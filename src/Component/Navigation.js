@@ -7,7 +7,7 @@ export default function Navigation(){
         <Container>
           <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Form inline>
+          <Form inline="true">
          <Row>
             <Col> 
           <Button>Advanced Search</Button>
