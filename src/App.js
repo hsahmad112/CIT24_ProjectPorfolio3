@@ -8,6 +8,12 @@ function App() {
     return (
     <div className="App">
       <Navigation/>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+
       <Homepage/>
     </div>
   );
