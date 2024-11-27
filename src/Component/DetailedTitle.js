@@ -1,12 +1,26 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-
+import { GetTitle } from "../Service/TitleService";
 
 export default function DetailedTitle({id}) {
 
+  const [detailedTitle, setDetailedTitle] = useState(null);
   const title = useParams(id); //?!
+  console.log(title.id);
+  useEffect(()=>{
 
+    const fetchData = async () => {
+      try {
+        setDetailedTitle(await GetTitle(title.id))
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  
+    fetchData();
+    // fetch title by title id
+  }, [id])
+
   // function DisplayGenre(genres){
   //   let genresString = "";
   //   let total = genres.length;
@@ -25,13 +39,16 @@ export default function DetailedTitle({id}) {
 
   //     return genresString;
   // }
+  if(detailedTitle){
+
+    console.log(detailedTitle)
 
     return(
       <div>
+        {detailedTitle.id}
         im a detailed title
+        <img src={detailedTitle.posterUrl}></img>
       </div>
-
-
         // placeholder 
       // <div key={title.url} className="ClickableOnHover">
       //   <div>
@@ -43,4 +60,5 @@ export default function DetailedTitle({id}) {
       //   </div>
       // </div> 
     );
+  }
 }

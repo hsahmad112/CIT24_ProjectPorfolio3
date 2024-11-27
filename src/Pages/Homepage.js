@@ -4,24 +4,29 @@ import { useEffect, useState } from 'react';
 import {GetAllTitles } from './../Service/TitleService';
 import {Carousel, Container, Row} from 'react-bootstrap';
 import SimpleTitle from '../Component/SimpleTitle';
+import { useNavigate } from "react-router";
 
 export default function Homepage(){
+    const navigate = useNavigate();
+
     const [titles, setTitles] = useState([]);
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          setTitles((await GetAllTitles()));
+          setTitles((await GetAllTitles()).entities);
+
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
 
       fetchData();
+
       },[]);
 
       if(titles){
-        // console.log(titles);
+         console.log(titles);
         // some images are 300 & 420, while others are 300 & 375
         // gives issues when they are displayed in the carousel
         // one fix it to set hard code the image ratio, but some images
@@ -33,7 +38,7 @@ export default function Homepage(){
           return(
             <div>
                 <Carousel data-bs-theme="dark">
-                  {titles?.map((title) => SimpleTitle(title))}  
+                  {titles?.map((title) => SimpleTitle(title, navigate))}  
                 </Carousel> 
               <br></br> 
               {/*<Container>

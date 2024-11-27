@@ -6,8 +6,12 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Card, Placeholder } from 'react-bootstrap';
+//import { useNavigate } from "react-router";
 
-export default function SimpleTitle(title) {
+export default function SimpleTitle(title, navigate) {
+  
+  //  let navigate = useNavigate();
+
   function DisplayGenre(genres){
     let genresString = "";
     let total = genres.length;
@@ -27,8 +31,19 @@ export default function SimpleTitle(title) {
       return genresString;
   }
 
+  // function GoToDetailedTitlePage(){
+  //   // should be a page, and use routing as we will learn
+  //   console.log("go to url: " + title.url);
+  //   navigate("/title/" + title.id)
+  // }
+  // const renderTooltip = (props) => (
+  //   <Tooltip id="button-tooltip" {...props}>
+  //           IMDB rating: {title.averageRating}
+  //   </Tooltip>
+  // );
+
     return(
-      <Carousel.Item interval={5000} key={title.url}>
+      <Carousel.Item interval={5000} key={title.url} className='ClickableOnHover' onClick={()=> navigate("/title/" + title.id)}>
           <img src={title.posterUrl} text="First slide" width="300" height="420"/>
           <Carousel.Caption>
           <h5>{title.primaryTitle}</h5>
