@@ -3,20 +3,27 @@
 - 
 ## Backend and DB
 - 
-
+## DB
+- 
 
 # Doing
 ## Frontend
 - 
 ## Backend and DB
 - 
+## DB
+- 
+
 
 # Done
 ## Frontend
 - 
-## Backend and DB
+## Backend
 - Create search for title and person
 
-  
+## DB
+
+
 # Nice to have
-- Lav en funktion i db og backend der kan hente distinct liste af types som frontend kan bruge i Navigation>Dropdown.Menu  
+- Use salted and encrypted passwords in DB.
+- Create a function in the db and backend that can retrieve a distinct list of types that the frontend can use in Navigation>Dropdown.Menu
