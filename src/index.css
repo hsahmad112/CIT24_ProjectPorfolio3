@@ -4,10 +4,60 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* -moz-osx-font-smoothing: grayscale;   unknown property, delcaration dropped */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.ClickableOnHover p:hover, img:hover{
+  cursor: pointer;
+}
+
+.ClickableOnHover p{
+  font-size: 13px !important;
+}
+
+.finite-box {
+  height: 50px; /* Adjust the height as needed */
+  width: auto;
+  overflow: hidden;
+}
+
+.finite-box p {
+  padding: 5px; /* Adjust the padding as needed */
+}
+
+.debug{
+  border: 1px solid black;
+}
+
+.card{
+  margin: 5px;
+  width: 180px !important;
+  height: 340px !important;
+  background-color: transparent !important; 
+  /* border: 2px solid black !important; */
+  border: 0px solid black !important; 
+
+  /*Every thing is hardcoded, don't look at me*/
+
+  transition: transform .15s, filter .5s; /* Animation */
+}
+
+.card:hover{
+  transform: scale(1.1);
+  filter: brightness(0.8);
+}
+
+.card-img {
+  width: 150px !important;
+  height: 210px !important;
+
+/* 
+  the default is w150, h210
+  but for some reson that still make a very solid quadratic square
+  */
 }

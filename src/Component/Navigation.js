@@ -1,15 +1,19 @@
-import {Container, Nav, Navbar, Button, Form, InputGroup, Dropdown, Row, Col} from 'react-bootstrap';
+import { Nav, Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
 
 
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export default function Navigation(){
-    return(<Navbar expand="lg" className="bg-body-tertiary">  
+    return(
+    <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
         <Container>
           <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Form inline>
+          <Form inline="true">
          <Row>
-            <Col> 
+            <Col md="auto"> 
           <Button>Advanced Search</Button>
           </Col>
           <Col>
@@ -34,6 +38,7 @@ export default function Navigation(){
         </Row>
       </Form>
         </Container>
-      </Navbar>);
+      </Navbar>
+      );
 }
 

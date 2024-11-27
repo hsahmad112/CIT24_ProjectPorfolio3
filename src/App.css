@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #e4e4e4; /* just so it is not so bright */
 }
 
 .App-logo {
