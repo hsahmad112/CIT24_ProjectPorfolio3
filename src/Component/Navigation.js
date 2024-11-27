@@ -1,12 +1,13 @@
-import { Nav, Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
-
+import { Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { Outlet } from 'react-router';
 
 export default function Navigation(){
     return(
+      <div>
     <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
         <Container>
           <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
@@ -39,6 +40,9 @@ export default function Navigation(){
       </Form>
         </Container>
       </Navbar>
+
+      <Outlet/>            
+      </div>
       );
 }
 
