@@ -6,11 +6,12 @@ import Col from 'react-bootstrap/Col';
 import { Outlet } from 'react-router';
 import { useContext } from 'react';
 import { User } from "../Store/store";
+import { useNavigate } from 'react-router';
 
 export default function Navigation(){
 
   const user = useContext(User);
-
+  let navigate = useNavigate();
     return(
       <div>
     <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
@@ -44,7 +45,7 @@ export default function Navigation(){
         </Row>
       </Form>
       {user !== "none" && <div><p style={{color:"white"}}>hello {user}</p><Button variant='danger'>burger menu</Button> </div>  }
-      {user === "none" && <div> <Button>Login</Button> <Button variant="success">Signup</Button></div>}
+      {user === "none" && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button variant="success">Signup</Button></div>}
         </Container>
       </Navbar>
 
