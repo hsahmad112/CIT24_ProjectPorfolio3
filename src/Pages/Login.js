@@ -1,16 +1,18 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-
-
+import { useContext } from 'react';
+import { User } from "../Store/store";
 import {useState} from 'react';
 
 export default function Login(){
+  const user = useContext(User);
 
     const [formData, setFormData] = useState({ //Need of state?
         email: '',
         password: '',
     });
+
 
 
     async function handleSubmit(e){
@@ -24,8 +26,18 @@ export default function Login(){
             }
         }
        )
-       console.log(response.data);
-       document.cookie = `Authorization=Bearer ${response.data}; expires=Thu, 28 Nov 2024 13:55:00 UTC`;
+
+       const expireTime = new Date();
+       expireTime.setMonth(expireTime.getMonth()+1)
+      
+       const {token, firstName} = response.data;
+    
+       document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}`;
+       document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}`;
+       User.Provider.value = {firstName};
+
+       console.log("login success");
+       console.log(User.Provider.value);
 
     } catch(error){
         console.log('login failed')
