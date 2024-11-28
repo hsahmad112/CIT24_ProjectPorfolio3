@@ -25,7 +25,7 @@ export default function Login(){
         }
        )
        console.log(response.data);
-       document.cookie = `Authorization=Bearer ${response.data}; expires=Thu, 28 Nov 2024 13:55:00 UTC`;
+       document.cookie = `Authorization=Bearer ${response.data}; expires=Thu, 28 Nov 2024 15:09:00 UTC+1`;
 
     } catch(error){
         console.log('login failed')
