@@ -16,10 +16,13 @@ function App() {
     <div className="App">
       <User.Provider value="bob">
         <Routes>
-          <Route element={<Navigation/>}>
-            <Route path="/" element={<Homepage/>} />
+          <Route path="/" element={<Navigation/>}>
+            <Route index element={<Homepage/>} />
             <Route path="/title/:id" element={<DetailedTitle/>} />
             <Route path="/person/:id" element={<DetailedPerson/>} />
+            <Route path="/login" element={<></>}></Route>
+            <Route path="/signin" element={<></>}></Route>
+            <Route path="/watchlist" element={<></>}></Route>
             <Route path="*" element={<Error></Error>}></Route>
           </Route>
         </Routes>
