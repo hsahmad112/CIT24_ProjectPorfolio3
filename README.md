@@ -2,7 +2,8 @@
 ## Frontend
 - 
 ## Backend and DB
-- 
+- Wrong status code(500) when searching for title by id with an id that doesn't exist
+  Should return 404 NotFound
 ## DB
 - 
 

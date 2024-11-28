@@ -4,8 +4,13 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Outlet } from 'react-router';
+import { useContext } from 'react';
+import { User } from "../Store/store";
 
 export default function Navigation(){
+
+  const user = useContext(User);
+
     return(
       <div>
     <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
@@ -38,6 +43,8 @@ export default function Navigation(){
         </Col>
         </Row>
       </Form>
+      {user !== "none" && <div><p style={{color:"white"}}>hello {user}</p><Button variant='danger'>burger menu</Button> </div>  }
+      {user === "none" && <div> <Button>Login</Button> <Button variant="success">Signup</Button></div>}
         </Container>
       </Navbar>
 

@@ -31,7 +31,6 @@ export default function Homepage(){
         // gives issues when they are displayed in the carousel
         // one fix it to set hard code the image ratio, but some images
         // will be streched, not ideal
-
       }
 
       if(titles.length > 0 ){

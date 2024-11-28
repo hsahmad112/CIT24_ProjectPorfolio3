@@ -9,33 +9,21 @@ import DetailedTitle from './Component/DetailedTitle';
 import SimplePerson from './Component/SimplePerson';
 import DetailedPerson from './Component/DetailedPerson';
 import Error from './Component/Error';
+import { User } from "./Store/store";
 
 function App() {
     return (
     <div className="App">
-
-    <Routes>
-      {/* <Route element={<Navigation />} >
-        <Route path="/title" element={<SimpleTitle/>}/>
-        <Route index element={<Homepage/>}/>
-      </Route> */}
-
-      <Route element={<Navigation/>}>
-        <Route path="/" element={<Homepage/>} />
-        <Route path="/title/:id" element={<DetailedTitle/>} />
-        <Route path="/person/:id" element={<DetailedPerson/>} />
-        <Route path="*" element={<Error></Error>}></Route>
-      </Route>
-    </Routes>
-
-      {/* <Navigation/>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-
-      <Homepage/> */}
+      <User.Provider value="bob">
+        <Routes>
+          <Route element={<Navigation/>}>
+            <Route path="/" element={<Homepage/>} />
+            <Route path="/title/:id" element={<DetailedTitle/>} />
+            <Route path="/person/:id" element={<DetailedPerson/>} />
+            <Route path="*" element={<Error></Error>}></Route>
+          </Route>
+        </Routes>
+      </User.Provider>
     </div>
   );
 }
