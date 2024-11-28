@@ -10,6 +10,7 @@ import SimplePerson from './Component/SimplePerson';
 import DetailedPerson from './Component/DetailedPerson';
 import Error from './Component/Error';
 import { User } from "./Store/store";
+import WactList from './Pages/WatchList';
 
 function App() {
     return (
@@ -22,7 +23,7 @@ function App() {
             <Route path="/person/:id" element={<DetailedPerson/>} />
             <Route path="/login" element={<></>}></Route>
             <Route path="/signin" element={<></>}></Route>
-            <Route path="/watchlist" element={<></>}></Route>
+            <Route path="/watchlist" element={<WactList/>}></Route>
             <Route path="*" element={<Error></Error>}></Route>
           </Route>
         </Routes>
