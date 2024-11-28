@@ -6,11 +6,8 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Card, Placeholder } from 'react-bootstrap';
-//import { useNavigate } from "react-router";
 
 export default function SimpleTitle(title, navigate) {
-  
-  //  let navigate = useNavigate();
 
   function DisplayGenre(genres){
     let genresString = "";
