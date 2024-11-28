@@ -45,7 +45,7 @@ export default function Navigation(){
         </Row>
       </Form>
       {user !== "none" && <div><p style={{color:"white"}}>hello {user}</p><Button variant='danger'>burger menu</Button> </div>  }
-      {user === "none" && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button variant="success">Signup</Button></div>}
+      {user === "none" && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button></div>}
         </Container>
       </Navbar>
 

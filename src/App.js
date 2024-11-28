@@ -12,6 +12,7 @@ import Error from './Component/Error';
 import { User } from "./Store/store";
 import WactList from './Pages/WatchList';
 import Login from './Pages/Login';
+import Signup from './Pages/Signup';
 
 function App() {
     return (
@@ -23,7 +24,7 @@ function App() {
             <Route path="/title/:id" element={<DetailedTitle/>} />
             <Route path="/person/:id" element={<DetailedPerson/>} />
             <Route path="/login" element={<Login/>}></Route>
-            <Route path="/signin" element={<></>}></Route>
+            <Route path="/signup" element={<Signup/>}></Route>
             <Route path="/watchlist" element={<WactList/>}></Route>
             <Route path="*" element={<Error></Error>}></Route>
           </Route>
