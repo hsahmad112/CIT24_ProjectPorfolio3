@@ -34,6 +34,10 @@ code {
   border: 1px solid black;
 }
 
+.less-opacity{
+  opacity: 75%;
+}
+
 .movie-card{
   margin: 5px;
   width: 180px !important;
@@ -60,7 +64,7 @@ code {
   background-color: transparent !important; 
   border-radius: 12px;
   margin-top: 70px;
-  right: 15%;
+  right: 10%;
 }
 
 .card-no-margin{
@@ -76,6 +80,24 @@ code {
   padding: 5px; /* Adjust the padding as needed */
 }
 
+.rate-movie-box{
+  background-color: transparent !important; 
+  margin-top: 400px;
+  border-radius: 12px;
+  right: 10%;
+  transition: .1s;
+}
+
+.rate-movie-box:hover{
+  cursor: pointer;
+  background-color: #ededed !important;
+}
+
+.detailed-movie-card{
+  width: 300px !important;
+  height: 420px !important;
+}
+
 .card-img {
   width: 150px !important;
   height: 210px !important;
@@ -84,4 +106,9 @@ code {
   the default is w150, h210
   but for some reson that still make a very solid quadratic square
   */
+}
+
+.pills{
+  margin: 2px;
+  color: #282c34;
 }

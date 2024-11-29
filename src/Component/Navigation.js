@@ -5,12 +5,15 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Outlet } from 'react-router';
 import { useContext } from 'react';
-import { User } from "../Store/store";
+import { User, useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
 
-export default function Navigation(){
 
-  const user = useContext(User);
+export default function Navigation(){
+  const { user, login, logout } = useUser();
+  console.log(user);
+
+  //const user = useContext(User);
   let navigate = useNavigate();
     return(
       <div>
