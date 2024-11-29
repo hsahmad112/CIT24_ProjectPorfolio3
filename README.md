@@ -4,15 +4,15 @@
 - Add components unrelated to routing: AdvancedSearch, Rate, Bookmark
 - Fix in Homepage.js: Carousel element needs a separate element (textbox?) with slightly darker but transparent background so text can appear readable.
 
-## Backend and DB
-- 
+## Backend
+- Perform checks on UserController.cs method Post(): Password has to be a certain length and not allowed to be empty space. Name is not allowed to be empty spaces.
 ## DB
 - 
 
 # Doing
 ## Frontend
 - 
-## Backend and DB
+## Backend
 - 
 ## DB
 - 
