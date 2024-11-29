@@ -11,14 +11,14 @@
 ## Frontend
 - 
 ## Backend and DB
-- 
+-
 ## DB
 - 
 
 
 # Done
 ## Frontend
-- 
+- SignUp done! :D
 ## Backend
 - Create search for title and person
 

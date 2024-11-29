@@ -34,7 +34,7 @@ code {
   border: 1px solid black;
 }
 
-.card{
+.movie-card{
   margin: 5px;
   width: 180px !important;
   height: 340px !important;
@@ -47,9 +47,33 @@ code {
   transition: transform .15s, filter .5s; /* Animation */
 }
 
-.card:hover{
+.movie-card:hover{
   transform: scale(1.1);
   filter: brightness(0.8);
+}
+
+.genre-box{
+  height: 200px; /* Adjust the height as needed */
+  width: auto;
+  overflow: hidden;
+  border: 1px solid black !important;
+  background-color: transparent !important; 
+  border-radius: 12px;
+  margin-top: 70px;
+  right: 15%;
+}
+
+.card-no-margin{
+  height: 200px; /* Adjust the height as needed */
+  width: auto;
+  overflow: hidden;
+  border: 1px solid black !important;
+  background-color: transparent !important; 
+  border-radius: 12px;
+}
+
+.genre-box p {
+  padding: 5px; /* Adjust the padding as needed */
 }
 
 .card-img {
