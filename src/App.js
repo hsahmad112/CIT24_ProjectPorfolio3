@@ -10,19 +10,21 @@ import SimplePerson from './Component/SimplePerson';
 import DetailedPerson from './Component/DetailedPerson';
 import Error from './Component/Error';
 import { User } from "./Store/store";
+import WactList from './Pages/WatchList';
+import Login from './Pages/Login';
 
 function App() {
     return (
     <div className="App">
-      <User.Provider value="bob">
+      <User.Provider value="none">
         <Routes>
           <Route path="/" element={<Navigation/>}>
             <Route index element={<Homepage/>} />
             <Route path="/title/:id" element={<DetailedTitle/>} />
             <Route path="/person/:id" element={<DetailedPerson/>} />
-            <Route path="/login" element={<></>}></Route>
+            <Route path="/login" element={<Login/>}></Route>
             <Route path="/signin" element={<></>}></Route>
-            <Route path="/watchlist" element={<></>}></Route>
+            <Route path="/watchlist" element={<WactList/>}></Route>
             <Route path="*" element={<Error></Error>}></Route>
           </Route>
         </Routes>
