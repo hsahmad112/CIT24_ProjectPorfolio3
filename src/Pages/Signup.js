@@ -1,11 +1,14 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+import { useNavigate } from 'react-router';
+import {useUser} from '../Store/store';
 import {useState} from 'react';
 
 
 export default function(){
 
+  let navigate = useNavigate();
     const [jsonBody, SetJsonBody] = useState({ //might not need a state
         email: '',
         firstname: '',
@@ -13,6 +16,17 @@ export default function(){
 //        confirmPassword: '', // not here, but still need to do string comparision with password
     });
 
+    const {login} = useUser(); //Get login state, from store.js (UserContext)
+    const [errorMessage, setErrorMessage] = useState('');
+
+    function formResetter(){
+      SetJsonBody({
+        email: '',
+        firstname: '',
+        password: '',
+      });
+      
+    }
     
     function handleChange(e){
         //console.log("live input:", jsonBody); //the most cursed console log
@@ -27,6 +41,8 @@ export default function(){
         e.preventDefault();
         console.log("pressing the submit button", jsonBody);
 
+        try{
+          
         const response = await fetch(process.env.REACT_APP_BASE_API_LINK + "user", {
             method: "POST",
             headers: {
@@ -34,6 +50,46 @@ export default function(){
             },
             body: JSON.stringify(jsonBody)
         });
+        if (!response.ok) {
+          throw new Error(response.status);
+        }
+     
+
+        const expireTime = new Date();
+        expireTime.setMonth(expireTime.getMonth()+1)
+       
+        const {token, firstName} = response.data;
+     
+        document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
+        document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
+
+        console.log("signup success")
+
+        navigate("/");
+        login(firstName);
+    
+      }
+      
+      catch(error){
+        console.error(error.message); 
+        if (error.message){
+          console.log("yaay det virker");
+        }
+        switch(error.message){
+          
+          case "400": //prop not good to get error message as string?
+            setErrorMessage('email is already taken or password is not set');
+            console.log("status 400 in switch");
+            
+            break;
+          default:
+            setErrorMessage( 'Unknown error happened, try again');
+              console.log("defaultgttt");
+        }
+      
+        {formResetter()}
+
+      }
 
     }
    
@@ -89,6 +145,9 @@ return(
     <Button variant="primary" type="submit" >
       Sign Up
     </Button>
+    {errorMessage && (<div className ='mt-3 text-danger'> {/* Currently buggy,expands the form when error message shown*/}
+            <p className = 'fw-bold'>{errorMessage}</p>
+          </div>)}
   </Form>
 </div>
     );
