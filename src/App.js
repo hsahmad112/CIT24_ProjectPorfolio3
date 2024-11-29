@@ -2,21 +2,30 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Homepage from './Pages/Homepage';
 import Navigation from './Component/Navigation';
-import { Routes, Route } from "react-router";
-import { useEffect, useState } from 'react';
+import { Routes, Route, useLocation} from "react-router";
+import { useEffect, useState, useContext } from 'react';
 import SimpleTitle from './Component/SimpleTitle';
 import DetailedTitle from './Component/DetailedTitle';
 import SimplePerson from './Component/SimplePerson';
 import DetailedPerson from './Component/DetailedPerson';
 import Error from './Component/Error';
-import { User } from "./Store/store";
+import { UserContext } from "./Store/store";
+import { UserProvider } from './Store/store';
 import WactList from './Pages/WatchList';
 import Login from './Pages/Login';
+import {useUser} from "./Store/store";
+
 
 function App() {
+  
+  //const [userName, setUserName] = useState('none');
+  const location = useLocation();
+
+  //const {userName, login, logout} = useUser();
+  
     return (
     <div className="App">
-      <User.Provider value="none">
+      <UserProvider >
         <Routes>
           <Route path="/" element={<Navigation/>}>
             <Route index element={<Homepage/>} />
@@ -28,7 +37,7 @@ function App() {
             <Route path="*" element={<Error></Error>}></Route>
           </Route>
         </Routes>
-      </User.Provider>
+      </UserProvider>
     </div>
   );
 }

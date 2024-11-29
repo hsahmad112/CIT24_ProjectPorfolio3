@@ -2,12 +2,17 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useContext } from 'react';
-import { User } from "../Store/store";
+import { UserContext, UserProvider } from "../Store/store";
 import {useState} from 'react';
+import { useNavigate } from 'react-router';
+import {useUser} from '../Store/store';
 
 export default function Login(){
-  const user = useContext(User);
+  const [user, setUser] = useState(null);
 
+  const {userName, login, logout} = useUser();
+
+  let navigate = useNavigate();
     const [formData, setFormData] = useState({ //Need of state?
         email: '',
         password: '',
@@ -32,16 +37,17 @@ export default function Login(){
       
        const {token, firstName} = response.data;
     
-       document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}`;
-       document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}`;
-       User.Provider.value = {firstName};
+       document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
+       document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
+       //UserContext.Provider.value = {firstName};
 
        console.log("login success");
-       console.log(User.Provider.value);
-
+       navigate("/watchlist");
+       //login(firstName);
+       
     } catch(error){
         console.log('login failed')
-        console.log(error.response?.data)
+        
     }
  
      
