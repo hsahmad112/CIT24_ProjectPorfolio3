@@ -11,29 +11,20 @@ import {useUser} from '../Store/store';
 
 export default function Navigation(){
 
-  const {userName, login, logout, getCookieValue} = useUser();
-  const [cookie, setCookie] = useState(getCookieValue("FirstName"));
+  const {userName, login, logout} = useUser();
+
   const location = useLocation();
+  
   useEffect(() => {
-    // const cookies = document.cookie.split(';');
-    // const userNameCookie = cookies.find(cookie => cookie.startsWith('FirstName')); //What if more cookies with same name, with different paths?
 
-
-    console.log(`cookie er: ${cookie}`);
-    login(cookie); 
-    if(cookie){
-      console.log("jaaa ikke undefined");
-      //login(cookie);
-      //setUserName(firstName) 
+  
+    if(userName){
+      login(userName); 
     }
-    console.log(`Route changed: ${location.pathname}`);
-    console.log(`brugernavn: ${userName}`);
-  }, [location.pathname]);
 
-  
-  
-  console.log(`Hello from Navigation, username is: ${userName}`);
-  //const userName = useContext(UserContext);
+  }, [location, userName]);
+
+
   let navigate = useNavigate();
     return(
       <div>
@@ -67,7 +58,7 @@ export default function Navigation(){
         </Col>
         </Row>
       </Form>
-      {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> </div>  }
+      {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> <Button onClick ={() => logout()} variant="danger">Sign out</Button></div>  }
       {userName === null && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button variant="success">Signup</Button></div>}
         </Container>
       </Navbar>
