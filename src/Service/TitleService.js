@@ -21,3 +21,12 @@ export async function GetTitle(id){
     return fetch(baseApiUrl + "titles/"+ id).then(res => res.json());
     //return (await axios.post(baseApiUrl + id)).data;
 }
+
+export async function GetTitleById(id){
+    const response = await fetch(baseApiUrl + "titles/"+ id);
+    if (!response.ok){
+        throw new Error("We got a HTTP error. Status is: "+response.status);
+    }
+
+    return await response.json();
+}
