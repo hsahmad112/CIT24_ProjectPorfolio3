@@ -23,7 +23,7 @@ export default function UserRating(){
      
         <>
      {
-     userRatings.map((u, i) => Rating(u))
+    userRatings.map((u, i) => <Rating key={i} {...u} />)
      
      }
      </>
