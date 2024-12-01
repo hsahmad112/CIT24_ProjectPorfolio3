@@ -15,6 +15,7 @@ export default function WactList(){
             try {
                 setPersonBookmarks( await GetPersonBookmarksById()); // should be the right id!
                 setTitleBookmarks( await GetTitleBookmarksById()); // should be the right id!
+    
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -120,6 +121,5 @@ export default function WactList(){
                 </Tabs>
             </div>
         );
-    } 
-
+    }
 }
