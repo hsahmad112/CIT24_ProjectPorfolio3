@@ -45,8 +45,8 @@ export default function Rating({...props}){
            
                 <Card.Body>
                 <Card.Title style = {{color: 'red'}}>{errorMessage}</Card.Title> {/* shows the error message if truthy. Currently shows "Network Error", if refreshing page while pictures are loading..*/}
-                <Card.Title onClick ={title?.primaryTitle ? onClickHandler : undefined} style = { {cursor: 'pointer'}}>{title?.primaryTitle || "Loading..."}</Card.Title> {/* Like with the img, Title of movie is only clickable when loaded */}
-                <Card.Text> {rating || "Rating not loaded"} </Card.Text>
+                <Card.Title  style = {title?.primaryTitle ? {cursor: 'pointer'}: {color: 'red'}} onClick ={title?.primaryTitle ? onClickHandler : undefined}>{title?.primaryTitle || "Loading..."}</Card.Title> {/* Like with the img, Title of movie is only clickable when loaded */}
+                <Card.Text> {`Rating: ${rating}` || "Rating not loaded"} </Card.Text>
                {/*<Button variant="primary">Go somewhere</Button>*/}
             </Card.Body>
         </Card>
