@@ -68,7 +68,8 @@ export async function GetPersonBackdrop(id){ // This function does the exact sam
         }
 
         const data = await response.json();
-        //console.log(data);
+        console.log("Person data:");
+        console.log(data);
         return data
     
     } catch (error) {
@@ -80,7 +81,7 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
     try {
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);
-        console.log("url: "+url);
+        console.log("title url: "+ url);
     
         // Could remove this, was only for 
         if (!response.ok) {
@@ -88,23 +89,28 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
         }
     
         const data = await response.json();
-        console.log("title data:");
-        console.log(data);
-        let switchData = [];
-        switch (data) {
-            case data.movie_results != []:
-                switchData = data.movie_results; 
-            case data.tv_results != []:
-                switchData = data.tv_results; 
-            case data.tv_episode_results != []:        
-                switchData = data.tv_episode_results; 
-            case data.tv_season_results != []:        
-                switchData = data.tv_season_results; 
+        // console.log("Title data:");
+        // console.log(data);
 
+        // Determine which array contains data
+        let result = null;
+
+        // could not use the switch, had to do the if else statements instead!
+        if (data.movie_results && data.movie_results.length > 0) {
+            result = data.movie_results;
+        } else if (data.tv_results && data.tv_results.length > 0) {
+            result = data.tv_results;
+        } else if (data.tv_episode_results && data.tv_episode_results.length > 0) {
+            result = data.tv_episode_results;
+        } else if (data.tv_season_results && data.tv_season_results.length > 0) {
+            result = data.tv_season_results;
         }
-        console.log("SwitchData is : ");
-        console.log(switchData);
-        return switchData;
+
+        // console.log("SwitchData is : ");
+        // console.log(result);
+        return result;
+
+
     } catch (error) {
         console.error("Error fetching data:", error);
     }  
