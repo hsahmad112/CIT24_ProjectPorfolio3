@@ -9,7 +9,7 @@
 - clear cache when logging out
 
 ## Backend
-
+- PersonSearch returns 500 if no results are found - needs to return a 404 instead.
 
 ## DB
 - 
