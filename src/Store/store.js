@@ -5,7 +5,8 @@ import {useLocation, useNavigate} from 'react-router';
 const UserContext = createContext();
 
 export const UserProvider = ({ children}) => {
-      const [userName,setUserName] = useState(getCookieValue("FirstName"));        
+      const [userName,setUserName] = useState(getCookieValue("FirstName"));  
+      const [token, setToken] = useState(getCookieValue("Authorization"));
       let navigate = useNavigate();
 
       const login = (userData) => {
@@ -37,7 +38,7 @@ export const UserProvider = ({ children}) => {
 
 
       return (
-        <UserContext.Provider value={{userName, login, logout}}>
+        <UserContext.Provider value={{userName, token, login, logout}}>
           {children}
           
         </UserContext.Provider>

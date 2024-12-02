@@ -6,6 +6,7 @@
 - signup bug - can login when signup with email that exists!
 - watchlist bug - gets all details from tmdb - only should get image
 - Cookie bug - check for 401 unauthorized response for ANY request. then set cookies to expire in the past
+- clear cache when logging out
 
 ## Backend
 - Perform checks on UserController.cs method Post(): Password has to be a certain length and not allowed to be empty space. Name is not allowed to be empty spaces.
