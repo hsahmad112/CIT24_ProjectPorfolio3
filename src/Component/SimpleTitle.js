@@ -6,8 +6,11 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Card, Placeholder } from 'react-bootstrap';
+import { useUser } from "../Store/store";
 
 export default function SimpleTitle(title, navigate) {
+  
+  const { user, login, logout } = useUser();
 
   function DisplayGenre(genres){
     let genresString = "";
@@ -46,6 +49,7 @@ export default function SimpleTitle(title, navigate) {
           <h5>{title.primaryTitle}</h5>
           {title.startYear && <p>Release year: {title.startYear}</p> }
           <p>Genres: {DisplayGenre(title.genresList)}</p>
+          {user}
           </Carousel.Caption>
         </Carousel.Item>   
     );

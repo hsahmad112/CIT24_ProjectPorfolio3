@@ -1,30 +1,26 @@
 import { Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
-
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Outlet, useLocation } from 'react-router';
 import { useContext, useEffect, useState} from 'react';
-import { UserContext } from "../Store/store";
+import { User, useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 
 export default function Navigation(){
-
   const {userName, login, logout} = useUser();
 
   const location = useLocation();
   
-  useEffect(() => {
-
-  
+  useEffect(() => {  
     if(userName){
       login(userName); 
     }
 
   }, [location, userName]);
 
-
+  //const user = useContext(User);
   let navigate = useNavigate();
     return(
       <div>
