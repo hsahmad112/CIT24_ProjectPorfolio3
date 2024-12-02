@@ -3,14 +3,28 @@ import { Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Outlet } from 'react-router';
-import { useContext } from 'react';
-import { User } from "../Store/store";
+import { Outlet, useLocation } from 'react-router';
+import { useContext, useEffect, useState} from 'react';
+import { UserContext } from "../Store/store";
 import { useNavigate } from 'react-router';
+import {useUser} from '../Store/store';
 
 export default function Navigation(){
 
-  const user = useContext(User);
+  const {userName, login, logout} = useUser();
+
+  const location = useLocation();
+  
+  useEffect(() => {
+
+  
+    if(userName){
+      login(userName); 
+    }
+
+  }, [location, userName]);
+
+
   let navigate = useNavigate();
     return(
       <div>
@@ -44,8 +58,9 @@ export default function Navigation(){
         </Col>
         </Row>
       </Form>
-      {user !== "none" && <div><p style={{color:"white"}}>hello {user}</p><Button variant='danger'>burger menu</Button> </div>  }
-      {user === "none" && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button variant="success">Signup</Button></div>}
+      {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> <Button onClick ={() => logout()} variant="danger">Sign out</Button></div>  }
+      {userName === null && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button></div>}
+
         </Container>
       </Navbar>
 
