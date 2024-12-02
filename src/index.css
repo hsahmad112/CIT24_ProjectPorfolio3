@@ -34,7 +34,11 @@ code {
   border: 1px solid black;
 }
 
-.card{
+.less-opacity{
+  opacity: 75%;
+}
+
+.movie-card{
   margin: 5px;
   width: 180px !important;
   height: 340px !important;
@@ -47,9 +51,51 @@ code {
   transition: transform .15s, filter .5s; /* Animation */
 }
 
-.card:hover{
+.movie-card:hover{
   transform: scale(1.1);
   filter: brightness(0.8);
+}
+
+.genre-box{
+  height: 200px; /* Adjust the height as needed */
+  width: auto;
+  overflow: hidden;
+  border: 1px solid black !important;
+  background-color: transparent !important; 
+  border-radius: 12px;
+  margin-top: 70px;
+  right: 10%;
+}
+
+.card-no-margin{
+  height: 200px; /* Adjust the height as needed */
+  width: auto;
+  overflow: hidden;
+  border: 1px solid black !important;
+  background-color: transparent !important; 
+  border-radius: 12px;
+}
+
+.genre-box p {
+  padding: 5px; /* Adjust the padding as needed */
+}
+
+.rate-movie-box{
+  background-color: transparent !important; 
+  margin-top: 400px;
+  border-radius: 12px;
+  right: 10%;
+  transition: .1s;
+}
+
+.rate-movie-box:hover{
+  cursor: pointer;
+  background-color: #ededed !important;
+}
+
+.detailed-movie-card{
+  width: 300px !important;
+  height: 420px !important;
 }
 
 .card-img {
@@ -60,4 +106,9 @@ code {
   the default is w150, h210
   but for some reson that still make a very solid quadratic square
   */
+}
+
+.pills{
+  margin: 2px;
+  color: #282c34;
 }
