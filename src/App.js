@@ -15,6 +15,7 @@ import Login from './Pages/Login';
 import {useUser} from "./Store/store";
 import Signup from './Pages/Signup';
 import UserRating from './Pages/UserRating';
+import UserSetting from './Pages/UserSetting';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
             <Route path="/signup" element={<Signup/>}></Route>
             <Route path="/watchlist" element={<WactList/>}></Route>
             <Route path="/rating" element={<UserRating/>}></Route>
+            <Route path="/settings" element={<UserSetting/>}></Route>
             <Route path="*" element={<Error></Error>}></Route>
           </Route>
         </Routes>
