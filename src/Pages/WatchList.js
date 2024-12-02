@@ -106,30 +106,29 @@ export default function WactList(){
                     <Button variant="underline">Titles</Button>
                     <Button>Persons</Button>
                 </ButtonGroup> */}
-
                                 
-                        <Tabs
-                            defaultActiveKey="Titles"
-                            id="uncontrolled-tab-example"
-                            className="mb-3">
-                            <Tab eventKey="Titles" title="Titles">
-                                List of Title Bookmarks:
-                                <Container>
-                                    <Row xs={1} md={4}> 
-                                        {titleBookmarks.map((title, index) => <TitleBookmark data={title} key={index}/> )}
-                                    </Row>
-                                </Container>
-                            </Tab>
-                            <Tab eventKey="Persons" title="Persons">
-                                List of Person Bookmarks:
+                <Tabs
+                    defaultActiveKey="Titles"
+                    id="uncontrolled-tab-example"
+                    className="mb-3">
+                    <Tab eventKey="Titles" title="Titles">
+                        List of Title Bookmarks:
+                        <Container>
+                            <Row xs={1} md={4}> 
+                                {titleBookmarks.map((title, index) => <TitleBookmark data={title} key={index}/> )}
+                            </Row>
+                        </Container>
+                    </Tab>
+                    <Tab eventKey="Persons" title="Persons">
+                        List of Person Bookmarks:
 
-                                <Container>
-                                    <Row xs={1} md={4}> 
-                                        {personBookmarks.map((person, index) => <PersonBookmark data={person} key={index}/>)}                
-                                    </Row>
-                                </Container>
-                            </Tab>
-                        </Tabs>                    
+                        <Container>
+                            <Row xs={1} md={4}> 
+                                {personBookmarks.map((person, index) => <PersonBookmark data={person} key={index}/>)}                
+                            </Row>
+                        </Container>
+                    </Tab>
+                </Tabs>                    
          
 
             </div>
