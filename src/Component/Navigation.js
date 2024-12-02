@@ -6,7 +6,6 @@ import { Outlet, useLocation } from 'react-router';
 import { useContext, useEffect, useState} from 'react';
 import { User, useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
-import {useUser} from '../Store/store';
 
 export default function Navigation(){
   const {userName, login, logout} = useUser();
