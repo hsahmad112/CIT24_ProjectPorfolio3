@@ -82,10 +82,24 @@ code {
 
 .rate-movie-box{
   background-color: transparent !important; 
-  margin-top: 400px;
+  margin-top: 250px;
   border-radius: 12px;
   right: 10%;
   transition: .1s;
+}
+
+.center-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-div p{
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .rate-movie-box:hover{
@@ -106,6 +120,10 @@ code {
   the default is w150, h210
   but for some reson that still make a very solid quadratic square
   */
+}
+
+.pointer-on-hover:hover{
+  cursor: pointer;
 }
 
 .pills{

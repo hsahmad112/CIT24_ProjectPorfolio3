@@ -1,28 +1,33 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { GetTitle } from "../Service/TitleService";
-import { User } from "../Store/store";
+import { GetTitleById } from "../Service/TitleService";
 import { Card, Col, Row, Container, Stack, Button } from 'react-bootstrap';
-import { PostRating } from "../Service/RatingService";
+import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
+import Modal from 'react-bootstrap/Modal';
 import { useUser } from "../Store/store";
+import { useNavigate } from 'react-router';
 
 export default function DetailedTitle({id}) {
 
-  //const user = useContext(User);
+  const list = [1,2,3,4,5,6,7,8,9,10];
 
   const [title, setTitle] = useState(null);
+  const [showModal, setShowModal] = useState(true);
+  const [rating, setRating] = useState(-1);
   const titleId = useParams(id);
-  //console.log(titleId.id);
 
-  const { user, login, logout } = useUser();
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  console.log(useUser.user)
+  const {userName, login, logout} = useUser();
+  let navigate = useNavigate();
+
   useEffect(()=>{
-
     const fetchData = async () => {
       try {
-        setTitle(await GetTitle(titleId.id))
+        setTitle(await GetTitleById(titleId.id))
+        setRating(await GetRatingById(titleId.id));
       } catch (error) {
+        setErrorMessage("could not find title with with id: " + titleId.id);
         console.error('Error fetching data:', error);
       }
     };
@@ -31,24 +36,42 @@ export default function DetailedTitle({id}) {
   }, [id])
 
   function RateMovie(){
-   login(x => x + "yo");
-   // PostRating(titleId.id, 9);
+
+    // rating is -1 if we have not never rated
+
+    setShowModal(false);
+    PostRating(titleId.id, rating);
     console.log(title.id);
   }
 
-  function NotMovie(){
-    logout();
+  function UpdateRatedMovie(){
+    PutRating(titleId.id, 3);
+    setShowModal(true);
+    console.log(title.id);
+  }
+
+
+
+  if(errorMessage){
+    return (
+      <div className="center-div">
+        <p>{errorMessage}</p>
+      </div>
+    );  
   }
 
   if(title){
     // console.log(title)
-    let genres = <>{title.genresList.map((genre, index) => <Button variant={"secondary"} className="pills" key={index}>{genre}</Button>)}</>
-    let actors = <> {title.principalCastList.map((actor, index) => <Button variant={"secondary"} className="pills" key={index}>{actor}, </Button>)}</>
-    let writers = <> {title.writersList.map((writer, index) => <Button variant={"secondary"} className="pills" key={index}>{writer}, </Button>)}</>
+    // title only have the person name, not the id, so can't use them to find the person, the name might overlap
+
+    let ratings = <>{list.map((id) => rating === id ? <i className="bi bi-star-full"></i> : <i className="bi bi-star"></i>)}</>
+
+
+    let genres = <> {title.genresList.map((genre, index) => <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills" key={index}>{genre}</Button>)}</>
+    let actors = <> {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/persons/" + actor.id)} variant={"secondary"} className="pills" key={index}>{actor}, </Button>)}</>
+    let writers = <> {title.writersList.map((writer, index) => <Button onClick={() => navigate("/persons/" + writer.id)} variant={"secondary"} className="pills" key={index}>{writer}, </Button>)}</>
     return (
-      
       <div>
-        {user}
         <Container fluid="true">
       <Row>
         <Col style={{marginTop: "55px"}}>
@@ -66,8 +89,7 @@ export default function DetailedTitle({id}) {
                 variant="bottom"
                 className=""
                 src={title.posterUrl}
-                alt={title.primaryTitle}
-               
+                alt={title.primaryTitle}      
             />
             </Card>
         </Col>
@@ -124,10 +146,18 @@ export default function DetailedTitle({id}) {
                   </Card.Text>
                 </Card.Body>
           </Card>
-          {/* rate movie button    HACK   change to user !=== "none"    */}
-          {/* {user === "none" && */}
-          {
-          <Card className="rate-movie-box" onClick={() => RateMovie()}>
+          { userName !== "" && rating === -1 &&      
+          <Card className="rate-movie-box" onClick={() => UpdateRatedMovie()}>
+            <Card.Body>
+              <Card.Text className="">
+                update your rating
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          }
+
+          {userName !== "" && rating !== -1 &&
+            <Card className="rate-movie-box" onClick={() => RateMovie()}>
             <Card.Body>
               <Card.Text className="">
                 Rate movie
@@ -135,10 +165,31 @@ export default function DetailedTitle({id}) {
             </Card.Body>
           </Card>
           }
-          <Button onClick={() => NotMovie()}>non user</Button>
         </Col>
       </Row>
         </Container>
+
+        {showModal &&      
+       <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
+       <Modal.Dialog >
+         <Modal.Header closeButton onClick={()=> setShowModal(x => x = false)}>
+           <Modal.Title>Rate {title.primaryTitle}</Modal.Title>
+         </Modal.Header>
+ 
+         <Modal.Body>
+
+           {ratings}
+
+         </Modal.Body>
+ 
+         <Modal.Footer>
+           <Button variant="secondary"  onClick={()=> setShowModal(x => x = false)}>Cancel</Button>
+           <Button variant="primary" onClick={() => RateMovie()}>Save rating</Button>
+         </Modal.Footer>
+       </Modal.Dialog>
+     </div>
+      }
+
       </div>
     );
   }

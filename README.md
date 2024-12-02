@@ -9,9 +9,7 @@
 - clear cache when logging out
 
 ## Backend
-- Perform checks on UserController.cs method Post(): Password has to be a certain length and not allowed to be empty space. Name is not allowed to be empty spaces.
-- Wrong status code(500) when searching for title by id with an id that doesn't exist
-  Should return 404 NotFound
+
 
 ## DB
 - 
@@ -32,6 +30,9 @@
 - SignUp done! :D
 ## Backend
 - Create search for title and person ✅ 
+Wrong status code(500) when searching for title by id with an id that doesn't exist
+  Should return 404 NotFound ✅ 
+- Perform checks on UserController.cs method Post(): Password has to be a certain length and not allowed to be empty space. Name is not allowed to be empty spaces. ✅ 
 
 ## DB
 

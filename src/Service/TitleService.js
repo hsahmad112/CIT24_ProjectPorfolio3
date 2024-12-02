@@ -17,17 +17,17 @@ export function GetTitleBackdrop(id){
     return fetch(baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + process.env.REACT_APP_TMDB_API_KEY).then(res => res.json());
 }
 
-export async function GetTitle(id){
-    return fetch(baseApiUrl + "titles/"+ id).then(res => res.json());
-    //return (await axios.post(baseApiUrl + id)).data;
-}
-
 export async function GetTitleById(id){
+    let data;
     const response = await fetch(baseApiUrl + "titles/"+ id);
-    if (!response.ok){
-        throw new Error("We got a HTTP error. Status is: "+response.status);
+
+    if(!response.ok) throw new Error("We got a HTTP error. Status is: " + response.status);
+
+    data = await response.json();
+    if(data == null){ //is falsy if null or undefined
+        console.log("no data");
+        throw new Error("Something went badly wrong");
     }
 
-    return await response.json();
+    return data;
 }
-
