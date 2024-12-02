@@ -6,11 +6,13 @@ import Tabs from 'react-bootstrap/Tabs';
 import {GetPersonBookmarksById, GetTitleBookmarksById, GetPersonBackdrop, GetTitleBackdrop} from '../Service/BookmarkService';
 import { ButtonGroup, Container, Row, Col } from 'react-bootstrap';
 import {useUser} from '../Store/store';
+import { useNavigate } from "react-router";
 
 export default function WactList(){
     const [personBookmarks, setPersonBookmarks] = useState(null);
     const [titleBookmarks, setTitleBookmarks] = useState(null);
     const {token} = useUser();
+    const navigate = useNavigate();
 
     useEffect(() =>{
         const getBookmarks = async () => {
@@ -20,8 +22,7 @@ export default function WactList(){
     
             } catch (error) {
                 console.error('Error fetching data:', error);
-            }
-            
+            }            
         }   
        getBookmarks();
        
@@ -46,17 +47,18 @@ export default function WactList(){
         
         if(personBookmark){
             return(
-                <Card style={{ width: '18rem' }}>
+                <Card style={{ width: '18rem', margin: '10px' }} onClick={()=> navigate("/person/" + person.data.personId)}>
                     <Card.Img variant="top" src={                      
                         personBookmark[0]?.profile_path !== undefined ? 
                         imageUrl + personBookmark[0]?.profile_path :
                         "/no-image.jpg"
-                        } />
-                        <Card.Body>
-                            <Card.Title> {personBookmark[0]?.name} </Card.Title> {/* name can be undefined, do something */}
-                            <Card.Text> {person.annotation} </Card.Text>
-                            <Button variant="primary">Go somewhere</Button>
-                        </Card.Body>
+                        } 
+                    />
+                    <Card.Body>
+                        <Card.Title> {personBookmark[0]?.name} </Card.Title> {/* name can be undefined, do something */}
+                        <Card.Text> {person.annotation} </Card.Text>
+                        <Button variant="primary">Go somewhere</Button>
+                    </Card.Body>
                 </Card>
                 );
         
@@ -80,22 +82,20 @@ export default function WactList(){
             }
             getTitleBookmark();
         }, [title])
-        if(titleBookmark){
-   
-            console.log("logging titleBookmark for " +title.data.titleId);
-            console.log(titleBookmark[0]?.backdrop_path);
+        if(titleBookmark){   
+            // console.log("logging titleBookmark for " +title.data.titleId);
+            // console.log(titleBookmark[0]?.backdrop_path);
             return(
-                <Card style={{ width: '18rem' }}>
-                    <Card.Img variant="top" src={imageUrl + titleBookmark[0]?.backdrop_path} />
-                        <Card.Body>
-                            <Card.Title> {titleBookmark[0]?.name} </Card.Title>
-                            <Card.Text> {title.annotation} </Card.Text>
-                            <Button variant="primary">Go somewhere</Button>
-                        </Card.Body>
+                <Card style={{ width: '18rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + title.data.titleId)}>
+                    <Card.Img variant="top" src={imageUrl + titleBookmark[0]?.backdrop_path}/>
+                    <Card.Body>
+                        <Card.Title> {titleBookmark[0]?.name} </Card.Title>
+                        <Card.Text> {title.annotation} </Card.Text>
+                        <Button variant="primary">Go to title</Button>
+                    </Card.Body>
                 </Card>
                 );
-        }
-       
+        }       
 
     }
     
@@ -123,7 +123,6 @@ export default function WactList(){
                     </Tab>
                     <Tab eventKey="Persons" title="Persons">
                         List of Person Bookmarks:
-
                         <Container>
                             <Row xs={1} md={4}> 
                                 {personBookmarks.map((person, index) => <PersonBookmark data={person} key={index}/>)}                
