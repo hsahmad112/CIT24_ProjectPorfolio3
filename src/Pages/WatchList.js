@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import {GetPersonBookmarksById, GetTitleBookmarksById, GetPersonBackdrop, GetTitleBackdrop} from '../Service/BookmarkService';
-import { ButtonGroup, Container, Row, Col, CardFooter, CardHeader } from 'react-bootstrap';
+import {GetPersonBookmarksById, GetTitleBookmarksById} from '../Service/BookmarkService';
+import { ButtonGroup, Container, Row } from 'react-bootstrap';
 import {useUser} from '../Store/store';
 import { useNavigate } from "react-router";
+import TitleCard from '../Component/TitleCard';
+import PersonCard from '../Component/PersonCard';
 
 export default function WactList(){
     const [personBookmarks, setPersonBookmarks] = useState(null);
@@ -26,81 +26,8 @@ export default function WactList(){
         }   
        getBookmarks();
        
-    }, [])
+    }, []);
 
-    function PersonBookmark(person) {       
-        const [personBookmark, setPersonBookmark] = useState(null);
-        const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
-        
-
-        useEffect(() =>{
-            const getPersonBookmark = async () => {
-                if(person){
-                    try {
-                        setPersonBookmark((await GetPersonBackdrop(person.data.personId)).person_results);
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }     
-            }
-            getPersonBookmark();
-        }, [person])
-        
-        if(personBookmark){
-            return(
-                <Card style={{ width: '16rem', margin: '10px' }} onClick={()=> navigate("/person/" + person.data.personId)}>
-                     <Card.Title> {personBookmark[0]?.name !== undefined ? personBookmark[0]?.name : "No Name"} </Card.Title> {/* name can be undefined, do something */}
-                     <Card.Body>
-                       <Card.Img style={{padding: '0px'}} variant="top" src={                      
-                        personBookmark[0]?.profile_path !== undefined ? 
-                        imageUrl + personBookmark[0]?.profile_path :
-                        "/no-image.jpg"
-                        } 
-                        />
-                    </Card.Body>
-                    <CardFooter> 
-                        <Card.Text> {person.annotation} </Card.Text>
-                        <Button variant="primary">Go to person</Button>
-                    </CardFooter>
-                </Card>
-                );
-        
-        }
-    }
-
-    function TitleBookmark(title) {
-        const [titleBookmark, setTitleBookmark] = useState(null);        
-        const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
-
-        useEffect(() =>{
-            const getTitleBookmark = async () => {
-                if(title){
-                    try {
-                        setTitleBookmark(await GetTitleBackdrop(title.data.titleId));
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-        
-            }
-            getTitleBookmark();
-        }, [title]);
-        if(titleBookmark){   
-            // console.log("logging titleBookmark for " +title.data.titleId);
-            // console.log(titleBookmark[0]?.backdrop_path);
-            return(
-                <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + title.data.titleId)}>
-                    <Card.Img variant="top" src={imageUrl + titleBookmark[0]?.backdrop_path}/>
-                    <Card.Body>
-                        <Card.Title> {titleBookmark[0]?.name} </Card.Title>
-                        <Card.Text> {title.annotation} </Card.Text>
-                        <Button variant="primary">Go to title</Button>
-                    </Card.Body>
-                </Card>
-                );
-        }       
-
-    }
     
     if(personBookmarks && titleBookmarks){
     
@@ -120,7 +47,7 @@ export default function WactList(){
                         List of Title Bookmarks:
                         <Container>
                             <Row xs={1} md={4}> 
-                                {titleBookmarks.map((title, index) => <TitleBookmark data={title} key={index}/> )}
+                                {titleBookmarks.map((title, index) => <TitleCard data={title} key={index}/> )}
                             </Row>
                         </Container>
                     </Tab>
@@ -128,7 +55,7 @@ export default function WactList(){
                         List of Person Bookmarks:
                         <Container>
                             <Row xs={1} md={4}> 
-                                {personBookmarks.map((person, index) => <PersonBookmark data={person} key={index}/>)}                
+                                {personBookmarks.map((person, index) => <PersonCard data={person} key={index}/>)}                
                             </Row>
                         </Container>
                     </Tab>
