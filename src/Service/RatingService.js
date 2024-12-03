@@ -36,8 +36,9 @@ export async function GetRatingById(id){
     
     if(!response.ok) {
         console.log("returning false");
-        return 0;
+        return -2;
     }
+    console.log("returning true");
     return response.json();
 }
 
@@ -46,5 +47,8 @@ export async function PostRating(titleId, rating){
 }
 
 export async function PutRating(titleId, rating) {
+    console.log("updating");
+    console.log(baseRatingApiUrl + titleId);
+    console.log(rating);
     return await axios.put(baseRatingApiUrl + titleId, {rating}, {headers});   
 }
