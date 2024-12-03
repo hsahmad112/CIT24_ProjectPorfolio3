@@ -4,15 +4,25 @@ import { GetPerson, GetPersonBackdrop } from "../Service/PersonService";
 import { Card, Col, Row, Container, Stack, Button } from 'react-bootstrap';
 import { PostRating } from "../Service/RatingService";
 import { useUser } from "../Store/store";
+import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson({id}){
     const [person, setPerson] = useState(null);
     const personId = useParams(id);
     const [personBackdrop, setPersonBackdrop] = useState(null);
+    const [bookmark, setBookmark] = useState(false);
 
     const { user, login, logout } = useUser();
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
   
+    function ToggleBookmark(){
+        if(bookmark){
+            setBookmark(false);
+        }else{
+            setBookmark(true);
+        }
+    }
+
     useEffect(()=>{
         const fetchData = async () => {
           try {
@@ -26,27 +36,37 @@ export default function DetailedPerson({id}){
         fetchData();
     }, [id]);
 
-    if(personBackdrop){
-        console.log("HAHAHAHA");
-        console.log(personBackdrop[0].profile_path);
-    }
-
     if(person && personBackdrop){
         let mostRelevantTitles = <>{person.mostRelevantTitles.map((title, index) => <Button variant={"secondary"} className="pills" key={index}>{title}</Button>)}</>
         let primaryProfessions = <>{person.primaryProfessions.map((profession, index) => <Button variant={"secondary"} className="pills" key={index}>{profession}</Button>)}</>
     
         // [url, id, name, birthYear, deathYear, mostRelevantTitles, primaryProfessions]
         return (      
-            <div>
+            <div className="container">
               {user}
               <Container fluid="true">
-              <h1 className="less-opacity">{person.name}</h1>
+
+                {/* Row 1) */}
                 <Row>
-                    <Col>                
+                    <Col md={4}>
+                        <h1 className="less-opacity">{person.name}</h1>
+                    </Col>
+                    <Col md={1}>
+                        {/* Toogle function, can be used to save as bookmark! */}
+                        <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px'}}>
+                            {bookmark ? <Icon.Bookmark size={20} /> : <Icon.BookmarkFill size={20} />}
+                        </div>
+                    </Col>
+                </Row>
+                  
+                {/* Row 2) */}
+                <Row>
+                    <Col md={4 }>
+                           
 
                         {/* column for poster img with person */}
-                        <Card bg="transparent d-flex align-items-center"style={{ width: '16rem', marginLeft: '50px', padding: '0px' }}>
-                           
+                        <Card bg="transparent d-flex align-items-center" style={{ width: '14rem', padding: '0px' }}>
+                        
                             <Card.Img 
                                 fluid="true"
                                 variant="bottom"
@@ -62,10 +82,10 @@ export default function DetailedPerson({id}){
                        
                     </Col>
 
-                    <Col xl={4 } >
+                    <Col md={4}>
                         {/* row for plot */}
-                        <div className="p-2">    
-                                <Card className="card-no-margin">
+                        <div className="p-2" style={{height: '100%'}}>    
+                                <Card className="card-no-margin" style={{height: '100%'}}>
                                     <Card.Header>
                                             fddf
                                     </Card.Header>
@@ -85,11 +105,10 @@ export default function DetailedPerson({id}){
 
 
                      {/* column for plot, actors, writers */}
-                    <Col xl={4} >
-                   
-                        <Stack>
-                            <div className="p-2">    
-                                <Card className="card-no-margin">
+                    <Col md={4}>                   
+                        <Stack  style={{height: '100%'}}>
+                            <div className="p-2"  style={{height: '100%'}}>    
+                                <Card className="card-no-margin" >
                                     <Card.Body>
                                         <div>
                                             <h5>Birth year: {person.birthYear && person.birthYear}</h5>
@@ -131,8 +150,7 @@ export default function DetailedPerson({id}){
                     </Col>
                     
              
-                </Row>
-             
+                </Row>            
 
               </Container>
             </div>
