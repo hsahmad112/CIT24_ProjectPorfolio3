@@ -14,6 +14,7 @@ export default function DetailedTitle({id}) {
   const [title, setTitle] = useState(null);
   const [showModal, setShowModal] = useState(true);
   const [rating, setRating] = useState(-1);
+  const [hoverRating, setHoverRating] = useState(-1);
   const titleId = useParams(id);
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -39,8 +40,8 @@ export default function DetailedTitle({id}) {
 
     // rating is -1 if we have not never rated
 
-    setShowModal(false);
-    PostRating(titleId.id, rating);
+    setShowModal(true);
+    //PostRating(titleId.id, rating);
     console.log(title.id);
   }
 
@@ -51,6 +52,24 @@ export default function DetailedTitle({id}) {
   }
 
 
+  const getColor = (index) => {
+    if (hoverRating >= index) {
+      return true;
+    } else if (!hoverRating && rating >= index) {
+      return true;
+    }
+
+    return false;
+  };
+
+  function CloseModal(){
+    setHoverRating(-1);
+    setShowModal(false);
+  }
+
+  function Leaver(){
+    console.log("left mouse star");
+  }
 
   if(errorMessage){
     return (
@@ -61,11 +80,16 @@ export default function DetailedTitle({id}) {
   }
 
   if(title){
+
+
+    // if the hover rating is 2 then display full for those below 2
+
     // console.log(title)
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
 
-    let ratings = <>{list.map((id) => rating === id ? <i className="bi bi-star-full"></i> : <i className="bi bi-star"></i>)}</>
-
+    let hoverRatings = <>{list.map((id) => (hoverRating >= id || 0 > hoverRating && rating >= id) ?
+    <i className="bi bi-star-fill rate-size" onClick={()=> setRating(x => x = id)} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i> : 
+    <i className="bi bi-star rate-size" onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i>)} </>
 
     let genres = <> {title.genresList.map((genre, index) => <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills" key={index}>{genre}</Button>)}</>
     let actors = <> {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/persons/" + actor.id)} variant={"secondary"} className="pills" key={index}>{actor}, </Button>)}</>
@@ -74,6 +98,8 @@ export default function DetailedTitle({id}) {
       <div>
         <Container fluid="true">
       <Row>
+        <Button onMouseLeave={() => Leaver()}>leave me</Button>
+        {hoverRating}
         <Col style={{marginTop: "55px"}}>
         {/* column for poster with title, rating and stuff */}
         <Card bg="transparent d-flex align-items-center" style={{height: "500px"}}>
@@ -172,18 +198,19 @@ export default function DetailedTitle({id}) {
         {showModal &&      
        <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
        <Modal.Dialog >
-         <Modal.Header closeButton onClick={()=> setShowModal(x => x = false)}>
+         <Modal.Header closeButton onClick={() => CloseModal()}>
            <Modal.Title>Rate {title.primaryTitle}</Modal.Title>
          </Modal.Header>
  
          <Modal.Body>
 
-           {ratings}
+           {hoverRatings}
+           {/* {ratings} */}
 
          </Modal.Body>
  
          <Modal.Footer>
-           <Button variant="secondary"  onClick={()=> setShowModal(x => x = false)}>Cancel</Button>
+           <Button variant="secondary"  onClick={() => CloseModal()}>Cancel</Button>
            <Button variant="primary" onClick={() => RateMovie()}>Save rating</Button>
          </Modal.Footer>
        </Modal.Dialog>
