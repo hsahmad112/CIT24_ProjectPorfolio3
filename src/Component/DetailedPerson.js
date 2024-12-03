@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GetPerson, GetPersonBackdrop } from "../Service/PersonService";
+import { GetPersonBookmarks, GetPersonBookmarksByID, SavePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
 import { Card, Col, Row, Container, Stack, Button } from 'react-bootstrap';
 import { PostRating } from "../Service/RatingService";
 import { useUser } from "../Store/store";
@@ -8,35 +9,48 @@ import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson({id}){
     const [person, setPerson] = useState(null);
+    const [bookmark, setBookmark] = useState(null);
     const personId = useParams(id);
     const [personBackdrop, setPersonBackdrop] = useState(null);
-    const [bookmark, setBookmark] = useState(false);
+    const [personBookmark, setPersonBookmark] = useState(null);
 
-    const { user, login, logout } = useUser();
+    const { user, token } = useUser();
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
   
     function ToggleBookmark(){
-        if(bookmark){
-            setBookmark(false);
-        }else{
+        if(bookmark){            
+            DeletePersonBookmarksById(token, personId.id);
+            setBookmark(false);            
+        }else{            
+            SavePersonBookmarksById(personId.id, "Test text...");
             setBookmark(true);
         }
     }
 
     useEffect(()=>{
         const fetchData = async () => {
-          try {
-            setPerson(await GetPerson(personId.id));
-            setPersonBackdrop((await GetPersonBackdrop(personId.id)))
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
+            try {
+                setPerson(await GetPerson(personId.id));
+                setPersonBackdrop((await GetPersonBackdrop(personId.id)))
+                const res = await GetPersonBookmarksByID(token, personId.id); // should be the right id!
+          
+                if(res){
+                    setPersonBookmark(res);
+                    setBookmark(true);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
     
         fetchData();
     }, [id]);
 
+
     if(person && personBackdrop){
+      
+     
+        
         let mostRelevantTitles = <>{person.mostRelevantTitles.map((title, index) => <Button variant={"secondary"} className="pills" key={index}>{title}</Button>)}</>
         let primaryProfessions = <>{person.primaryProfessions.map((profession, index) => <Button variant={"secondary"} className="pills" key={index}>{profession}</Button>)}</>
     
@@ -45,7 +59,7 @@ export default function DetailedPerson({id}){
             <div className="container">
               {user}
               <Container fluid="true">
-
+  
                 {/* Row 1) */}
                 <Row>
                     <Col md={4}>
@@ -53,8 +67,9 @@ export default function DetailedPerson({id}){
                     </Col>
                     <Col md={1}>
                         {/* Toogle function, can be used to save as bookmark! */}
+                       
                         <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px'}}>
-                            {bookmark ? <Icon.Bookmark size={20} /> : <Icon.BookmarkFill size={20} />}
+                            { bookmark ? <Icon.BookmarkFill size={20}/> : <Icon.Bookmark size={20} /> }
                         </div>
                     </Col>
                 </Row>
@@ -93,7 +108,7 @@ export default function DetailedPerson({id}){
                                         <h5>name</h5>
                                         <Card.Text className="">
                                         {person.name}
-                                        </Card.Text>
+                                    </Card.Text>
                                        
                                     </Card.Body>
                                     <Card.Footer>

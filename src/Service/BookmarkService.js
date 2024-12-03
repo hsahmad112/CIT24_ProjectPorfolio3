@@ -1,10 +1,19 @@
 //https://localhost:7154/api/bookmarks/person/2
 import axios from 'axios';
+import {getCookieValue} from '../Store/store';
 
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 const api_key = process.env.REACT_APP_TMDB_API_KEY;
 
+const headers =  {    
+    "Content-Type": "application/json",
+    "Authorization" : getCookieValue('Authorization')
+
+}
+
+// Use find so get title or person from tmdb api: 
+// Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
 
 export async function GetTitleBookmarksById(token){    
     try {
@@ -14,7 +23,7 @@ export async function GetTitleBookmarksById(token){
                 "Content-Type": "application/json",
                 "Authorization" : `${token}` }
         });
-        // Could remove this, was only for 
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -27,7 +36,7 @@ export async function GetTitleBookmarksById(token){
     
 }
 
-export async function GetPersonBookmarksById(token){
+export async function GetPersonBookmarks(token){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/person/", {
             method: "GET",
@@ -35,7 +44,7 @@ export async function GetPersonBookmarksById(token){
                 "Content-Type": "application/json",
                 "Authorization" : `${token}`}
         });
-        // Could remove this, was only for 
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -44,6 +53,28 @@ export async function GetPersonBookmarksById(token){
         return data
     } catch (error) {
         console.error("Error fetching data:", error);
+    }
+    
+}
+
+export async function GetPersonBookmarksByID(token, id){
+    try {
+        const response = await fetch(baseApiUrl + "bookmarks/person/"+id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization" : `${token}`}
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        //return null;
     }
     
 }
@@ -70,7 +101,6 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);
     
-        // Could remove this, was only for 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -98,4 +128,41 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
         console.error("Error fetching data:", error);
     }  
 
+}
+
+export async function SavePersonBookmarksById(personId, anno){
+    try {
+        const response = await axios.post(baseApiUrl + "bookmarks/person/", { personId, anno },  headers);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+    
+}
+
+export async function DeletePersonBookmarksById(token, personId){
+    try {
+        const response = await fetch(baseApiUrl + `bookmarks/person/${personId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization" : `${token}`}
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+    
 }
