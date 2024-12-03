@@ -61,14 +61,15 @@ export default function DetailedPerson({id}){
               <Container fluid="true">
   
                 {/* Row 1) */}
-                <Row>
-                    <Col md={4}>
-                        <h1 className="less-opacity">{person.name}</h1>
+                <Row style={{marginTop: "10px", marginBottom: "10px"}}>
+                    <Col width="100%">
+                        <h1 className="less-opacity" style={{textAlign: 'left'}}>
+                            {person.name}                     
+                        </h1>
                     </Col>
                     <Col md={1}>
-                        {/* Toogle function, can be used to save as bookmark! */}
-                       
-                        <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px'}}>
+                        {/* Toogle function, can be used to save as bookmark! */}                       
+                        <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                             { bookmark ? <Icon.BookmarkFill size={20}/> : <Icon.Bookmark size={20} /> }
                         </div>
                     </Col>
@@ -101,18 +102,15 @@ export default function DetailedPerson({id}){
                         {/* row for plot */}
                         <div className="p-2" style={{height: '100%'}}>    
                                 <Card className="card-no-margin" style={{height: '100%'}}>
-                                    <Card.Header>
-                                            fddf
+                                    <Card.Header style={{textAlign: 'left'}}>
+                                            Description:
                                     </Card.Header>
                                     <Card.Body>
-                                        <h5>name</h5>
-                                        <Card.Text className="">
-                                        {person.name}
-                                    </Card.Text>
+                                      Put in description...
                                        
                                     </Card.Body>
                                     <Card.Footer>
-                                            fddf
+                                            Footer
                                     </Card.Footer>
                                 </Card>
                             </div>
@@ -126,8 +124,8 @@ export default function DetailedPerson({id}){
                                 <Card className="card-no-margin" >
                                     <Card.Body>
                                         <div>
-                                            <h5>Birth year: {person.birthYear && person.birthYear}</h5>
-                                            <h5>Death year: {person.deathYear && person.deathYear}</h5>
+                                            <h6>{person.birthYear && "Birth year: " +person.birthYear}</h6>
+                                            <h6>{person.deathYear && "Death year: " +person.deathYear}</h6>
                                         </div>
                                     </Card.Body>
                                 </Card>

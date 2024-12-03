@@ -9,7 +9,6 @@ const api_key = process.env.REACT_APP_TMDB_API_KEY;
 const headers =  {    
     "Content-Type": "application/json",
     "Authorization" : getCookieValue('Authorization')
-
 }
 
 // Use find so get title or person from tmdb api: 
@@ -130,9 +129,9 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
 
 }
 
-export async function SavePersonBookmarksById(personId, anno){
+export async function SavePersonBookmarksById(personId, annotation){
     try {
-        const response = await axios.post(baseApiUrl + "bookmarks/person/", { personId, anno },  headers);
+        const response = await axios.post(baseApiUrl + "bookmarks/person/", { personId, annotation },  {headers});
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
