@@ -18,10 +18,8 @@ export async function GetTitleBookmarksById(token){
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const data = await response.json();
-        // console.log("Logging data from service:")
-        // console.log(data[0].titleId);
+
         return data
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -29,8 +27,7 @@ export async function GetTitleBookmarksById(token){
     
 }
 
-export async function GetPersonBookmarksById(token){    
-
+export async function GetPersonBookmarksById(token){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/person/", {
             method: "GET",
@@ -42,9 +39,8 @@ export async function GetPersonBookmarksById(token){
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const data = await response.json();
-        //console.log(data);
+
         return data
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,15 +52,12 @@ export async function GetPersonBackdrop(id){ // This function does the exact sam
     try {
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);
-        //console.log("url: "+url);
-        // Could remove this, was only for 
+ 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const data = await response.json();
-        // console.log("Person data:");
-        // console.log(data);
+
         return data
     
     } catch (error) {
@@ -76,7 +69,6 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
     try {
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);
-        //console.log("title url: "+ url);
     
         // Could remove this, was only for 
         if (!response.ok) {
@@ -84,8 +76,6 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
         }
     
         const data = await response.json();
-        // console.log("Title data:");
-        // console.log(data);
 
         // Determine which array contains data
         let result = null;
@@ -101,8 +91,6 @@ export async function GetTitleBackdrop(id){ // This function does the exact same
             result = data.tv_season_results;
         }
 
-        // console.log("SwitchData is : ");
-        // console.log(result);
         return result;
 
 

@@ -33,7 +33,7 @@ export default function WactList(){
     
         return(
             <div className="container">
-                <h1>Hello watchlist</h1>
+                <h1>Your Watchlist</h1>
                 {/* <ButtonGroup>
                     <Button variant="underline">Titles</Button>
                     <Button>Persons</Button>
