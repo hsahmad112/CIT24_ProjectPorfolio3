@@ -1,17 +1,21 @@
-const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
+import axios from "axios";
+
+import { getCookieValue } from "../Store/store";
+
+const baseRatingApiUrl = process.env.REACT_APP_BASE_API_LINK + "users/rating/";
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 
-export async function GetAllRatings(){   
-    
+// trying to get it from store, doesn't allow it, it's like it make the async call before it has the header
+const headers = { 
+    "Content-Type": "application/json",
+    "Authorization" : getCookieValue("Authorization") 
+}
+
+export async function GetAllRatings(){     
     let data;
     try{
-        const response = await fetch(baseApiUrl + "users/rating/", {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization" : "bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QHJ1YzIyLmRrIiwibmJmIjoxNzMyNzk3MTcyLCJleHAiOjE3MzUzODkxNzJ9.9Tf919r-EUMN1vKokyY-0zaozLeHTXATZsoRGiyplDc"
-            }
-        });
-        if(!response){
+        const response = await fetch(baseRatingApiUrl, { headers });
+        if(!response.ok){
             throw new Error("status code is:" + response.status);
         }
         data = await response.json();
@@ -23,7 +27,24 @@ export async function GetAllRatings(){
     catch(error){
         console.error("We got an error" + error.message);
     }
-
-    
+ 
     return data;
+}
+
+export async function GetRatingById(id){
+    const response = await fetch(baseRatingApiUrl + id, {headers});
+    
+    if(!response.ok) {
+        console.log("returning false");
+        return 0;
+    }
+    return response.json();
+}
+
+export async function PostRating(titleId, rating){
+    return await axios.post(baseRatingApiUrl, {titleId, rating}, {headers});
+}
+
+export async function PutRating(titleId, rating) {
+    return await axios.put(baseRatingApiUrl + titleId, {rating}, {headers});   
 }
