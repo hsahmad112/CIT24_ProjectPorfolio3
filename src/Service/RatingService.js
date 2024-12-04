@@ -12,23 +12,23 @@ const headers = {
 }
 
 export async function GetAllRatings(){     
-    let data;
     try{
         const response = await fetch(baseRatingApiUrl, { headers });
         if(!response.ok){
-            throw new Error("status code is:" + response.status);
+            throw new Error (response.status);
         }
-        data = await response.json();
+        const data = await response.json();
         if(data == null){ //is falsy if null or undefined
             throw new Error("Something went badly wrong");
         }
-
+        return {success: true, data};
     }
-    catch(error){
-        console.error("We got an error" + error.message);
+    catch(error){   
+        return {success: false, message: error.message};
     }
- 
-    return data;
+       
+        
+        
 }
 
 export async function GetRatingById(id){
