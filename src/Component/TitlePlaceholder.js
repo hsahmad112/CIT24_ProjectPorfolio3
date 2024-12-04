@@ -1,7 +1,7 @@
 import { Card } from 'react-bootstrap';     
 import Placeholder from 'react-bootstrap/Placeholder';
 
-export default function TitlePlacerholder(){
+export default function TitlePlaceholder(){
     return (
         <Card style={{ width: '18rem' }}>
             <Card.Img variant="top" src="https://upload.wikimedia.org/wikipedia/commons/3/37/YouTube_loading_symbol_2_%28stable%29.gif" />

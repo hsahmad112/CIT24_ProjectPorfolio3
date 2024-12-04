@@ -8,7 +8,7 @@ import Alert from 'react-bootstrap/Alert';
 import {Container, Row} from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import TitlePlacerholder from '../Component/TitlePlaceholder';
+import TitlePlaceholder from '../Component/TitlePlaceholder';
 
 export default function UserRating(){
     const [userRatings, setUserRatings] = useState([]);
@@ -150,14 +150,14 @@ export default function UserRating(){
     return (
         <>
 
-        {!isLoading && 
+        {isLoading && 
         <Container>
         <h1>Ratings are being loaded...</h1>
         <Row xs={1} md={4}>
-        <TitlePlacerholder/>
-        <TitlePlacerholder/>
-        <TitlePlacerholder/>
-        <TitlePlacerholder/> 
+        <TitlePlaceholder/>
+        <TitlePlaceholder/>
+        <TitlePlaceholder/>
+        <TitlePlaceholder/> 
         </Row>
         </Container>
         }

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { data } from 'react-router';
 import { useNavigate } from 'react-router';
 import Placeholder from 'react-bootstrap/Placeholder';
-import TitlePlacerholder from './TitlePlaceholder';
+import TitlePlaceholder from './TitlePlaceholder';
 
 
 export default function Rating({...props}){
