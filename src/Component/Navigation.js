@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Outlet, useLocation } from 'react-router';
-import { useEffect} from 'react';
+import { useEffect, useState} from 'react';
 import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
 
@@ -68,46 +68,45 @@ export default function Navigation(){
   let navigate = useNavigate();
     return(
       <div>
-    <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
-        <Container>
-          <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>React-Bootstrap</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Form inline="true">
-         <Row>
-            <Col md="auto"> 
-          <Button>Advanced Search</Button>
-          </Col>
-          <Col>
-        <InputGroup>
-        <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-      {searchCategory}
-      </Dropdown.Toggle>
+        <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
+            <Container>
+              <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>React-Bootstrap</Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Form inline="true" onSubmit={handleSubmit}>
+                <Row>
+                  <Col md="auto"> 
+                    <Button>Advanced Search</Button>
+                  </Col>
+                  <Col>
+                <InputGroup>
+                <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {searchCategory}
+              </Dropdown.Toggle>
 
-      <Dropdown.Menu>
-        <Dropdown.Item onClick = {handleType} str="everything" name= "Everything" >Everything</Dropdown.Item>
-        <Dropdown.Item onClick = {handleType}  str= "titles" name= "Titles" >Title</Dropdown.Item>
-        <Dropdown.Item onClick = {handleType} str= "persons"  name="Persons">Person</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-          <Form.Control
-            placeholder={placeholderText}
-            aria-label="Search Term"
-            aria-describedby="nav-bar-search"     
-            onChange= {handleQuery}
-          />
-          <Button onClick={handleSubmit}> Search</Button>
-        </InputGroup>
-        </Col>
-        </Row>
-      </Form>
-      {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> <Button onClick ={() => logout()} variant="danger">Sign out</Button></div>  }
-      {userName === null && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button></div>}
+              <Dropdown.Menu>
+                <Dropdown.Item onClick = {handleType} str="everything" name= "Everything" >Everything</Dropdown.Item>
+                <Dropdown.Item onClick = {handleType}  str= "titles" name= "Titles" >Title</Dropdown.Item>
+                <Dropdown.Item onClick = {handleType} str= "persons"  name="Persons">Person</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+                  <Form.Control
+                    placeholder={placeholderText}
+                    aria-label="Search Term"
+                    aria-describedby="nav-bar-search"     
+                    onChange= {handleQuery}
+                  />
+                      <Button type='submit'> Search</Button>
+                    </InputGroup>
+                    </Col>
+                </Row>
+              </Form>
+              {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> <Button onClick ={() => logout()} variant="danger">Sign out</Button></div>  }
+              {userName === null && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button></div>}
 
-      </Container>
-      </Navbar>
-
-      <Outlet/>            
+            </Container>
+        </Navbar>
+        <Outlet/>            
       </div>
   );
 }

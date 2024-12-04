@@ -25,7 +25,7 @@ export default function UserRating(){
     useEffect(() =>{
         const fetchRatings = async () => {
 
-            const ratings = await GetAllRatings(token);
+            const ratings = await GetAllRatings();
          
             if(ratings.success){
             setUserRatings(ratings.data);
