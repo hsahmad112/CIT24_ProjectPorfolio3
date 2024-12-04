@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Homepage from './Pages/Homepage';
 import Navigation from './Component/Navigation';
 import { Routes, Route } from "react-router";
-import DetailedTitle from './Component/DetailedTitle';
+import DetailedTitle from './Pages/DetailedTitle';
 import DetailedPerson from './Component/DetailedPerson';
 import Error from './Component/Error';
 import { UserProvider } from "./Store/store";
