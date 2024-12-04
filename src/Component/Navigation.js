@@ -11,9 +11,13 @@ export default function Navigation(){
   const {userName, login, logout} = useUser();
   const location = useLocation();
   const [searchCategory, setSearchCategory] = useState("Everything");
-  const [searchType, setSearchType] = useState("");
+  const [searchType, setSearchType] = useState("everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
   const [result, setResult] = useState([]);
+  const [everythingResult, setEverythingResult] = useState({
+    persons: [],
+    titles: []
+  });
 
 
   const [body, setBody] = useState({
@@ -51,12 +55,26 @@ export default function Navigation(){
     e.preventDefault();
     
     console.log("searching for", searchType);
-    console.log("sending body", body);
-    const response = await fetch(process.env.REACT_APP_BASE_API_LINK + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+    console.log("sending body", body); 
+    switch (searchType) {
+      case "everything":
+        const personResponse = await fetch(process.env.REACT_APP_BASE_API_LINK  + "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+        const titleResponse = await fetch(process.env.REACT_APP_BASE_API_LINK + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+        
+        const personData = await personResponse.json();
+        const titleData = await titleResponse.json();
+        setEverythingResult(prevData => ({... prevData, persons: personData, titles: titleData}));      
+        break;
+        
+      default:
+        const response = await fetch(process.env.REACT_APP_BASE_API_LINK + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+        const data = await response.json();
+        setResult(data);
+        break;
 
-      const data = await response.json();
-      setResult(data);
-      console.log("printer", result); //implement this into a SearchResultPage
+    }
+    console.log("printer", result); //implement this into a SearchResultPage
+    console.log("printing Everything result", everythingResult);
 
     }
     
