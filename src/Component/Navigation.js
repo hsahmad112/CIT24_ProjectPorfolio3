@@ -15,6 +15,7 @@ export default function Navigation(){
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
   const [result, setResult] = useState([]);
 
+
   const [body, setBody] = useState({
         id : null,
         searchTerm : '',
@@ -23,7 +24,7 @@ export default function Navigation(){
   })
 
   function handleQuery(e){
-   
+  
     const  {name, value} = e.target;
     setBody((prevData) => ({
         ...prevData, 
@@ -51,19 +52,21 @@ export default function Navigation(){
     
     console.log("searching for", searchType);
     console.log("sending body", body);
-    const response = await fetch(process.env.REACT_APP_BASE_API_LINK + searchType + "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize);
+    const response = await fetch(process.env.REACT_APP_BASE_API_LINK + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
 
       const data = await response.json();
       setResult(data);
-    console.log("printer", result); //implement this into a SearchResultPage
-  }
+      console.log("printer", result); //implement this into a SearchResultPage
 
+    }
+    
   useEffect(() => {  
     if(userName){
       login(userName); 
     }
 
   }, [location, userName, body, login, searchType]);
+  
   //const user = useContext(User);
   let navigate = useNavigate();
     return(
