@@ -1,8 +1,14 @@
-export default function PersonSearchCard (props){
-    console.log('it do be props', props);
+export default function PersonSearchCard (personId, primaryName, birthYear, deathYear, url){
     
-    let primaryName = props.primaryName;
 
+    return (
+    <div>
+    <p>Rendering PersonSearchCard {personId}</p>
+    <p>Rendering PersonSearchCard {primaryName}</p>    
+    <p>Rendering PersonSearchCard {birthYear}</p>
+    <p>Rendering PersonSearchCard {deathYear}</p>
+    <p>Rendering PersonSearchCard {url}</p>
+    </div>
 
-    return (<p>Rendering PersonSearchCard</p>)
+)
 }

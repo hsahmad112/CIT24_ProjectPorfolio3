@@ -1,74 +1,65 @@
 import { Form } from "react-bootstrap";
 import SearchPreview from "../Component/SearchPreview";
-import { Outlet, useLocation } from 'react-router';
-import { useEffect, useState} from 'react';
-import { useUser } from "../Store/store";
 import PersonSearchCard from "../Component/PersonSearchCard";
 import TitleSearchCard from "../Component/TitleSearchCard";
+import { useLocation } from "react-router";
 
 
-export async function Search(e, searchQuery){
-    const {userName, token, searchType, searchResult, setSearchType, setSearchResult, login, logout } = useUser();
-    const [result, setResult] = useState([]);
-   
-
-        const [body, setBody] = useState({
-            id : null,
-            searchTerm : searchQuery,
-            page : '1',
-            pageSize : '10'
-      })
-    
-    e.preventDefault();
-    console.log("searching for", searchType);
-    console.log("sending body", body); 
-    
+//method only handles fetching data
+ export async function fetchData(searchType, body){
+    const baseUrl = process.env.REACT_APP_BASE_API_LINK;
 
     switch (searchType) {
-    case "everything":
-        const personResponse = await fetch(process.env.REACT_APP_BASE_API_LINK  + "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
-        const titleResponse = await fetch(process.env.REACT_APP_BASE_API_LINK + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
-        const personData = await personResponse.json();
-        const titleData = await titleResponse.json();
-        setSearchResult(prevData => ({... prevData, persons: personData, titles: titleData}));
-          
-        break;
-
-    default:
-        const response = await fetch(process.env.REACT_APP_BASE_API_LINK + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
-        const data = await response.json();
-        setResult(data);
-        break;
-
+        case "everything":
+            
+            //returns both titles and persons
+            const personResponse = await fetch(baseUrl  + "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+            const titleResponse = await fetch(baseUrl + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+            
+            //server response to fetch gets parsed to js object
+            const personData = await personResponse.json();
+            const titleData = await titleResponse.json();
+            //returns object containing results containing persons and titels
+            return{persons: personData, titles: titleData};
+            
+        default:
+            const response = await fetch(baseUrl + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+            const data = await response.json();
+            
+            return data;
     }
-    console.log("printer", result); //implement this into a SearchResultPage
-    console.log("printing Everything result", searchResult);
 
-    }
-    
+}
 
 
-    
 
+export default  function SearchResult(){
+    //gives us access to states passed through navigation.js 
+    const location = useLocation();
 
-export default function SearchResult(){
+    //make a try catch here  
+    let result = location.state.result;
 
-    const {userName, token, searchType, searchResult, setSearchType, setSearchResult, login, logout } = useUser();
-
-
+    //using empty array in case no results in either/both of persons/titles
+    const personEntities = result.persons?.entities || [];
+    const titleEntities = result.titles?.entities || [];
 
     return(
-    <div>
-        <Form>
+
+
+        <div>
             <SearchPreview 
             children={ <PersonSearchCard/>}
-            EverythingResult={searchResult}
+            EverythingResult={personEntities}
             />
                <SearchPreview 
             children={ <TitleSearchCard/>}
-            EverythingResult={searchResult}
+            EverythingResult={titleEntities}
             />
 
-        </Form>
-    </div>);
+        </div>
+        );
+
 }
+
+

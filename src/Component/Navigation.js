@@ -6,56 +6,54 @@ import { Outlet, useLocation } from 'react-router';
 import { useEffect, useState} from 'react';
 import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
-import { Search } from '../Pages/SearchResult';
+import  {fetchData}  from '../Pages/SearchResult';
+
+
 
 export default function Navigation(){
-  const {userName, token, searchType, setSearchType, login, logout } = useUser();
-  const location = useLocation();
-  const [searchCategory, setSearchCategory] = useState("Everything");
-  //const [searchType, setSearchType] = useState("everything");
-  const [placeholderText, setPlaceholderText] = useState("Search for Everything");
-  const [result, setResult] = useState([]);
-  const [everythingResult, setEverythingResult] = useState({
-    persons: [],
-    titles: []
-  });
-  let navigate = useNavigate();
-  
+  const {userName, searchType, setSearchType, login, logout } = useUser();
 
-  const [body, setBody] = useState({
-        id : null,
-        searchTerm : '',
-        page : '1',
-        pageSize : '10'
-  })
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchCategory, setSearchCategory] = useState("Everything");
+  const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+
+
+  let navigate = useNavigate();
+
+
 
   function handleQuery(e){
-  
-    const  {name, value} = e.target;
-    setBody((prevData) => ({
-        ...prevData, 
-        searchTerm: value
-      }));
+    setSearchQuery(e.target.value);
     }
+
 
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
       const newSelectedType = e.target.getAttribute('str');
+
       setSearchType(newSelectedType);
-      console.log('Selected type:', newSelectedType);
-
       setSearchCategory(newSelectedCategory);
-      console.log('Selected category:', newSelectedCategory);
-      
-      setPlaceholderText("Search for "+ newSelectedCategory);
-      console.log('placeholder:', newSelectedCategory);
-
-      
+      setPlaceholderText("Search for "+ newSelectedCategory); 
     }
 
   async function handleSubmit(e){
-    Search(e, body.searchTerm);
-    navigate('/search');
+    e.preventDefault();
+    const body = 
+    { id: null, 
+      searchTerm: searchQuery, 
+      page: '1', 
+      pageSize: '10' 
+    };
+
+    
+    const result = await fetchData(searchType, body);
+    console.log(result);
+    
+    //when we navigate to search, we "bring along" the current states result (search result list).
+    // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
+    //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
+    //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
+    navigate('/search', {state: {result}});
   }
 
   useEffect(() => {  
@@ -63,7 +61,7 @@ export default function Navigation(){
       login(userName); 
     }
 
-  }, [location, userName, body, login, searchType]);
+  }, [userName, login]);
   
   
     return(
@@ -101,12 +99,14 @@ export default function Navigation(){
                 </Col>
               </Row>
             </Form>
+            
             {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> <Button onClick ={() => logout()} variant="danger">Sign out</Button></div>  }
             {userName === null && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button></div>}
-
+      
           </Container>
-        </Navbar>
-        <Outlet/>            
+         
+        </Navbar>    
+        <Outlet />       
       </div>
   );
 }
