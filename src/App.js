@@ -13,6 +13,7 @@ import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import UserRating from './Pages/UserRating';
 import UserSetting from './Pages/UserSetting';
+import SearchResult from './Pages/SearchResult';
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
             <Route path="/login" element={<Login/>}></Route>
             <Route path="/signup" element={<Signup/>}></Route>
             <Route path="/watchlist" element={<WactList/>}></Route>
+            <Route path="/search" element={<SearchResult></SearchResult>}/>
             <Route path="/rating" element={<UserRating/>}></Route>
             <Route path="/settings" element={<UserSetting/>}></Route>
             <Route path="*" element={<Error></Error>}></Route>

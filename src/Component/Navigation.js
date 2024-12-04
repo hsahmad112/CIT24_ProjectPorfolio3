@@ -6,19 +6,21 @@ import { Outlet, useLocation } from 'react-router';
 import { useEffect, useState} from 'react';
 import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
+import { Search } from '../Pages/SearchResult';
 
 export default function Navigation(){
-  const {userName, login, logout} = useUser();
+  const {userName, token, searchType, setSearchType, login, logout } = useUser();
   const location = useLocation();
   const [searchCategory, setSearchCategory] = useState("Everything");
-  const [searchType, setSearchType] = useState("everything");
+  //const [searchType, setSearchType] = useState("everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
   const [result, setResult] = useState([]);
   const [everythingResult, setEverythingResult] = useState({
     persons: [],
     titles: []
   });
-
+  let navigate = useNavigate();
+  
 
   const [body, setBody] = useState({
         id : null,
@@ -52,32 +54,10 @@ export default function Navigation(){
     }
 
   async function handleSubmit(e){
-    e.preventDefault();
-    
-    console.log("searching for", searchType);
-    console.log("sending body", body); 
-    switch (searchType) {
-      case "everything":
-        const personResponse = await fetch(process.env.REACT_APP_BASE_API_LINK  + "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
-        const titleResponse = await fetch(process.env.REACT_APP_BASE_API_LINK + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
-        
-        const personData = await personResponse.json();
-        const titleData = await titleResponse.json();
-        setEverythingResult(prevData => ({... prevData, persons: personData, titles: titleData}));      
-        break;
-        
-      default:
-        const response = await fetch(process.env.REACT_APP_BASE_API_LINK + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
-        const data = await response.json();
-        setResult(data);
-        break;
+    Search(e, body.searchTerm);
+    navigate('/search');
+  }
 
-    }
-    console.log("printer", result); //implement this into a SearchResultPage
-    console.log("printing Everything result", everythingResult);
-
-    }
-    
   useEffect(() => {  
     if(userName){
       login(userName); 
@@ -85,8 +65,7 @@ export default function Navigation(){
 
   }, [location, userName, body, login, searchType]);
   
-  //const user = useContext(User);
-  let navigate = useNavigate();
+  
     return(
       <div>
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
@@ -131,4 +110,5 @@ export default function Navigation(){
       </div>
   );
 }
+
 
