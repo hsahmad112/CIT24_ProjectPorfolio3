@@ -6,8 +6,7 @@ export async function GetPersonBackdrop(id){ // This function does the exact sam
     try {
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);
-        //console.log("url: "+url);
-        // Could remove this, was only for 
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }

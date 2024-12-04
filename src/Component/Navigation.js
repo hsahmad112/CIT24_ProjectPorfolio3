@@ -3,8 +3,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Outlet, useLocation } from 'react-router';
-import { useContext, useEffect, useState} from 'react';
-import { User, useUser } from "../Store/store";
+import { useEffect} from 'react';
+import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
 
 export default function Navigation(){
@@ -18,25 +18,24 @@ export default function Navigation(){
 
   }, [location, userName]);
 
-  //const user = useContext(User);
   let navigate = useNavigate();
     return(
       <div>
-        <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
-          <Container>
-            <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Form inline="true">
-              <Row>
-                <Col md="auto"> 
-                  <Button>Advanced Search</Button>
-                </Col>
-                <Col>
-                  <InputGroup>
-                    <Dropdown>
-                      <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        type
-                      </Dropdown.Toggle>
+    <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
+        <Container>
+          <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>React-Bootstrap</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Form inline="true">
+         <Row>
+            <Col md="auto"> 
+          <Button>Advanced Search</Button>
+          </Col>
+          <Col>
+        <InputGroup>
+        <Dropdown>
+      <Dropdown.Toggle variant="success" id="dropdown-basic">
+        type
+      </Dropdown.Toggle>
 
                       <Dropdown.Menu>
                         <Dropdown.Item href="#/title">Title</Dropdown.Item>
