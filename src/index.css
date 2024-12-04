@@ -122,6 +122,10 @@ code {
   */
 }
 
+.no-border{
+  border: 0px !important;
+}
+
 .inline-p-1{
   display: inline;
   margin-left: 125px;
@@ -134,12 +138,12 @@ code {
 
 .to-front{
   position: absolute;
-  right: 40%;
-  bottom: 40%;
+  right: 5%;
+  bottom: 5%;
   z-index: 10;
 }
 
-.rate-size{
+.rate-star{
   font-size: 30px;
   color: rgb(255, 204, 0);
   cursor: pointer;

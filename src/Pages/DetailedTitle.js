@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { GetTitleById } from "../Service/TitleService";
-import { Card, Col, Row, Container, Stack, Button } from 'react-bootstrap';
-import Toast from 'react-bootstrap/Toast';
-import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
-import Modal from 'react-bootstrap/Modal';
 import { useUser } from "../Store/store";
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+import { GetTitleById } from "../Service/TitleService";
+import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
+import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
 
 export default function DetailedTitle({id}) {
 
   const {userName} = useUser();
-  const titleId = useParams(id);
+  const params = useParams(id);
   const list = [1,2,3,4,5,6,7,8,9,10];
   
   const [title, setTitle] = useState(null);
@@ -28,29 +25,27 @@ export default function DetailedTitle({id}) {
   useEffect(()=>{
     const fetchData = async () => {
       try {
-        setTitle(await GetTitleById(titleId.id));
-        let tempRating = (await GetRatingById(titleId.id)).rating;
+        setTitle(await GetTitleById(params.id));
+        let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
       } catch (error) {
-        setErrorMessage("could not find title with with id: " + titleId.id);
+        setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [id])
+  }, [id, params])
 
   async function RateMovie(){
     setShowPop(true);
     setShowModal(false);
     if(hasRated){
-      console.log("putting");
-      await PutRating(titleId.id, rating);
+      await PutRating(params.id, rating);
     }
     else{
-      console.log("posting");
-      await PostRating(titleId.id, rating);
+      await PostRating(params.id, rating);
       setHasRated(true);
     }
   }
@@ -81,33 +76,22 @@ export default function DetailedTitle({id}) {
     // console.log(title)
     // console.log(rating);
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
-
-    let hoverRatings = <>{list.map((id) => (hoverRating >= id || 0 > hoverRating && rating >= id) ?
-    <i className="bi bi-star-fill rate-size" key={id} onClick={()=> setRating(x => x = id)} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i> : 
-    <i className="bi bi-star rate-size" key={id} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i>)} </>
-
-    let genres = <> {title.genresList.map((genre, index) => <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills" key={index}>{genre}</Button>)}</>
-    let actors = <> {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/persons/" + actor.id)} variant={"secondary"} className="pills" key={index}>{actor} </Button>)}</>
-    let writers = <> {title.writersList.map((writer, index) => <Button onClick={() => navigate("/persons/" + writer.id)} variant={"secondary"} className="pills" key={index}>{writer} </Button>)}</>
     return (
       <div>
         <Container fluid="true">
       <Row>
         <Col style={{marginTop: "55px"}}>
           {/* column for poster with title, rating and stuff */}
-          <Card bg="transparent d-flex align-items-center" style={{height: "500px"}}>
+          <Card bg="transparent d-flex align-items-center no-border" style={{height: "500px"}}>
             <Card.Title>
               <div style={{display: "flex", justifyContent: "space-between"}}>
                 <span style={{textAlign: "left"}}>
                   <h1>
                     {title.primaryTitle}
                      <p style={{fontSize: "28px", display: "inline"}}>{displayYears(title.startYear, title.endYear)}</p> 
-                    
-{/*                     
-                     {title.startYear && <p style={{fontSize: "25px", display: "inline"}}>({title.startYear}</p>}{title.endYear && <p style={{fontSize: "25px", display: "inline"}}>-{title.endYear})</p>}
-                   */}
                   </h1>
-                  <h5 className="less-opacity">{title.originalTitle}</h5>
+                  {title.originalTitle !== title.primaryTitle &&
+                   <h5 className="less-opacity">{title.originalTitle}</h5>}  
                 </span>
                 <span style={{textAlign: "right"}}>
                   <p style={{fontSize: "15px"}}>{title.titleType}</p>
@@ -147,7 +131,7 @@ export default function DetailedTitle({id}) {
               <Card className="card-no-margin">
                   <Card.Body>
                     <h5>actors</h5>
-                      {actors}
+                      {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/persons/" + actor.id)} variant={"secondary"} className="pills" key={index}>{actor}</Button>)}
                     <Card.Text className="">
                     </Card.Text>
                   </Card.Body>
@@ -159,7 +143,7 @@ export default function DetailedTitle({id}) {
               <Card className="card-no-margin">
                   <Card.Body>
                     <h5>writers</h5>
-                      {writers}
+                     {title.writersList.map((writer, index) => <Button onClick={() => navigate("/persons/" + writer.id)} variant={"secondary"} className="pills" key={index}>{writer}</Button>)}
                     <Card.Text className="">
                     </Card.Text>
                   </Card.Body>
@@ -173,7 +157,7 @@ export default function DetailedTitle({id}) {
           <Card className="genre-box">
                 <Card.Body>
                   <h5>genres</h5>
-                    {genres}
+                    {title.genresList.map((genre, index) => <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills" key={index}>{genre}</Button>)}
                   <Card.Text className="">
                   </Card.Text>
                 </Card.Body>
@@ -213,7 +197,9 @@ export default function DetailedTitle({id}) {
               <p className="inline-p-1">5</p>
               <p className="inline-p-2">10</p>
             </div> */}
-            {hoverRatings}
+            {list.map((id) => (hoverRating >= id || (0 > hoverRating && rating >= id)) ?
+            <i className="bi bi-star-fill rate-star" key={id} onClick={() => setRating(id)} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i> : 
+            <i className="bi bi-star rate-star" key={id} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i>)}
           </Modal.Body>
   
           <Modal.Footer>

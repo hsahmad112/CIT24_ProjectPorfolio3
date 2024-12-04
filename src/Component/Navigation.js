@@ -17,7 +17,7 @@ export default function Navigation(){
       login(userName); 
     }
 
-  }, [location, userName]);
+  }, [location, login, userName]);
 
   let navigate = useNavigate();
     return(
