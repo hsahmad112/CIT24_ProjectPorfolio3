@@ -33,6 +33,7 @@
 Wrong status code(500) when searching for title by id with an id that doesn't exist
   Should return 404 NotFound ✅ 
 - Perform checks on UserController.cs method Post(): Password has to be a certain length and not allowed to be empty space. Name is not allowed to be empty spaces. ✅ 
+- changed TitleSearchResultDTO & TitleSearchResultTempTable - added field: StartYear, EndYear and OriginalTitle. Also added entities in context.
 
 ## DB
 

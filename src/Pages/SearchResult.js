@@ -43,23 +43,16 @@ export default  function SearchResult(){
     //using empty array in case no results in either/both of persons/titles
     const personEntities = result.persons?.entities || [];
     const titleEntities = result.titles?.entities || [];
+    const personType = "personType";
+    const titleType = "titleType";
 
     return(
-
-
-        <div>
-            <SearchPreview 
-            children={ <PersonSearchCard/>}
-            EverythingResult={personEntities}
-            />
-               <SearchPreview 
-            children={ <TitleSearchCard/>}
-            EverythingResult={titleEntities}
-            />
+        <div className="container" >
+            <SearchPreview componentType={personType} everythingResult={personEntities} />
+            <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
 
         </div>
         );
 
 }
-
 

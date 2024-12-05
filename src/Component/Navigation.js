@@ -8,23 +8,17 @@ import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
 import  {fetchData}  from '../Pages/SearchResult';
 
-
-
 export default function Navigation(){
   const {userName, searchType, setSearchType, login, logout } = useUser();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
-
-
   let navigate = useNavigate();
-
 
 
   function handleQuery(e){
     setSearchQuery(e.target.value);
-    }
+  }
 
 
   function handleType(e){
@@ -41,12 +35,13 @@ export default function Navigation(){
     const body = 
     { id: null, 
       searchTerm: searchQuery, 
-      page: '1', 
+      page: '0', 
       pageSize: '10' 
     };
 
     
     const result = await fetchData(searchType, body);
+    console.log("Hello:")
     console.log(result);
     
     //when we navigate to search, we "bring along" the current states result (search result list).
