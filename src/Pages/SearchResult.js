@@ -24,45 +24,55 @@ import { useUser } from "../Store/store";
             return{persons: personData, titles: titleData};
             
         default:
-            const response = await fetch(baseUrl +  "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+            const response = await fetch(baseUrl + searchType +"/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
             const data = await response.json();
             
-            return data;
+            return {persons: data, titles: data}; //Bug testing, is not good
     }
 
 }
-
-
 
 export default  function SearchResult(){
     //gives us access to states passed through navigation.js 
     const location = useLocation();
 
     //make a try catch here  
-    let result = location.state.result;
-    const { searchType } = useUser();
 
-    //using empty array in case no results in either/both of persons/titles
-    const personEntities = result.persons?.entities || [];
+    //const { searchType } = useUser();
+
+     const { result, searchType } = location.state || {}; // Access the `result` from `state`
+
+const personEntities = result.persons?.entities || [];
     const titleEntities = result.titles?.entities || [];
+
     const personType = "personType";
     const titleType = "titleType";
 
     return(
         <div className="container" >
-
-            { searchType === 'everything'  &&   
+{console.log("entities:", result)}
+{result === undefined && <p>Der skete en fejl</p>} 
+            { searchType === 'everything'  && personEntities?.length > 0 && titleEntities?.length > 0 &&(
                 <>
+                <p>vi har her everything</p>
                     <SearchPreview componentType={personType} everythingResult={personEntities} />
                     <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
                 </>       
+                )
             }
-            { searchType === 'persons' && 
+            { searchType === 'persons' && personEntities?.length > 0 && (
+            <>
+            <p>vi her her persons</p>
                 <SearchPreview componentType={personType} everythingResult={personEntities} />
-             
+                </>
+                )
             }
-            { searchType === 'titles' && 
-                <SearchPreview componentType={personType} everythingResult={personEntities} />  
+            { searchType === 'titles' && titleEntities?.length > 0 && (
+            <>
+            <p>Vi har her titles</p>
+                <SearchPreview componentType={titleType} everythingResult={titleEntities} />  
+                </>
+                )
             }
            
 

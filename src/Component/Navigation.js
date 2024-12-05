@@ -24,7 +24,6 @@ export default function Navigation(){
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
       const newSelectedType = e.target.getAttribute('str');
-
       setSearchType(newSelectedType);
       setSearchCategory(newSelectedCategory);
       setPlaceholderText("Search for "+ newSelectedCategory); 
@@ -48,8 +47,7 @@ export default function Navigation(){
     //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
     //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
     navigate('/search', {
-      state: {result},
-      searchType : {searchType}
+      state: {result, searchType },
     });
   }
 

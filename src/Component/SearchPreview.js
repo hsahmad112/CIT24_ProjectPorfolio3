@@ -4,6 +4,12 @@ import PersonSearchCard from './PersonSearchCard';
 import {Row} from 'react-bootstrap'
 
 export default function SearchPreview({ componentType, everythingResult }) {
+
+  if (!Array.isArray(everythingResult)) {
+    console.log("everything resutl is ::", JSON.stringify(everythingResult, null, 2));
+   
+    return <p>No results found</p>; // Or handle appropriately
+  }
   return (
     <div style={{textAlign: 'left'}}>
       <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
