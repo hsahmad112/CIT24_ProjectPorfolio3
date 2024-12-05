@@ -38,8 +38,7 @@ export default function Navigation(){
       page: '0', 
       pageSize: '10' 
     };
-
-    
+ 
     const result = await fetchData(searchType, body);
     console.log("Hello:")
     console.log(result);

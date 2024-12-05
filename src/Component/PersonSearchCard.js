@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, CardTitle } from 'react-bootstrap';
 import { useNavigate } from "react-router";
 import { GetPersonBackdrop } from '../Service/PersonService';
 
@@ -21,10 +21,10 @@ export default function PersonSearchCard ({person}){
     }
 
     return (
-        <Card style={{width: '100%', padding: '10px', height: '200px'}}>
-            <div className="col-md-4">
-                <Card.Img height={"80px"}  src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl}></Card.Img>
-                {person.primaryName}
+        <Card style={{width: '50%', padding: '10px', height: '200px'}}>
+            <div className="col-md-4 debug" style={{height: '100%'}}>
+                <img className='personSearchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl}></img>
+                <CardTitle>{person.primaryName}</CardTitle>
             </div>
         </Card>
   
