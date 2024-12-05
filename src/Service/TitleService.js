@@ -16,6 +16,9 @@ export function GetAllTitles(){
 export function GetTitleBackdrop(id){
     return fetch(baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + process.env.REACT_APP_TMDB_API_KEY).then(res => res.json());
 }
+export function GetTitlePoster(id){
+    return fetch(baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + process.env.REACT_APP_TMDB_API_KEY).then(res => res.json());
+}
 
 export async function GetTitleById(id){
     let data;
