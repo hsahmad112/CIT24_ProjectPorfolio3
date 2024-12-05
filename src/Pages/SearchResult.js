@@ -42,8 +42,33 @@ export default  function SearchResult(){
 
      const { result, searchType } = location.state || {}; // Access the `result` from `state`
 
-const personEntities = result.persons?.entities || [];
-    const titleEntities = result.titles?.entities || [];
+    //  const personEntities = [];
+
+    // const titleEntities = [];
+
+    const selectedEntities = {};
+
+     switch (searchType) {
+        case "everything":
+            selectedEntities.persons = result?.persons || [];
+            selectedEntities.titles = result?.titles|| [];
+           
+            console.log("this is our everything entity");
+            console.log(selectedEntities);
+            break;
+        case "titles":
+            selectedEntities.titles = result?.titles|| [];
+            console.log("this is our title entity");
+            console.log(selectedEntities);
+            break;
+        case "persons":
+            selectedEntities.persons = result?.persons|| [];
+            console.log("this is our person entity");
+            console.log(selectedEntities);
+            break;
+        default:
+            break;
+     }
 
     const personType = "personType";
     const titleType = "titleType";
@@ -52,25 +77,25 @@ const personEntities = result.persons?.entities || [];
         <div className="container" >
 {console.log("entities:", result)}
 {result === undefined && <p>Der skete en fejl</p>} 
-            { searchType === 'everything'  && personEntities?.length > 0 && titleEntities?.length > 0 &&(
+            { searchType === 'everything'  && (selectedEntities?.persons.entities.length > 0 || selectedEntities?.titles.entities.length > 0) &&(
                 <>
                 <p>vi har her everything</p>
-                    <SearchPreview componentType={personType} everythingResult={personEntities} />
-                    <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
+                    <SearchPreview componentType={personType} searchResult={selectedEntities.persons.entities} />
+                    <SearchPreview componentType={titleType} searchResult={selectedEntities.titles.entities}  />
                 </>       
                 )
             }
-            { searchType === 'persons' && personEntities?.length > 0 && (
+            { searchType === 'persons' && selectedEntities?.persons.entities.length > 0 && (
             <>
             <p>vi her her persons</p>
-                <SearchPreview componentType={personType} everythingResult={personEntities} />
+                <SearchPreview componentType={personType} searchResult={selectedEntities.persons.entities} />
                 </>
                 )
             }
-            { searchType === 'titles' && titleEntities?.length > 0 && (
+            { searchType === 'titles' && selectedEntities?.titles.entities.length > 0 && (
             <>
             <p>Vi har her titles</p>
-                <SearchPreview componentType={titleType} everythingResult={titleEntities} />  
+                <SearchPreview componentType={titleType} searchResult={selectedEntities.titles.entities} />  
                 </>
                 )
             }
