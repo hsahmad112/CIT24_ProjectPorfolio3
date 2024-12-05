@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, CardTitle } from 'react-bootstrap';
 
 export default function TitleSearchCard ({title}){
     // const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");
@@ -15,10 +15,11 @@ export default function TitleSearchCard ({title}){
     // }, [title]);
 
     return (
-
-        <Card style={{width: '100%', padding: '10px', height: '150px', margin: "10px"}}>
-            <Card.Img
-                src={title.url.posterUrl !== null ? title.url.posterUrl : "./no-image.jpg"} />{title.url}
+        <Card style={{width: '48%', margin: '10px', height: '200px'}}>
+            <div className="col-md-4 debug" style={{height: '100%', width: '100%'}}>
+                <img className='personSearchCard' src={title.posterUrl !== null ? title.posterUrl : "./no-image.jpg"}></img>
+                <CardTitle>{title.primaryTitle}</CardTitle>
+            </div>
         </Card>
    
     );

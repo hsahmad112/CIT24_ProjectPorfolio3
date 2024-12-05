@@ -21,8 +21,8 @@ export default function PersonSearchCard ({person}){
     }
 
     return (
-        <Card style={{width: '50%', padding: '10px', height: '200px'}}>
-            <div className="col-md-4 debug" style={{height: '100%'}}>
+        <Card style={{width: '48%', margin: '10px', height: '200px'}}>
+            <div className="col-md-4 debug" style={{height: '100%', width: '100%'}}>
                 <img className='personSearchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl}></img>
                 <CardTitle>{person.primaryName}</CardTitle>
             </div>
