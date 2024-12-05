@@ -6,7 +6,7 @@ import { useLocation } from "react-router";
 
 
 //method only handles fetching data
- export async function fetchData(searchType, body){
+ export async function fetchData({searchType, body}){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
 
     switch (searchType) {
@@ -52,7 +52,7 @@ export default  function SearchResult(){
             <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
 
         </div>
-        );
+    );
 
 }
 
