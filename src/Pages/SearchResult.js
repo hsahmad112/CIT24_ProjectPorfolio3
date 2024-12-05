@@ -1,12 +1,8 @@
-import { Form } from "react-bootstrap";
 import SearchPreview from "../Component/SearchPreview";
-import PersonSearchCard from "../Component/PersonSearchCard";
-import TitleSearchCard from "../Component/TitleSearchCard";
 import { useLocation } from "react-router";
 
-
 //method only handles fetching data
- export async function fetchData(searchType, body){
+export async function fetchData(searchType, body){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
 
     switch (searchType) {
@@ -28,10 +24,7 @@ import { useLocation } from "react-router";
             
             return data;
     }
-
 }
-
-
 
 export default  function SearchResult(){
     //gives us access to states passed through navigation.js 
@@ -43,16 +36,16 @@ export default  function SearchResult(){
     //using empty array in case no results in either/both of persons/titles
     const personEntities = result.persons?.entities || [];
     const titleEntities = result.titles?.entities || [];
+    const body = location.state.body;
     const personType = "personType";
     const titleType = "titleType";
 
     return(
         <div className="container" >
-            <SearchPreview componentType={personType} everythingResult={personEntities} />
-            <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
-
+            <SearchPreview componentType={personType} body={body} everythingResult={personEntities} />
+            <SearchPreview componentType={titleType} body={body} everythingResult={titleEntities}  />
         </div>
-        );
+    );
 
 }
 

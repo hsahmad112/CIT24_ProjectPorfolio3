@@ -2,7 +2,7 @@ import { Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Outlet, useLocation } from 'react-router';
+import { Outlet } from 'react-router';
 import { useEffect, useState} from 'react';
 import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
@@ -15,11 +15,9 @@ export default function Navigation(){
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
   let navigate = useNavigate();
 
-
   function handleQuery(e){
     setSearchQuery(e.target.value);
   }
-
 
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
@@ -40,14 +38,14 @@ export default function Navigation(){
     };
  
     const result = await fetchData(searchType, body);
-    console.log("Hello:")
+    console.log("Nav all results")
     console.log(result);
     
     //when we navigate to search, we "bring along" the current states result (search result list).
     // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
     //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
     //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
-    navigate('/search', {state: {result}});
+    navigate('/search', {state: {result, body}});
   }
 
   useEffect(() => {  
@@ -56,8 +54,7 @@ export default function Navigation(){
     }
 
   }, [userName, login]);
-  
-  
+   
     return(
       <div>
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  

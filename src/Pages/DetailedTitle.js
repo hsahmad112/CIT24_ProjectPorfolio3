@@ -38,6 +38,12 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [id, params])
 
+
+// TODO
+// Oh it still needs the bookmark
+// 
+// it would probalby also need at the bottom the relevant/similar movies
+
   async function RateMovie(){
     setShowPop(true);
     setShowModal(false);
@@ -56,7 +62,7 @@ export default function DetailedTitle({id}) {
   }
 
   function displayYears(startYear, endYear){
-    if(startYear && endYear) return "";
+    if(!startYear && !endYear) return "";
 
     if(!endYear){
       return "(" + startYear + ")";

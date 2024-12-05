@@ -7,23 +7,20 @@ import SimpleTitle from '../Component/SimpleTitle';
 import { useNavigate } from "react-router";
 
 export default function Homepage(){
-    const navigate = useNavigate();
-
-    const [titles, setTitles] = useState([]);
+  
+  const [titles, setTitles] = useState([]);
+  const navigate = useNavigate();
 
     useEffect(() => {
       const fetchData = async () => {
         try {
           setTitles((await GetAllTitles()).entities);
-
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
-
       fetchData();
-
-      },[]);
+    },[]);
 
       if(titles){
          console.log(titles);
@@ -37,6 +34,7 @@ export default function Homepage(){
           return(
             <div>
                 <Carousel data-bs-theme="dark">
+                  {/* The line below is what throws the hook error */}
                   {titles?.map((title) => SimpleTitle(title, navigate))}  
                 </Carousel> 
               <br></br> 
