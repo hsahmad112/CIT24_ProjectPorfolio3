@@ -6,7 +6,7 @@ import { useLocation } from "react-router";
 
 
 //method only handles fetching data
- export async function fetchData({searchType, body}){
+ export async function fetchData(searchType, body){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
 
     switch (searchType) {
@@ -39,6 +39,7 @@ export default  function SearchResult(){
 
     //make a try catch here  
     let result = location.state.result;
+    let searchType = location.state.searchType;
 
     //using empty array in case no results in either/both of persons/titles
     const personEntities = result.persons?.entities || [];

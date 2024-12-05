@@ -14,11 +14,8 @@ export function GetAllTitles(){
     // return (await axios.get(baseApiUrl + "titles?page=" + page + "&pageSize=" + pageSize)).data.entities;
 }
 
-export function GetTitleBackdrop(id){
-    return fetch(baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + process.env.REACT_APP_TMDB_API_KEY).then(res => res.json());
-}
 
-export async function GetTitlePoster(id){
+export async function GetTitleBackdrop(id, useBackdrop){ // This function does the exact same thing as the function in TitleService: GetTitleBackdrop(id)
     try {
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);
@@ -31,7 +28,7 @@ export async function GetTitlePoster(id){
 
         // Determine which array contains data
         let result = null;
-        console.log(data);
+
         // could not use the switch, had to do the if else statements instead!
         if (data.movie_results && data.movie_results.length > 0) {
             result = data.movie_results;
@@ -43,12 +40,59 @@ export async function GetTitlePoster(id){
             result = data.tv_season_results;
         }
 
-        return result[0].poster_path;
+        if(useBackdrop){
+            return result[0].backdrop_path;
+        }else{
+            return result[0].poster_path;
+        }    
+
 
     } catch (error) {
         console.error("Error fetching data:", error);
-    } 
+    }  
+
 }
+
+// export async function GetTitlePoster(id){ // Not working yet...
+//     try {
+//         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
+//         // console.log("ID is: ")
+//         // console.log(id);
+//         const url2 =  "https://api.themoviedb.org/3/find/" + id + "?external_source=imdb_id&api_key=347fca3e5c548c1137537df3300fd169"
+//         const response = await fetch(url2);
+    
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+    
+//         const data = await response.json();
+
+//         // Determine which array contains data
+//         let result = null;
+//         // console.log("TEST ME!!!!");
+//         // console.log(data);
+
+//         // could not use the switch, had to do the if else statements instead!
+//         if (data.movie_results && data.movie_results.length > 0) {
+//             result = data.movie_results;
+//             console.log(data.movie_results);
+//         } else if (data.tv_results && data.tv_results.length > 0) {
+//             result = data.tv_results;            
+//             console.log(data.tv_results);
+//         } else if (data.tv_episode_results && data.tv_episode_results.length > 0) {
+//             result = data.tv_episode_results;
+//             console.log(data.tv_episode_results);
+//         } else if (data.tv_season_results && data.tv_season_results.length > 0) {
+//             result = data.tv_season_results;
+//             console.log(data.tv_season_results);
+//         }
+
+//         return result[0].poster_path;
+
+//     } catch (error) {
+//         console.error("Error fetching data:", error);
+//     } 
+// }
 
 export async function GetTitleById(id){
     let data;

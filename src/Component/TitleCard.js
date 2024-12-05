@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useNavigate } from "react-router";
-import {GetTitleBookmarksById, GetTitleBackdrop} from '../Service/BookmarkService';
+import { GetTitleBackdrop } from '../Service/TitleService';
 
 export default function TitleCard(title){
     const [titleBookmark, setTitleBookmark] = useState(null);        
@@ -12,7 +12,7 @@ export default function TitleCard(title){
         const getTitleBookmark = async () => {
             if(title){
                 try {
-                    setTitleBookmark(await GetTitleBackdrop(title.data.titleId));
+                    setTitleBookmark(await GetTitleBackdrop(title.data.titleId, true));
                 } catch (error) {
                     console.log(error);
                 }
@@ -25,9 +25,9 @@ export default function TitleCard(title){
     if(titleBookmark){   
         return(
             <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + title.data.titleId)}>
-                <Card.Img variant="top" src={imageUrl + titleBookmark[0]?.backdrop_path}/>
+                <Card.Img variant="top" src={imageUrl + titleBookmark}/>
                 <Card.Body>
-                    <Card.Title> {titleBookmark[0]?.name} </Card.Title>
+                    <Card.Title> {title.primaryTitle} </Card.Title>
                     <Card.Text> {title.data.annotation} </Card.Text>
                     <Button variant="primary">Go to title</Button>
                 </Card.Body>
