@@ -36,7 +36,7 @@ export default function Navigation(){
     { id: null, 
       searchTerm: searchQuery, 
       page: '0', 
-      pageSize: '10' 
+      pageSize: searchCategory === 'everything' ? '5' :'10' 
     };
  
     const result = await fetchData(searchType, body);
@@ -47,7 +47,10 @@ export default function Navigation(){
     // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
     //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
     //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
-    navigate('/search', {state: {result}});
+    navigate('/search', {
+      state: {result},
+      searchType : {searchType}
+    });
   }
 
   useEffect(() => {  
@@ -78,7 +81,7 @@ export default function Navigation(){
 
                       <Dropdown.Menu>
                         <Dropdown.Item onClick = {handleType} str="everything" name= "Everything" >Everything</Dropdown.Item>
-                        <Dropdown.Item onClick = {handleType}  str= "titles" name= "Titles" >Title</Dropdown.Item>
+                        <Dropdown.Item onClick = {handleType} str= "titles" name= "Titles" >Title</Dropdown.Item>
                         <Dropdown.Item onClick = {handleType} str= "persons"  name="Persons">Person</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>

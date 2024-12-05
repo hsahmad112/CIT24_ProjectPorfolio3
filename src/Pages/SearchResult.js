@@ -3,6 +3,7 @@ import SearchPreview from "../Component/SearchPreview";
 import PersonSearchCard from "../Component/PersonSearchCard";
 import TitleSearchCard from "../Component/TitleSearchCard";
 import { useLocation } from "react-router";
+import { useUser } from "../Store/store";
 
 
 //method only handles fetching data
@@ -23,7 +24,7 @@ import { useLocation } from "react-router";
             return{persons: personData, titles: titleData};
             
         default:
-            const response = await fetch(baseUrl + searchType + "/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+            const response = await fetch(baseUrl +  "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
             const data = await response.json();
             
             return data;
@@ -39,6 +40,7 @@ export default  function SearchResult(){
 
     //make a try catch here  
     let result = location.state.result;
+    const { searchType } = useUser();
 
     //using empty array in case no results in either/both of persons/titles
     const personEntities = result.persons?.entities || [];
@@ -48,11 +50,24 @@ export default  function SearchResult(){
 
     return(
         <div className="container" >
-            <SearchPreview componentType={personType} everythingResult={personEntities} />
-            <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
+
+            { searchType === 'everything'  &&   
+                <>
+                    <SearchPreview componentType={personType} everythingResult={personEntities} />
+                    <SearchPreview componentType={titleType} everythingResult={titleEntities}  />
+                </>       
+            }
+            { searchType === 'persons' && 
+                <SearchPreview componentType={personType} everythingResult={personEntities} />
+             
+            }
+            { searchType === 'titles' && 
+                <SearchPreview componentType={personType} everythingResult={personEntities} />  
+            }
+           
 
         </div>
-        );
+    );
 
 }
 
