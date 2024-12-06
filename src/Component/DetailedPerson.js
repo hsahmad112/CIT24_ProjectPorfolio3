@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GetPerson, GetPersonBackdrop } from "../Service/PersonService";
 import { GetPersonBookmarks, GetPersonBookmarksByID, SavePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
 import { Card, Col, Row, Container, Stack, Button } from 'react-bootstrap';
-import { PostRating } from "../Service/RatingService";
 import { useUser } from "../Store/store";
 import * as Icon from 'react-bootstrap-icons';
 
@@ -32,12 +31,14 @@ export default function DetailedPerson({id}){
             try {
                 setPerson(await GetPerson(personId.id));
                 setPersonBackdrop((await GetPersonBackdrop(personId.id)))
-                const res = await GetPersonBookmarksByID(token, personId.id); // should be the right id!
-          
-                if(res){
-                    setPersonBookmark(res);
-                    setBookmark(true);
+                if(token){
+                    const res = await GetPersonBookmarksByID(token, personId.id); // should be the right id!
+                    if(res){
+                        setPersonBookmark(res);
+                        setBookmark(true);
+                    }
                 }
+          
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -45,12 +46,9 @@ export default function DetailedPerson({id}){
     
         fetchData();
     }, [id]);
-    console.log("TEST::");
-    console.log(personBackdrop);
-    if(person && personBackdrop){
-      
-     
-        
+
+    if(person && personBackdrop){      
+           
         let mostRelevantTitles = <>{person.mostRelevantTitles.map((title, index) => <Button variant={"secondary"} className="pills" key={index}>{title}</Button>)}</>
         let primaryProfessions = <>{person.primaryProfessions.map((profession, index) => <Button variant={"secondary"} className="pills" key={index}>{profession}</Button>)}</>
     

@@ -1,10 +1,7 @@
-import { Form } from "react-bootstrap";
+import { useEffect } from "react";
 import SearchPreview from "../Component/SearchPreview";
-import PersonSearchCard from "../Component/PersonSearchCard";
-import TitleSearchCard from "../Component/TitleSearchCard";
 import { useLocation } from "react-router";
 import { useUser, getCookieValue } from "../Store/store";
-
 
 //method only handles fetching data
  export async function FetchData(searchType, body){
@@ -63,7 +60,6 @@ import { useUser, getCookieValue } from "../Store/store";
             
             
     }
-
 }
 
 export default  function SearchResult(){
@@ -88,7 +84,7 @@ export default  function SearchResult(){
     // const titleEntities = [];
 
     const selectedEntities = {}; //One object for searhResult, used to store both title/persons indivually depending on the case:
-
+    const body = location.state.body;
      switch (searchType) {
         case "everything":
             selectedEntities.persons = result?.persons || {};
@@ -119,27 +115,25 @@ export default  function SearchResult(){
     return(
         <div className="container" >
             {console.log("entities:", result)}
-            {result === undefined && <p>Der skete en fejl</p>} 
+            {result === undefined && <p>Der skete en fejl</p>} {/* Change this error message! */}
             { searchType === 'everything' &&(
                 <>
 
-                    <SearchPreview componentType={personType} searchResult={selectedEntities.persons} />
-                    <SearchPreview componentType={titleType} searchResult={selectedEntities.titles}  />   
+                    <SearchPreview componentType={personType} body={body} searchResult={selectedEntities.persons} />
+                    <SearchPreview componentType={titleType} body={body} searchResult={selectedEntities.titles}  />   
         
                 </>       
                 )
             }
             { searchType === 'persons' && selectedEntities?.persons?.length > 0 && (
-            <>
-            <p>vi her her persons</p>
-                <SearchPreview componentType={personType} searchResult={selectedEntities.persons} />
+                <>
+                    <SearchPreview componentType={personType} body={body} searchResult={selectedEntities.persons} />
                 </>
                 )
             }
             { searchType === 'titles' && selectedEntities?.titles?.entities?.length > 0 && (
-            <>
-            <p>Vi har her titles</p>
-                <SearchPreview componentType={titleType} searchResult={selectedEntities.titles} />  
+                <>
+                    <SearchPreview componentType={titleType} body={body} searchResult={selectedEntities.titles} />  
                 </>
                 )
             }

@@ -2,7 +2,7 @@ import { Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Outlet, useLocation } from 'react-router';
+import { Outlet } from 'react-router';
 import { useEffect, useState} from 'react';
 import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
@@ -16,11 +16,9 @@ export default function Navigation(){
   const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
   let navigate = useNavigate();
 
-
   function handleQuery(e){
     setSearchQuery(e.target.value);
   }
-
 
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
@@ -53,7 +51,7 @@ export default function Navigation(){
       //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
       //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
       navigate('/search', {
-        state: {result, searchType },
+        state: {result, searchType, body },
       });
 
     } catch (error) {
@@ -70,8 +68,7 @@ export default function Navigation(){
     }
 
   }, [userName, login]);
-  
-  
+   
     return(
       <div>
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
