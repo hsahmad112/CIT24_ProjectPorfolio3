@@ -11,7 +11,8 @@ export default function(){
 
   const [legalFormatBool, SetLegalFormatBool] = useState();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  
+  const isLegitPasswordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ //we did not make this    (match at least one digit, special character and upper cased character, minimum length of 8 characters)
+
 
   let navigate = useNavigate();
     const [jsonBody, SetJsonBody] = useState({ //consider splitting up for readability
@@ -27,10 +28,29 @@ export default function(){
       passwordNotMatching: '',
       emailIncorrectFormat: '',
       generalError: '',
+      passwordIncorrectFormat: ''
 
     });
     const formIsValid = !legalFormatBool && !errorMessage.passwordNotMatching && !errorMessage.emailIncorrectFormat; //tracking validity for whole form 
 
+
+    const validatePassword = () => {
+      if (!jsonBody.password || !jsonBody.confirmPassword) return; //dont do anything if pwd field empty
+      if(!isLegitPasswordRegex.test(jsonBody.password)){
+        SetLegalFormatBool(true);
+        setErrorMessage((prevState) => ({
+          ...prevState,
+          passwordIncorrectFormat: 'Wrong format: Match at least one digit, special character and upper cased character, minimum length of 8 characters',
+        }));
+      }
+      else{
+        SetLegalFormatBool(false);
+        setErrorMessage((prevState) => ({
+          ...prevState,
+          passwordIncorrectFormat: '',
+        }));
+      }
+    }
 
     const comparePwds = () => {
       if (!jsonBody.password || !jsonBody.confirmPassword) return;
@@ -50,8 +70,7 @@ export default function(){
     }
     
     const emailChecker = () =>{
-   // if(!errorMessage.emailIncorrectFormat) return; //somehow not working like the one for pwdChecker wtf
-    
+      if(!errorMessage.emailIncorrectFormat) return;
       if (!emailRegex.test(jsonBody.email)) {
         SetLegalFormatBool(true);
         setErrorMessage((prevState) => ({
@@ -80,6 +99,7 @@ export default function(){
     useEffect(()=>{
       emailChecker();
       comparePwds();
+      validatePassword();
     }, [jsonBody], )
 
     
@@ -184,7 +204,7 @@ return(
 
     <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {false}> {errorMessage.emailIncorrectFormat}</Form.Text>
+      disabled = {legalFormatBool}> {errorMessage.emailIncorrectFormat}</Form.Text>
     </Form.Group>
 
 
@@ -192,6 +212,14 @@ return(
       <Form.Text className ='mt-3 text-danger'
       disabled = {legalFormatBool}> {errorMessage.passwordNotMatching}</Form.Text>
     </Form.Group>
+
+    <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
+      <Form.Text className ='mt-3 text-danger'
+      disabled = {legalFormatBool}> 
+      {errorMessage.passwordIncorrectFormat}
+      </Form.Text>
+    </Form.Group>
+
 
     <Button variant="primary" type="submit" disabled = {!formIsValid}> 
       Sign Up
