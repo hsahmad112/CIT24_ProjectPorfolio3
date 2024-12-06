@@ -3,7 +3,8 @@ import TitleSearchCard from './TitleSearchCard';
 import PersonSearchCard from './PersonSearchCard';
 import {Row} from 'react-bootstrap'
 
-export default function SearchPreview({ componentType, everythingResult }) {
+export default function SearchPreview({ componentType, searchResult }) {
+
   return (
     <div style={{textAlign: 'left'}}>
       <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
