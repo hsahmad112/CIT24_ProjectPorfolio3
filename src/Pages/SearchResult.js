@@ -3,32 +3,39 @@ import SearchPreview from "../Component/SearchPreview";
 import PersonSearchCard from "../Component/PersonSearchCard";
 import TitleSearchCard from "../Component/TitleSearchCard";
 import { useLocation } from "react-router";
-import { useUser } from "../Store/store";
+import { useUser, getCookieValue } from "../Store/store";
 
 
 //method only handles fetching data
- export async function fetchData(searchType, body){
+ export async function FetchData(searchType, body){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
+    const fetchUrl = "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize;
+    //const {token} = useUser();
+    const headers =  {    
+        "Content-Type": "application/json",
+        "Authorization" : getCookieValue('Authorization')
+    }
 
     switch (searchType) {
         case "everything":
             
             //returns both titles and persons, fethces concurrently using Promise.All, 
             const [personResponse, titleResponse] = await Promise.all([
-                fetch(baseUrl  + "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize),
-                fetch(baseUrl + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize),
+                fetch(baseUrl  + "persons" + fetchUrl, {headers}),
+                fetch(baseUrl + "titles" + fetchUrl),
             ]);
            
             //If response of either person or title is not HTTP OK status code, then we use the below 2 empty arrays to pass on 
             let personData = [];
             let titleData = [];
-            
+
             if(personResponse.ok){
                 //server response to fetch gets parsed to js object
                 personData = await personResponse.json();  
             }
-            else{
+            else {
                 console.warn("No persons found from search. Status code: ", personResponse.status); //Including HTTP status code in warning 
+                personData = null;
             }
 
             if(titleResponse.ok){
@@ -37,12 +44,13 @@ import { useUser } from "../Store/store";
             }
             else {
                 console.warn("No titles found from search. Status code: ", titleResponse.status)
+                titleData = null;
             }
             //returns object containing results containing persons and titels (possibly empty)
             return{persons: personData, titles: titleData};
             
         default:
-            const response = await fetch(baseUrl + searchType +"/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+            const response = await fetch(baseUrl + searchType + fetchUrl, { headers });
             if(response.ok){
                 const data = await response.json();
                 return {persons: data, titles: data}; //Should prop find a better way, than duplicating data in persons/titles....
@@ -83,19 +91,19 @@ export default  function SearchResult(){
 
      switch (searchType) {
         case "everything":
-            selectedEntities.persons = result?.persons || [];
-            selectedEntities.titles = result?.titles|| [];
+            selectedEntities.persons = result?.persons || {};
+            selectedEntities.titles = result?.titles ||  {};
            
             console.log("this is our everything entity");
             console.log(selectedEntities);
             break;
         case "titles":
-            selectedEntities.titles = result?.titles|| [];
+            selectedEntities.titles = result?.titles || [];
             console.log("this is our title entity");
             console.log(selectedEntities);
             break;
         case "persons":
-            selectedEntities.persons = result?.persons|| [];
+            selectedEntities.persons = result?.persons || [];
             console.log("this is our person entity");
             console.log(selectedEntities);
             break;
@@ -110,27 +118,28 @@ export default  function SearchResult(){
 
     return(
         <div className="container" >
-{console.log("entities:", result)}
-{result === undefined && <p>Der skete en fejl</p>} 
-            { searchType === 'everything'  && (selectedEntities?.persons?.entities?.length > 0 || selectedEntities?.titles?.entities?.length > 0) &&(
+            {console.log("entities:", result)}
+            {result === undefined && <p>Der skete en fejl</p>} 
+            { searchType === 'everything' &&(
                 <>
-                <p>vi har her everything</p>
-                    <SearchPreview componentType={personType} searchResult={selectedEntities.persons.entities} />
-                    <SearchPreview componentType={titleType} searchResult={selectedEntities.titles.entities}  />
+
+                    <SearchPreview componentType={personType} searchResult={selectedEntities.persons} />
+                    <SearchPreview componentType={titleType} searchResult={selectedEntities.titles}  />   
+        
                 </>       
                 )
             }
-            { searchType === 'persons' && selectedEntities?.persons?.entities?.length > 0 && (
+            { searchType === 'persons' && selectedEntities?.persons?.length > 0 && (
             <>
             <p>vi her her persons</p>
-                <SearchPreview componentType={personType} searchResult={selectedEntities.persons.entities} />
+                <SearchPreview componentType={personType} searchResult={selectedEntities.persons} />
                 </>
                 )
             }
             { searchType === 'titles' && selectedEntities?.titles?.entities?.length > 0 && (
             <>
             <p>Vi har her titles</p>
-                <SearchPreview componentType={titleType} searchResult={selectedEntities.titles.entities} />  
+                <SearchPreview componentType={titleType} searchResult={selectedEntities.titles} />  
                 </>
                 )
             }

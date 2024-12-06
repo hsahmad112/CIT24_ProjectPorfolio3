@@ -6,7 +6,7 @@ import { Outlet, useLocation } from 'react-router';
 import { useEffect, useState} from 'react';
 import { useUser } from "../Store/store";
 import { useNavigate } from 'react-router';
-import  {fetchData}  from '../Pages/SearchResult';
+import  {FetchData}  from '../Pages/SearchResult';
 
 export default function Navigation(){
   const {userName, searchType, setSearchType, login, logout } = useUser();
@@ -41,7 +41,7 @@ export default function Navigation(){
  
     try {
 
-      const result = await fetchData(searchType, body);
+      const result = await FetchData(searchType, body);
 
       // ideally we want result to be a state
       // const fetchedData = await fetchData(searchType, body);
