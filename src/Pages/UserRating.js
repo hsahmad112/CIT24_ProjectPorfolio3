@@ -146,7 +146,8 @@ export default function UserRating(){
     useEffect(() => { //Each time descending state update, calls sortRatingsHandler and sorts result again
         sortRatingsHandler(sortingOrder);    
     },[descending])
-
+    console.log("user rating is::::");
+    console.log(userRatings);
     return (
         <>
 

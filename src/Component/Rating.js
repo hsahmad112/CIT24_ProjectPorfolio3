@@ -19,10 +19,11 @@ export default function Rating({...props}){
     const onClickHandler = () => {
         navigate("/title/"+titleId);
     }
-
+    console.log("FROM Ratings:: Title id is:")
+  console.log(rating);
     return(
         <>
-    
+  
    
    {/* STill in progress, should utilize TitlePlaceHolder */}
     <Card style={{ width: '18rem' }}>
