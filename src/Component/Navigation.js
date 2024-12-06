@@ -40,11 +40,13 @@ export default function Navigation(){
     };
  
     try {
-      const fetchedData = await fetchData(searchType, body);
-      setResult(fetchedData)
 
-      console.log("Hello:")
-      console.log(result);
+      const result = await fetchData(searchType, body);
+
+      // ideally we want result to be a state
+      // const fetchedData = await fetchData(searchType, body);
+      // setResult(fetchedData)
+
       
       //when we navigate to search, we "bring along" the current states result (search result list).
       // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip

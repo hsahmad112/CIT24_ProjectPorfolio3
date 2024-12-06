@@ -70,7 +70,8 @@ export default  function SearchResult(){
 
     let result, searchType;
     if (location.state.result){  
-        ({ result, searchType } = location.state);  // Needs to be wrapped in (), as JS apparently thinks its a block of code otherwise. Access the `result` from `state`
+        result = location.state.result;
+        searchType = location.state.searchType; 
     }   else {
         console.error("NOTE TO DEV: Location state is not defined"); //Using .error to indicate, that issue is critical
     }   
