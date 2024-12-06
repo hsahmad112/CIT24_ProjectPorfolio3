@@ -9,10 +9,9 @@ export default function SearchPreview({ componentType, body, everythingResult })
   const [result, setResult] = useState(everythingResult);
   const [page, setPage] = useState(body.page);
 
-  
   useEffect(()=>{
-    console.log("we rerender preview... again");
-  }, [body, everythingResult])
+    //console.log("we rerender preview... again");
+  }, [body, result, everythingResult])
  
   async function LoadMore() {
     if(componentType === "personType"){
@@ -27,8 +26,9 @@ export default function SearchPreview({ componentType, body, everythingResult })
       setPage(x => x + 1); // is it not supposed to set the state and be used before the next render if written like so?
     }
     else{
+      const nextPage = page + 1;
       // console.log(baseUrl  + "titles/search?searchTerm=" + body?.searchTerm.replace(/\s/g, '&') + "&page=" + body?.page + "&pageSize=" + body?.pageSize)
-      const titleResponse = await fetch(baseUrl + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + body.page + "&pageSize=" + body.pageSize);
+      const titleResponse = await fetch(baseUrl + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + nextPage + "&pageSize=" + body.pageSize);
       const data = (await titleResponse.json()).entities;
       setResult([...result, ...data]);
       setPage(x => x + 1);

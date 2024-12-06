@@ -25,10 +25,7 @@ export async function GetAllRatings(){
     }
     catch(error){   
         return {success: false, message: error.message};
-    }
-       
-        
-        
+    }      
 }
 
 export async function GetRatingById(id){

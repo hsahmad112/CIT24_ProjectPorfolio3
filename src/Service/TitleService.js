@@ -34,3 +34,18 @@ export async function GetTitleById(id){
 
     return data;
 }
+
+export async function GetSimilarMovies(id){
+    let data;
+    const response = await fetch(baseApiUrl + "titles/similar-titles?titleId="+ id);
+
+    if(!response.ok) throw new Error("We got a HTTP error. Status is: " + response.status);
+
+    data = await response.json();
+    if(data == null){ //is falsy if null or undefined
+        console.log("no data");
+        throw new Error("Something went badly wrong");
+    }
+
+    return data;
+}

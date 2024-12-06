@@ -1,7 +1,7 @@
 import { useUser } from "../Store/store";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { GetTitleById } from "../Service/TitleService";
+import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
 
@@ -17,6 +17,7 @@ export default function DetailedTitle({id}) {
   const [rating, setRating] = useState(-1);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
+  const [similarMovies, setSimliarMovies] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -29,6 +30,8 @@ export default function DetailedTitle({id}) {
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
+
+        setSimliarMovies(await GetSimilarMovies(params.id));
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
@@ -77,6 +80,8 @@ export default function DetailedTitle({id}) {
       </div>
     );  
   }
+
+ // if(similarMovies) console.log(similarMovies);
 
   if(title){
     // console.log(title)
@@ -190,6 +195,17 @@ export default function DetailedTitle({id}) {
         </Col>
       </Row>
         </Container>
+
+        {similarMovies && 
+
+            similarMovies.map((item) => 
+            <div>
+              <p></p>
+            </div>)
+          // <div>
+
+          // </div>
+          }
 
       {showModal &&      
        <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>

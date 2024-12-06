@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import SearchPreview from "../Component/SearchPreview";
 import { useLocation } from "react-router";
 
@@ -32,6 +33,10 @@ export default  function SearchResult(){
 
     //make a try catch here  
     let result = location.state.result;
+
+    useEffect(()=>{
+
+    },[result])
 
     //using empty array in case no results in either/both of persons/titles
     const personEntities = result.persons?.entities || [];
