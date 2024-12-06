@@ -52,7 +52,7 @@ export default function UserRating(){
         let countDown;
         const errorCodeHandler = () => {
             if (errorMessage === "401") {
-                console.log("Unauthorized. We redirect in 5 sec my frined");
+                console.log("Unauthorized. We redirect in 5 sec my friend");
                // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
                  countDown = setInterval(() => {
                     setTimer((t) => {
@@ -139,13 +139,14 @@ export default function UserRating(){
                     console.log("failed to do sorting order for ratings..");
                     break;
             } 
-        })
-            
+        })      
             
     }
     useEffect(() => { //Each time descending state update, calls sortRatingsHandler and sorts result again
         sortRatingsHandler(sortingOrder);    
     },[descending])
+
+    console.log(userRatings[0]);
 
     return (
         <>

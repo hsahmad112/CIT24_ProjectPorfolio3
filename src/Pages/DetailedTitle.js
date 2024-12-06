@@ -197,10 +197,11 @@ export default function DetailedTitle({id}) {
         </Container>
 
         {similarMovies && 
-
+            // make a card or something, it should probably contain the same data 
             similarMovies.map((item) => 
             <div>
-              <p></p>
+              <h1>{item.primaryTitle}</h1>
+              <p>{item.primaryTitle}</p>
             </div>)
           // <div>
 

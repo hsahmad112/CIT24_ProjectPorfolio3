@@ -47,7 +47,7 @@ function FetchUrl(page){
       // console.log(baseUrl  + "titles/search?searchTerm=" + body?.searchTerm.replace(/\s/g, '&') + "&page=" + body?.page + "&pageSize=" + body?.pageSize)
       const titleResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {headers} );
       const data = (await titleResponse.json()).entities;
-      
+
       if(data) {
         setResult([...result, ...data]);
         setPage(x => parseInt(x) + 1); // is it not supposed to set the state and be used before the next render if written like so?
@@ -76,7 +76,7 @@ function FetchUrl(page){
     return (
       <div style={{textAlign: 'left'}}>
         <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
-        <Row md={2}>
+        <Row md={3}>
 
           {
             (searchResult.entities.length > 0)  && (searchResult.entities !== undefined) ?

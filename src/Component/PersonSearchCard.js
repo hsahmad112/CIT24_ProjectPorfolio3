@@ -27,13 +27,14 @@ export default function PersonSearchCard ({person}){
     }
 
     return (
-                    // widht was not here before in Card
-        <Card className='' style={{ width: '48%', padding: '10px', margin: "10px", height: '200px'}}>
-            <div className="col-md-4" style={{width: '100%', height: '100%'}}>
-                <img className='personSearchCard'  onClick={() => navigate("../person/"  + person.personId)} src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl}></img>
-                <CardTitle>{person.primaryName} {displayYears(person.birthYear, person?.deathYear)}</CardTitle>
-            </div>
+    <div>
+        <Card className='pointer-on-hover' style={{ width: '100%', padding: '10px', margin: "2px", height: '200px'}}
+        onClick={() => navigate("../person/"  + person.personId)}>
+        <div className="col-md-4" style={{width: '100%', height: '100%'}}>
+            <img className='personSearchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl}></img>
+            <CardTitle>{person.primaryName} {displayYears(person.birthYear, person?.deathYear)}</CardTitle>
+        </div>
         </Card>
-  
+    </div>  
     );
 }
