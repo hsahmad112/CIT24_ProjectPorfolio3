@@ -9,7 +9,7 @@ export default function SearchPreview({ componentType, searchResult }) {
     <div style={{textAlign: 'left'}}>
       <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
       <Row md={2}>
-        {everythingResult.map((e, index) => (
+        {searchResult.map((e, index) => (
           componentType === "personType" ? 
           <PersonSearchCard person={e} key={index}/> :
           <TitleSearchCard title={e} key={index}/>
