@@ -105,10 +105,29 @@ export default function Navigation(){
               </Row>
             </Form>
             
-            {userName !== null && <div><p style={{color:"white"}}>hello {userName}</p><Button variant='danger'>burger menu</Button> <Button onClick ={() => logout()} variant="danger">Sign out</Button></div>  }
-            {userName === null && <div> <Button onClick ={() => navigate("/login")}>Login</Button> <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button></div>}
-      
-          </Container>
+            {userName !== null && 
+            <div>
+              <p style={{color:"white"}}>hello {userName}</p>
+                    <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                      Burgermenu
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={ () => navigate("/profile")}> Profile NOT IMPLEMENETED!</Dropdown.Item>
+                        <Dropdown.Item onClick={ () => navigate("/watchlist")}>Watchlist</Dropdown.Item>
+                        <Dropdown.Item onClick={() => navigate("/settings")}>Settings</Dropdown.Item>
+                        <Dropdown.Item onClick = {() => navigate ("/rating")}>Rating</Dropdown.Item>
+                        <Dropdown.Item onClick ={() => logout()} >Sign out</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+            </div>}
+
+            {userName === null && 
+            <div> 
+              <Button onClick ={() => navigate("/login")}>Login</Button> 
+              <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button>
+            </div>}
+       </Container>
          
         </Navbar>    
         <Outlet />       
