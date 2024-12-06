@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useNavigate } from "react-router";
-import {GetPersonBookmarks, GetPersonBackdrop} from '../Service/BookmarkService';
+import { GetPersonBackdrop } from '../Service/PersonService';
 
 export default function PersonCard(person){
     const [personBookmark, setPersonBookmark] = useState(null);
@@ -12,7 +12,7 @@ export default function PersonCard(person){
         const getPersonBookmark = async () => {
             if(person){
                 try {
-                    setPersonBookmark((await GetPersonBackdrop(person.data.personId)).person_results);
+                    setPersonBookmark((await GetPersonBackdrop(person.data.personId)));
                 } catch (error) {
                     console.log(error);
                 }
@@ -28,11 +28,11 @@ export default function PersonCard(person){
                 onClick={()=> navigate("/person/" + person.data.personId)}>
                 <Card.Body>
                     <Card.Title>
-                        {personBookmark[0]?.name !== undefined ? personBookmark[0]?.name : "No Name"}
+                        {personBookmark?.name !== undefined ? personBookmark?.name : "No Name"}
                     </Card.Title>
                     <Card.Img style={{padding: '0px'}} variant="top" src={                      
-                        personBookmark[0]?.profile_path !== undefined ? 
-                        imageUrl + personBookmark[0]?.profile_path :
+                        personBookmark?.profile_path !== undefined ? 
+                        imageUrl + personBookmark?.profile_path :
                         "/no-image.jpg"
                         } 
                     />

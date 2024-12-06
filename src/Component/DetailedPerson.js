@@ -45,8 +45,8 @@ export default function DetailedPerson({id}){
     
         fetchData();
     }, [id]);
-
-
+    console.log("TEST::");
+    console.log(personBackdrop);
     if(person && personBackdrop){
       
      
@@ -88,9 +88,9 @@ export default function DetailedPerson({id}){
                                 variant="bottom"
                                 className=""
                                 src={                      
-                                    personBackdrop[0]?.profile_path !== undefined ? 
-                                    imageUrl + personBackdrop[0]?.profile_path :
-                                    "/no-image.jpg"
+                                        personBackdrop?.profile_path !== undefined ? 
+                                        imageUrl + personBackdrop?.profile_path :
+                                        "/no-image.jpg"
                                     }            
                                 />
                            
