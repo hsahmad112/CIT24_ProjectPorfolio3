@@ -13,6 +13,7 @@ export default function Navigation(){
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+  const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
   let navigate = useNavigate();
 
 
@@ -38,17 +39,29 @@ export default function Navigation(){
       pageSize: searchType === 'everything' ? '5' : '10' 
     };
  
-    const result = await fetchData(searchType, body);
-    console.log("Hello:")
-    console.log(result);
-    
-    //when we navigate to search, we "bring along" the current states result (search result list).
-    // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
-    //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
-    //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
-    navigate('/search', {
-      state: {result, searchType },
-    });
+    try {
+
+      const result = await fetchData(searchType, body);
+
+      // ideally we want result to be a state
+      // const fetchedData = await fetchData(searchType, body);
+      // setResult(fetchedData)
+
+      
+      //when we navigate to search, we "bring along" the current states result (search result list).
+      // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
+      //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
+      //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
+      navigate('/search', {
+        state: {result, searchType },
+      });
+
+    } catch (error) {
+      console.error("Error in fetching of data, in Navigation.js", error);
+      //throw new Error (error); --Do we want to throw error here on in SearchResult?
+    }
+    //const result = await fetchData(searchType, body);
+ 
   }
 
   useEffect(() => {  
