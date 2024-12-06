@@ -31,11 +31,15 @@ export default function DetailedTitle({id}) {
   function ToggleBookmark(){
       if(bookmark){            
           DeleteTitleBookmarksById(token, params.id);
-          setBookmark(false);            
+          setBookmark(false);          
+          setShowBookmarkModal(false);        
       }else{            
           SaveTitleBookmarksById(params.id, "Test text..."); // add annotations!
           setBookmark(true);
+          setShowBookmarkPop(true);
+          setShowBookmarkModal(false);
       }
+      
   }
 
   useEffect(()=>{
@@ -80,7 +84,7 @@ export default function DetailedTitle({id}) {
   }
   function CloseBookmarkModal(){
     //setHoverRating(-1);
-    setShowModal(false);
+    setShowBookmarkModal(false);
   }
 
   function displayYears(startYear, endYear){
