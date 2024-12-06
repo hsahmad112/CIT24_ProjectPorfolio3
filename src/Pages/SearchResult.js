@@ -55,10 +55,7 @@ import { useUser, getCookieValue } from "../Store/store";
             else {
                 console.error(`Could not fetch ${searchType}`, response.status)
                 
-            }
-            
-            
-            
+            }      
     }
 }
 
@@ -125,7 +122,7 @@ export default  function SearchResult(){
                 </>       
                 )
             }
-            { searchType === 'persons' && selectedEntities?.persons?.length > 0 && (
+            { searchType === 'persons' && selectedEntities?.persons.entities?.length > 0 && (
                 <>
                     <SearchPreview componentType={personType} body={body} searchResult={selectedEntities.persons} />
                 </>

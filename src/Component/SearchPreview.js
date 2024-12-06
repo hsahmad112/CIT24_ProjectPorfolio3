@@ -2,36 +2,60 @@ import TitleSearchCard from './TitleSearchCard';
 import PersonSearchCard from './PersonSearchCard';
 import {Button, Row} from 'react-bootstrap'
 import { useEffect, useState } from 'react';
+import { getCookieValue } from "../Store/store";
 
 export default function SearchPreview({ componentType, body, searchResult }) {
   const baseUrl = process.env.REACT_APP_BASE_API_LINK;
 
-  const [result, setResult] = useState(searchResult);
+  const [result, setResult] = useState(searchResult.entities);
   const [page, setPage] = useState(body.page);
+  const [errorMessage, setErrorMessage] = useState("");
+
+function FetchUrl(page){
+  return "/search?searchTerm=" + body.searchTerm + "&page=" + page + "&pageSize=" + body.pageSize;
+}
+ //const {token} = useUser();
+  const headers =  {    
+      "Content-Type": "application/json",
+      "Authorization" : getCookieValue('Authorization')
+  }
 
   useEffect(()=>{
-    //console.log("we rerender preview... again");
-  }, [body, result, searchResult])
+    setResult(searchResult.entities);
+  }, [body, searchResult.entities])
  
   async function LoadMore() {
     if(componentType === "personType"){
+      const type = "persons";
       const nextPage = page + 1;
       // console.log(baseUrl  + "persons/search?searchTerm=" + body?.searchTerm.replace(/\s/g, '&') + "&page=" + page + "&pageSize=" + body?.pageSize)
-      const personResponse = await fetch(baseUrl  + "persons/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + nextPage + "&pageSize=" + body.pageSize);
+      const personResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {headers} );
       const data = (await personResponse.json()).entities;
       
-      console.log("person response");
-      console.log(data);
-      setResult([...result, ...data]);
-      setPage(x => x + 1); // is it not supposed to set the state and be used before the next render if written like so?
+      if(data) {
+        setResult([...result, ...data]);
+        setPage(x => parseInt(x) + 1); // is it not supposed to set the state and be used before the next render if written like so?
+      }
+      else {
+        setErrorMessage("problably no more results");
+        // probably no more results
+      }
     }
     else{
+      const type = "titles";
       const nextPage = page + 1;
       // console.log(baseUrl  + "titles/search?searchTerm=" + body?.searchTerm.replace(/\s/g, '&') + "&page=" + body?.page + "&pageSize=" + body?.pageSize)
-      const titleResponse = await fetch(baseUrl + "titles/search?searchTerm=" + body.searchTerm.replace(/\s/g, '&') + "&page=" + nextPage + "&pageSize=" + body.pageSize);
+      const titleResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {headers} );
       const data = (await titleResponse.json()).entities;
-      setResult([...result, ...data]);
-      setPage(x => x + 1);
+      
+      if(data) {
+        setResult([...result, ...data]);
+        setPage(x => parseInt(x) + 1); // is it not supposed to set the state and be used before the next render if written like so?
+      }
+      else {
+        setErrorMessage("problably no more results");
+        // probably no more results
+      }
     }
   }
 
@@ -56,7 +80,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
 
           {
             (searchResult.entities.length > 0)  && (searchResult.entities !== undefined) ?
-            searchResult.entities.map((e) => (
+            result.map((e) => (
               componentType === "personType" ? 
               <PersonSearchCard person={e} key={e.personId}/> :
               <TitleSearchCard title={e} key={e.titleId}/>
@@ -66,7 +90,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
           }
 
         </Row>
-        <Button style={{textAlign: 'right'}} onClick={()=> LoadMore()}>Load More</Button>
+        {errorMessage ? <p>{errorMessage}</p> : <Button style={{textAlign: 'right'}} onClick={()=> LoadMore()}>Load More</Button>}
       </div>
     );
   }
