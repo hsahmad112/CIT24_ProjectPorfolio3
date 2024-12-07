@@ -8,13 +8,13 @@ export const validatePassword = (password, confirmPassword, setErrorMessage, set
       setLegalFormatBool(true);
       setErrorMessage((prevState) => ({
         ...prevState,
-        passwordIncorrectFormat: 'Wrong format: Match at least one digit, special character, uppercase letter, and 8+ characters.',
+        invalidPasswordFormat: 'Wrong format: Match at least one digit, special character, uppercase letter, and 8+ characters.',
       }));
     } else {
       setLegalFormatBool(false);
       setErrorMessage((prevState) => ({
         ...prevState,
-        passwordIncorrectFormat: '', //needless as the setLegalFormatBool hides the message
+        invalidPasswordFormat: '', //needless as the setLegalFormatBool hides the message
       }));
     }
   };
@@ -25,16 +25,66 @@ export const comparePasswords = (password, confirmPassword, setErrorMessage, set
         setLegalFormatBool(true);
         setErrorMessage(prevState => ({
             ...prevState,
-            passwordNotMatching: "Password fields do not match." ,
+            passwordMismatch: "Password fields do not match." ,
         }));}
         else{
             setLegalFormatBool(false);
             setErrorMessage(prevState => ({
                 ...prevState,
-                passwordNotMatching: "", //needless as the setLegalFormatBool hides the message
+                passwordMismatch: "", //needless as the setLegalFormatBool hides the message
             }));
         }
     }
 
 
 
+export const validateEmail = (email, setErrorMessage, setLegalFormatBool) => {
+    const errorKey = "invalidEmailFormat";
+    const invalidEmailFormatMessage = "The format of the email is not correct. Please insert a valid email address" 
+    if(isFieldEmpty(email, setLegalFormatBool, setErrorMessage, errorKey)){
+        return;
+    }
+    if(!doesFieldPassRegex(email, emailRegex, setLegalFormatBool, setErrorMessage, errorKey, invalidEmailFormatMessage)){
+        return;
+    }
+    else{
+        removeError(setLegalFormatBool, setErrorMessage, errorKey);
+    }
+}
+
+
+
+//Meta helpers (Helperfunctions for the helpers)
+
+function isFieldEmpty(field, setLegalFormatBool, setErrorMessage, errorKey){
+    if(field === ""){
+        setLegalFormatBool(false);
+        setErrorMessage((prevState) => ({
+            ...prevState,
+            [errorKey]: ""
+        }));
+        return true; //field empty, remove error message
+    }
+        return false; //not empty
+}
+
+
+function doesFieldPassRegex(field, regex, setLegalFormatBool, setErrorMessage, errorKey, errorMessage){
+    if(!regex.test(field)){
+        setLegalFormatBool(true);
+        setErrorMessage((prevState) => ({
+            ...prevState,
+            [errorKey]: errorMessage
+        }));
+        return false;
+    }
+    return true;
+}
+
+function removeError(setLegalFormatBool, setErrorMessage, errorKey){
+    setLegalFormatBool(false);
+    setErrorMessage((prevState) => ({
+        ...prevState,
+        [errorKey]: ""
+    }));
+}

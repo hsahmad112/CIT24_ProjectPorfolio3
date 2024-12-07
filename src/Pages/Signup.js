@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 import {useEffect, useState} from 'react';
-import { comparePasswords, validatePassword } from '../Helpers/FormHelper';
+import { comparePasswords, validatePassword, validateEmail} from '../Helpers/FormHelper';
 
 export default function(){
 
@@ -24,49 +24,33 @@ export default function(){
     const {login} = useUser(); //Get login state, from store.js (UserContext)
     
     const [errorMessage, setErrorMessage] = useState({
-      passwordNotMatching: '',
-      emailIncorrectFormat: '',
-      generalError: '',
-      passwordIncorrectFormat: ''
+      passwordMismatch: '',
+      invalidEmailFormat: '',
+      genericError: '',
+      invalidPasswordFormat: ''
 
     });
-    const formIsValid = !legalFormatBool && !errorMessage.passwordNotMatching && !errorMessage.emailIncorrectFormat; //tracking validity for whole form 
+    const formIsValid = !legalFormatBool && !errorMessage.passwordMismatch && !errorMessage.invalidEmailFormat; //tracking validity for whole form 
 
 
-    // const comparePwds = () => {
-    //   if (!jsonBody.password || !jsonBody.confirmPassword) return;
-    //   if(jsonBody.password !== jsonBody.confirmPassword){
+    
+    // const emailChecker = () =>{
+    //   if(!errorMessage.invalidEmailFormat) return;
+    //   if (!emailRegex.test(jsonBody.email)) {
     //     setLegalFormatBool(true);
     //     setErrorMessage((prevState) => ({
     //       ...prevState,
-    //       passwordNotMatching: "Password fields do not match!",
-    //     }));      }
+    //       invalidEmailFormat: "The format of the email is not correct!"
+    //     }));
+    //   }
     //   else{
     //     setLegalFormatBool(false);
     //     setErrorMessage((prevState) => ({
     //       ...prevState,
-    //       passwordNotMatching: "",
+    //       invalidEmailFormat: ""
     //     }));
     //   }
-    // }
-    
-    const emailChecker = () =>{
-      if(!errorMessage.emailIncorrectFormat) return;
-      if (!emailRegex.test(jsonBody.email)) {
-        setLegalFormatBool(true);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          emailIncorrectFormat: "The format of the email is not correct!"
-        }));
-      }
-      else{
-        setLegalFormatBool(false);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          emailIncorrectFormat: ""
-        }));
-      }
-    } 
+    // } 
 
     function handleChange(e){
         //console.log("live input:", jsonBody); //the most cursed console log
@@ -78,7 +62,7 @@ export default function(){
     };
 
     useEffect(()=>{
-      emailChecker();
+      validateEmail(jsonBody.email, setErrorMessage, setLegalFormatBool);
       comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
       validatePassword(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
     }, [jsonBody], )
@@ -122,7 +106,7 @@ export default function(){
 
         setErrorMessage((prevState) => ({
           ...prevState,
-          generalError: 'An error occurred. Please try again later.'
+          genericError: 'An error occurred. Please try again later.'
         }));
     }
       //   }
@@ -185,19 +169,19 @@ return(
 
     <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> {errorMessage.emailIncorrectFormat}</Form.Text>
+      disabled = {legalFormatBool}> {errorMessage.invalidEmailFormat}</Form.Text>
     </Form.Group>
 
 
     <Form.Group className='mb-1' controlId='PwdNotMatching'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> {errorMessage.passwordNotMatching}</Form.Text>
+      disabled = {legalFormatBool}> {errorMessage.passwordMismatch}</Form.Text>
     </Form.Group>
 
     <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
       <Form.Text className ='mt-3 text-danger'
       disabled = {legalFormatBool}> 
-      {errorMessage.passwordIncorrectFormat}
+      {errorMessage.invalidPasswordFormat}
       </Form.Text>
     </Form.Group>
 
