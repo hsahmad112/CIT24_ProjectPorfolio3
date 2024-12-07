@@ -1,32 +1,30 @@
-const isLegitPasswordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ //we did not make this    (match at least one digit, special character and upper cased character, minimum length of 8 characters)
+const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ //we did not make this    (match at least one digit, special character and upper cased character, minimum length of 8 characters)
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 
 export const validatePassword = (password, confirmPassword, setErrorMessage, setLegalFormatBool) => {
-    if (!password && !confirmPassword) return; //return here, if no entry is made, without raising error.
-    if (!isLegitPasswordRegex.test(password)) {
-      setLegalFormatBool(true);
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        invalidPasswordFormat: 'Wrong format: Match at least one digit, special character, uppercase letter, and 8+ characters.',
-      }));
-    } else {
-      setLegalFormatBool(false);
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        invalidPasswordFormat: '', //needless as the setLegalFormatBool hides the message
-      }));
+    const errorKey = "invalidPasswordFormat";
+    const invalidPasswordFormatMessage = "Wrong format: Match at least one digit, special character, uppercase letter, and 8+ characters." 
+    if(!password || !confirmPassword) return;
+    if(!doesFieldPassRegex(password, passwordRegex, setLegalFormatBool, setErrorMessage, errorKey, invalidPasswordFormatMessage)){
+        return;
+    }
+    else {
+        removeError(setLegalFormatBool, setErrorMessage, errorKey);
     }
   };
 
 export const comparePasswords = (password, confirmPassword, setErrorMessage, setLegalFormatBool) => {
     if(!password || !confirmPassword) return;
+  
     if(password !== confirmPassword){
         setLegalFormatBool(true);
         setErrorMessage(prevState => ({
             ...prevState,
             passwordMismatch: "Password fields do not match." ,
         }));}
+      
+      
         else{
             setLegalFormatBool(false);
             setErrorMessage(prevState => ({
@@ -87,4 +85,23 @@ function removeError(setLegalFormatBool, setErrorMessage, errorKey){
         ...prevState,
         [errorKey]: ""
     }));
+}
+
+function doesFieldsMatch(fieldA, fieldB, setLegalFormatBool, setErrorMessage, errorkey, errorMessage){
+    
+    if(fieldA !== fieldB){
+        setLegalFormatBool(true);
+        setErrorMessage(prevState => ({
+            ...prevState,
+            [errorkey]: errorMessage,
+        }));}
+      
+      
+        else{
+            setLegalFormatBool(false);
+            setErrorMessage(prevState => ({
+                ...prevState,
+                [errorkey]: "", //needless as the setLegalFormatBool hides the message
+            }));
+        }
 }
