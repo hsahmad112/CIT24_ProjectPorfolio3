@@ -1,12 +1,8 @@
-import { Navbar, Button, Form, InputGroup, Dropdown} from 'react-bootstrap';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Outlet } from 'react-router';
 import { useEffect, useState} from 'react';
-import { useUser } from "../Store/store";
-import { useNavigate } from 'react-router';
+import { useNavigate, Outlet } from 'react-router';
 import  {FetchData}  from '../Pages/SearchResult';
+import { useUser } from "../Store/store";
+import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row} from 'react-bootstrap';
 
 export default function Navigation(){
   const {userName, searchType, setSearchType, login, logout } = useUser();
@@ -113,11 +109,11 @@ export default function Navigation(){
                       Burgermenu
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item onClick={ () => navigate("/profile")}> Profile NOT IMPLEMENETED!</Dropdown.Item>
-                        <Dropdown.Item onClick={ () => navigate("/watchlist")}>Watchlist</Dropdown.Item>
-                        <Dropdown.Item onClick={() => navigate("/settings")}>Settings</Dropdown.Item>
-                        <Dropdown.Item onClick = {() => navigate ("/rating")}>Rating</Dropdown.Item>
-                        <Dropdown.Item onClick ={() => logout()} >Sign out</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/profile")}> Profile NOT IMPLEMENETED!</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/watchlist")}>Watchlist</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/settings")}>Settings</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/rating")}>Rating</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => logout()} >Sign out</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
             </div>}

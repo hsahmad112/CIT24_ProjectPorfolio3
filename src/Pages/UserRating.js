@@ -12,7 +12,7 @@ import TitlePlaceholder from '../Component/TitlePlaceholder';
 
 export default function UserRating(){
     const [userRatings, setUserRatings] = useState([]);
-    const[errorMessage, setErrorMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [timer, setTimer] = useState(5);
     const [sortingOrder, setSortingOrder] = useState("rating"); //Sort order will default to rating
@@ -28,46 +28,48 @@ export default function UserRating(){
             const ratings = await GetAllRatings();
          
             if(ratings.success){
-            setUserRatings(ratings.data);
-            sortRatingsHandler(sortingOrder);
-            setIsLoading(false); //should not render "loading" in UI when rating fetch is successful
+                console.log("Have ratings");
+                setUserRatings(ratings.data);
+                sortRatingsHandler(sortingOrder);
+                setIsLoading(false); //should not render "loading" in UI when rating fetch is successful
             }
             else {
-                setIsLoading(false);
-                switch (ratings.message) {
-                    case "401":
-                        setErrorMessage("401");
-                        //navigate("/login");
-                        break;
+                console.log("Have NO ratings");
+                // setIsLoading(false);
+                // switch (ratings.message) {
+                //     case "401":
+                //         setErrorMessage("401");
+                //         //navigate("/login");
+                //         break;
                 
-                    default:
-                        break;
-                }
+                //     default:
+                //         break;
+                // }
             }
         }
         fetchRatings();
     }, []);
 
     useEffect(() => {
-        let countDown;
-        const errorCodeHandler = () => {
-            if (errorMessage === "401") {
-                console.log("Unauthorized. We redirect in 5 sec my friend");
-               // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
-                 countDown = setInterval(() => {
-                    setTimer((t) => {
-                        if(t <=0){
-                            clearInterval(countDown); //Stops countDown timer from continously running
-                            navigate("/login");
-                            return 0; //timer state is set to 0
-                        }
-                        return t - 1; //aka subtract 1 sec from timer
-                    })
-                }, 1000);  
-            }    
-        };
-        errorCodeHandler(); //Calls the above method, to be used within Effect
-        return () => clearInterval(countDown); //Cleanup function, which gets called upon component unmount or change of state    
+        // let countDown;
+        // const errorCodeHandler = () => {
+        //     if (errorMessage === "401") {
+        //         console.log("Unauthorized. We redirect in 5 sec my friend");
+        //        // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
+        //          countDown = setInterval(() => {
+        //             setTimer((t) => {
+        //                 if(t <=0){
+        //                     clearInterval(countDown); //Stops countDown timer from continously running
+        //                     navigate("/login");
+        //                     return 0; //timer state is set to 0
+        //                 }
+        //                 return t - 1; //aka subtract 1 sec from timer
+        //             })
+        //         }, 1000);  
+        //     }    
+        // };
+        // errorCodeHandler(); //Calls the above method, to be used within Effect
+        // return () => clearInterval(countDown); //Cleanup function, which gets called upon component unmount or change of state    
 
     }, [errorMessage]);
    

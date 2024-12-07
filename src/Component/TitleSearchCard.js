@@ -15,17 +15,17 @@ export default function TitleSearchCard ({title}){
     //     } 
     //     getBackdrop();
     // }, [title]);
-
     return (
-        <Card 
-            style={{width: '48%', margin: '10px', height: '200px'}}
+        <Card className='pointer-on-hover'
+            style={{width: '48%', margin: '5px', padding: '10px', height: '200px'}}
             onClick={()=> navigate("/title/" + title.titleId)}>
-            <div className="col-md-4 debug" style={{height: '100%', width: '100%'}}>
+            <div className="col-md-4" style={{height: '100%', width: '100%'}}>
                 {/* <img className='personSearchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl} /> */}
                 <img className='personSearchCard' src={title.posterUrl !== "" ? title.posterUrl : "./no-image.jpg"} />
-                <CardTitle>{title.primaryTitle}</CardTitle>
+                <CardTitle className='card-text'>{title.primaryTitle}</CardTitle>
+                {title.originalTitle !== title.primaryTitle &&
+                   <CardTitle className='card-text less-opacity' style={{fontSize: "15px"}}>{title.originalTitle}</CardTitle>}  
             </div>
         </Card>
-   
     );
 }
