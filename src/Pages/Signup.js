@@ -9,14 +9,11 @@ import { comparePasswords, validatePassword, validateEmail} from '../Helpers/For
 export default function(){
 
   const [legalFormatBool, setLegalFormatBool] = useState();
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const isLegitPasswordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ //we did not make this    (match at least one digit, special character and upper cased character, minimum length of 8 characters)
-
 
   let navigate = useNavigate();
-    const [jsonBody, SetJsonBody] = useState({ //consider splitting up for readability
+    const [jsonBody, setJsonBody] = useState({ //consider splitting up for readability
         email: '',
-        firstName: '',
+        firstname: '',
         password: '',
         confirmPassword: '',
     });
@@ -32,30 +29,10 @@ export default function(){
     });
     const formIsValid = !legalFormatBool && !errorMessage.passwordMismatch && !errorMessage.invalidEmailFormat; //tracking validity for whole form 
 
-
-    
-    // const emailChecker = () =>{
-    //   if(!errorMessage.invalidEmailFormat) return;
-    //   if (!emailRegex.test(jsonBody.email)) {
-    //     setLegalFormatBool(true);
-    //     setErrorMessage((prevState) => ({
-    //       ...prevState,
-    //       invalidEmailFormat: "The format of the email is not correct!"
-    //     }));
-    //   }
-    //   else{
-    //     setLegalFormatBool(false);
-    //     setErrorMessage((prevState) => ({
-    //       ...prevState,
-    //       invalidEmailFormat: ""
-    //     }));
-    //   }
-    // } 
-
     function handleChange(e){
         //console.log("live input:", jsonBody); //the most cursed console log
         const  {name, value} = e.target;
-        SetJsonBody((prevData) => ({
+        setJsonBody((prevData) => ({
             ...prevData, 
             [name]:value,
         }));
@@ -71,32 +48,39 @@ export default function(){
 
    async function handleSubmit(e){
         e.preventDefault();
+        const { email, firstname, password } = jsonBody;
         console.log("pressing the submit button", jsonBody);
 
-        try{
-          
+        try{    
        const response = await fetch(process.env.REACT_APP_BASE_API_LINK + "user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(jsonBody)
+            body: JSON.stringify({email, firstname, password })
         });
-        const data = await response.json();
-
-        const expireTime = new Date();
-        expireTime.setMonth(expireTime.getMonth()+1)
-       
         
-        const {token, firstName} = data;
-        console.log(`token: ${token} - firstname${firstName}`);
-        document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
-        document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
+        console.log(response.status);
 
-        console.log("signup success")
+        if(response.ok){
+          
+          const data = await response.json();
+          const expireTime = new Date();
+          expireTime.setMonth(expireTime.getMonth()+1)
 
-        navigate("/");
-        login(firstName);
+          const {token, firstname} = data;
+          console.log(`token: ${token} - firstname${firstname}`);
+          document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
+          document.cookie = `FirstName=${firstname}; expires=${expireTime.toUTCString()}; Path=/`;
+  
+          console.log("signup success")
+  
+          navigate("/");
+          login(firstname);
+        }
+        else{
+          console.log("credentials passed the form check, but following server error occured", response.message);
+        }
     
       }
       
@@ -108,13 +92,7 @@ export default function(){
           ...prevState,
           genericError: 'An error occurred. Please try again later.'
         }));
-    }
-      //   }
-      
-      // }
-
-      
-
+    }      
     }
    
 return(
@@ -139,7 +117,7 @@ return(
         type="firstname"
         placeholder="Firstname"
         name="firstname"
-        defaultValue={jsonBody.firstName}
+        defaultValue={jsonBody.firstname}
         onChange={handleChange}
       />
     </Form.Group>
