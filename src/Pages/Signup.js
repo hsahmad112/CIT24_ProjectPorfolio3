@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 import {useEffect, useState} from 'react';
-import { validatePassword } from '../Helpers/FormHelper';
+import { comparePasswords, validatePassword } from '../Helpers/FormHelper';
 
 export default function(){
 
@@ -33,40 +33,22 @@ export default function(){
     const formIsValid = !legalFormatBool && !errorMessage.passwordNotMatching && !errorMessage.emailIncorrectFormat; //tracking validity for whole form 
 
 
-    // const validatePassword = () => {
-    //   if (!jsonBody.password || !jsonBody.confirmPassword) return; //dont do anything if pwd field empty
-    //   if(!isLegitPasswordRegex.test(jsonBody.password)){
+    // const comparePwds = () => {
+    //   if (!jsonBody.password || !jsonBody.confirmPassword) return;
+    //   if(jsonBody.password !== jsonBody.confirmPassword){
     //     setLegalFormatBool(true);
     //     setErrorMessage((prevState) => ({
     //       ...prevState,
-    //       passwordIncorrectFormat: 'Wrong format: Match at least one digit, special character and upper cased character, minimum length of 8 characters',
-    //     }));
-    //   }
+    //       passwordNotMatching: "Password fields do not match!",
+    //     }));      }
     //   else{
     //     setLegalFormatBool(false);
     //     setErrorMessage((prevState) => ({
     //       ...prevState,
-    //       passwordIncorrectFormat: '',
+    //       passwordNotMatching: "",
     //     }));
     //   }
     // }
-
-    const comparePwds = () => {
-      if (!jsonBody.password || !jsonBody.confirmPassword) return;
-      if(jsonBody.password !== jsonBody.confirmPassword){
-        setLegalFormatBool(true);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          passwordNotMatching: "Password fields do not match!",
-        }));      }
-      else{
-        setLegalFormatBool(false);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          passwordNotMatching: "",
-        }));
-      }
-    }
     
     const emailChecker = () =>{
       if(!errorMessage.emailIncorrectFormat) return;
@@ -97,7 +79,7 @@ export default function(){
 
     useEffect(()=>{
       emailChecker();
-      comparePwds();
+      comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
       validatePassword(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
     }, [jsonBody], )
 

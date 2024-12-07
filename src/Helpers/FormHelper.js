@@ -14,7 +14,27 @@ export const validatePassword = (password, confirmPassword, setErrorMessage, set
       setLegalFormatBool(false);
       setErrorMessage((prevState) => ({
         ...prevState,
-        passwordIncorrectFormat: '',
+        passwordIncorrectFormat: '', //needless as the setLegalFormatBool hides the message
       }));
     }
   };
+
+export const comparePasswords = (password, confirmPassword, setErrorMessage, setLegalFormatBool) => {
+    if(!password || !confirmPassword) return;
+    if(password !== confirmPassword){
+        setLegalFormatBool(true);
+        setErrorMessage(prevState => ({
+            ...prevState,
+            passwordNotMatching: "Password fields do not match." ,
+        }));}
+        else{
+            setLegalFormatBool(false);
+            setErrorMessage(prevState => ({
+                ...prevState,
+                passwordNotMatching: "", //needless as the setLegalFormatBool hides the message
+            }));
+        }
+    }
+
+
+
