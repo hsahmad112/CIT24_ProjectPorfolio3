@@ -4,7 +4,8 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 import {useEffect, useState} from 'react';
-import { comparePasswords, validatePassword, validateEmail} from '../Helpers/FormHelper';
+import { comparePasswords, validatePassword, validateEmail, validateName} from '../Helpers/FormHelper';
+import { fireEvent } from '@testing-library/react';
 
 export default function(){
 
@@ -24,7 +25,8 @@ export default function(){
       passwordMismatch: '',
       invalidEmailFormat: '',
       genericError: '',
-      invalidPasswordFormat: ''
+      invalidPasswordFormat: '',
+      invalidFirstNameFormat: ''
 
     });
     const formIsValid = !legalFormatBool && !errorMessage.passwordMismatch && !errorMessage.invalidEmailFormat; //tracking validity for whole form 
@@ -42,6 +44,7 @@ export default function(){
       validateEmail(jsonBody.email, setErrorMessage, setLegalFormatBool);
       comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
       validatePassword(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
+      validateName(jsonBody.firstname, setErrorMessage, setLegalFormatBool);
     }, [jsonBody], )
 
     
@@ -63,7 +66,7 @@ export default function(){
         console.log(response.status);
 
         if(response.ok){
-          
+
           const data = await response.json();
           const expireTime = new Date();
           expireTime.setMonth(expireTime.getMonth()+1)
@@ -163,6 +166,13 @@ return(
       </Form.Text>
     </Form.Group>
 
+
+    <Form.Group className='mb-1' controlId='firstNameIncorrectFormat'>
+      <Form.Text className ='mt-3 text-danger'
+      disabled = {legalFormatBool}> 
+      {errorMessage.invalidFirstNameFormat}
+      </Form.Text>
+    </Form.Group>
 
     <Button variant="primary" type="submit" disabled = {!formIsValid}> 
       Sign Up

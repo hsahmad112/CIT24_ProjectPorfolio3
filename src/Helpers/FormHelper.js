@@ -10,7 +10,7 @@ export const validatePassword = (password, confirmPassword, setErrorMessage, set
         return;
     }
     else {
-        removeError(setLegalFormatBool, setErrorMessage, errorKey);
+        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
     }
   };
 
@@ -32,7 +32,7 @@ export const comparePasswords = (password, confirmPassword, setErrorMessage, set
                 passwordMismatch: "", //needless as the setLegalFormatBool hides the message
             }));
         }
-    }
+}
 
 
 
@@ -46,9 +46,28 @@ export const validateEmail = (email, setErrorMessage, setLegalFormatBool) => {
         return;
     }
     else{
-        removeError(setLegalFormatBool, setErrorMessage, errorKey);
+        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
     }
 }
+
+
+export const validateName = (firstname, setErrorMessage, setLegalFormatBool) => {
+    const errorKey = "invalidFirstNameFormat";
+    const invalidFirstNameFormatMessage = "The minimum required lenght for a name is 8 characters. Idk why tho.."
+
+    if(isFieldEmpty(firstname, setLegalFormatBool, setErrorMessage, errorKey)){
+        return;
+    }
+    if(firstname === "" || firstname.length < 8){
+        setError(setLegalFormatBool, setErrorMessage, errorKey, invalidFirstNameFormatMessage)
+    }
+    else{
+        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
+    }
+
+    
+}
+
 
 
 
@@ -56,7 +75,7 @@ export const validateEmail = (email, setErrorMessage, setLegalFormatBool) => {
 
 function isFieldEmpty(field, setLegalFormatBool, setErrorMessage, errorKey){
     if(field === ""){
-        setLegalFormatBool(false);
+        setLegalFormatBool(true); //should not be able to pass empty fields
         setErrorMessage((prevState) => ({
             ...prevState,
             [errorKey]: ""
@@ -64,6 +83,17 @@ function isFieldEmpty(field, setLegalFormatBool, setErrorMessage, errorKey){
         return true; //field empty, remove error message
     }
         return false; //not empty
+}
+
+
+
+function setError(setLegalFormatBool, setErrorMessage, errorKey, errorMessage){
+        setLegalFormatBool(true);
+        setErrorMessage((prevState) => ({
+            ...prevState,
+            [errorKey]: errorMessage
+        }));
+        return true; //field empty, remove error message
 }
 
 
@@ -79,29 +109,10 @@ function doesFieldPassRegex(field, regex, setLegalFormatBool, setErrorMessage, e
     return true;
 }
 
-function removeError(setLegalFormatBool, setErrorMessage, errorKey){
+function clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey){
     setLegalFormatBool(false);
     setErrorMessage((prevState) => ({
         ...prevState,
         [errorKey]: ""
     }));
-}
-
-function doesFieldsMatch(fieldA, fieldB, setLegalFormatBool, setErrorMessage, errorkey, errorMessage){
-    
-    if(fieldA !== fieldB){
-        setLegalFormatBool(true);
-        setErrorMessage(prevState => ({
-            ...prevState,
-            [errorkey]: errorMessage,
-        }));}
-      
-      
-        else{
-            setLegalFormatBool(false);
-            setErrorMessage(prevState => ({
-                ...prevState,
-                [errorkey]: "", //needless as the setLegalFormatBool hides the message
-            }));
-        }
 }
