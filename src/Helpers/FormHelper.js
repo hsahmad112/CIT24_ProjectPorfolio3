@@ -2,10 +2,10 @@ const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 
-export const validatePassword = (password, confirmPassword, setErrorMessage, setLegalFormatBool) => {
+export const validatePassword = (password, setErrorMessage, setLegalFormatBool) => {
     const errorKey = "invalidPasswordFormat";
     const invalidPasswordFormatMessage = "Wrong format: Match at least one digit, special character, uppercase letter, and 8+ characters." 
-    if(!password || !confirmPassword) return;
+    if(!password) return;
     if(!doesFieldPassRegex(password, passwordRegex, setLegalFormatBool, setErrorMessage, errorKey, invalidPasswordFormatMessage)){
         return;
     }

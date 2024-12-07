@@ -3,40 +3,71 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {getCookieValue } from "../Store/store";
+import { comparePasswords, validateEmail, validatePassword } from '../Helpers/FormHelper';
+import { paste } from '@testing-library/user-event/dist/paste';
 
 
 export default function UserSetting(){
-    const baseUrl = process.env.REACT_APP_BASE_API_LINK;    
-        const [updateEmailBody, setUpdateEmailBody] = useState({
+    const baseUrl = process.env.REACT_APP_BASE_API_LINK;  
+
+    const [errorMessage, setErrorMessage] = useState({
+        passwordMismatch: '',
+        invalidEmailFormat: '',
+        genericError: '',
+        invalidPasswordFormat: '',
+        invalidFirstNameFormat: ''
+    
+    });     
+    const [legalFormatBool, setLegalFormatBool] = useState();
+
+    const [formValues, setFormValues] = useState({
         "email": "",
-        "firstName": "",
-        "password": "" 
+        "password": "",
+        "confirmPassword": ""
     })
+
+
+
+    const [updateEmailBody, setUpdateEmailBody] = useState({
+    "email": "",
+    "firstName": "",
+    "password": "" 
+    });
+
+    const [updatePasswordBody, setUpdatePasswordBody] = useState({
+        "password": "",
+    });
 
   const headers =  {    
     "Content-Type": "application/json",
     "Authorization" : getCookieValue('Authorization')
 }
 
-
-    function handleEmailChange(e){
+    function handleChange(e){
         const  {name, value} = e.target;
-
-        setUpdateEmailBody((prevData) => ({
+        setFormValues((prevData) => ({
             ...prevData, 
             [name]:value,
         }));
     }
 
-    console.log(updateEmailBody)
-
-    async function handleSubmitEmail(e){
+    async function handleSubmitEmail(e){ //you'd want a user to input their password to confirm their identitiy, no?
         e.preventDefault();
-        console.log(headers.Authorization);
+
+
+        //sets the matching keys from one object to the 
+        setUpdateEmailBody(prevState => ({
+            ...prevState,
+            ...Object.keys(prevState).reduce((acc, key) => {
+                if (formValues[key] !== undefined) acc[key] = formValues[key];
+                return acc;
+            }, {})
+        }));
+
         const res = await fetch(baseUrl+ 'user', {method: "PUT", headers: headers, body: JSON.stringify(updateEmailBody)})
-        console.log(res);
+        console.log("updating email");
         if(res.ok){
             console.log("updated! Status code: ", res.status);
         }
@@ -46,15 +77,46 @@ export default function UserSetting(){
         
     }
 
-  
+
+    async function handlePasswordSubmit(e){
+        e.preventDefault();
+
+        setUpdatePasswordBody(prevState => ({
+            ...prevState,
+            ...Object.keys(prevState).reduce((acc, key) => {
+                if (formValues[key] !== undefined) acc[key] = formValues[key];
+                return acc;
+            }, {})
+        }));
+
+        const res = await fetch(baseUrl + 'user/password-reset/', {method: "PUT", headers: headers, body: JSON.stringify(updatePasswordBody)});
+        console.log("updating password");
+
+        if(res.ok){
+            console.log("password Update successfull");
+        }
+        else{
+            console.warn("Update did not happen. Status code: ", res.status);
+        }  
+        
+
+    }
+
+    useEffect(() => {
+        validateEmail(formValues.email, setErrorMessage, setLegalFormatBool);
+        validatePassword(formValues.password, setErrorMessage, setLegalFormatBool)
+        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setLegalFormatBool);
+    }, [formValues.email, formValues.password, formValues.confirmPassword])
+
+
     return(
 
        <div>
         <h3> Settings </h3>
         
-        <div class= "d-grid gap-3">
-         <div class="row justify-content-start"> 
-        <Container class="col-4" className = "mt-5"> 
+        <div className= "d-grid gap-3">
+         <div className="row justify-content-start"> 
+        <Container className="mt-5"> 
         <Form onSubmit={handleSubmitEmail}>
             <h5>Change Email</h5>
             <Row className="align-items-end">
@@ -64,7 +126,8 @@ export default function UserSetting(){
                     type = "email"
                     placeholder = "Insert new email"
                     name = "email"
-                    onChange ={handleEmailChange}
+                    value={formValues.email}
+                    onChange ={handleChange}
                     />
             </Form.Group>
             </Col>
@@ -73,13 +136,18 @@ export default function UserSetting(){
                 Change email
             </Button>
             </Col>
+            <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
+            <Form.Text className ='mt-3 text-danger'
+            disabled = {legalFormatBool}> {errorMessage.invalidEmailFormat}</Form.Text>
+            </Form.Group>
+
             </Row>
-        </Form>
+        </Form >
         </Container>
         </div>  
 
         <div>
-           <Form>     
+           <Form onSubmit={handlePasswordSubmit}>     
            <h5>Change Password</h5>
         <Form.Group className="mb-1" controlId="ChangePasswordForm">
             <Form.Label>Password</Form.Label>
@@ -87,8 +155,8 @@ export default function UserSetting(){
                     type="password"
                     placeholder="Password"
                     name="password"
-                    // value={jsonBody.password}
-                    // onChange={handleChange}
+                    value={formValues.password}
+                    onChange={handleChange}
                 />
         </Form.Group>
         
@@ -98,15 +166,29 @@ export default function UserSetting(){
                 type="password"
                 placeholder="Confirm Password"
                 name="confirmPassword"
-                // value={jsonBody.confirmPassword}
-                // onChange={handleChange}
+                value={formValues.confirmPassword}
+                onChange={handleChange}
             />   
             </Form.Group>
             <Col>
-            <Button variant="primary" type="submit"> 
+            <Button variant="primary" type="submit" disabled ={legalFormatBool}> 
             Change Password
             </Button>
             </Col>
+            <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
+            <Form.Text className ='mt-3 text-danger'
+            disabled = {legalFormatBool}> 
+            {errorMessage.invalidPasswordFormat}
+            </Form.Text>
+            </Form.Group>
+
+            
+            <Form.Group className='mb-1' controlId='PwdNotMatching'>
+            <Form.Text className ='mt-3 text-danger'
+            disabled = {legalFormatBool}> {errorMessage.passwordMismatch}</Form.Text>
+            </Form.Group>
+
+
         </Form>
     </div>
     </div>
