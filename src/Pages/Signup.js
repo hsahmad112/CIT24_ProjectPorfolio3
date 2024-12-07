@@ -4,12 +4,11 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 import {useEffect, useState} from 'react';
-import { prettyDOM } from '@testing-library/react';
-import { toBePartiallyChecked } from '@testing-library/jest-dom/matchers';
+import { validatePassword } from '../Helpers/FormHelper';
 
 export default function(){
 
-  const [legalFormatBool, SetLegalFormatBool] = useState();
+  const [legalFormatBool, setLegalFormatBool] = useState();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const isLegitPasswordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ //we did not make this    (match at least one digit, special character and upper cased character, minimum length of 8 characters)
 
@@ -34,34 +33,34 @@ export default function(){
     const formIsValid = !legalFormatBool && !errorMessage.passwordNotMatching && !errorMessage.emailIncorrectFormat; //tracking validity for whole form 
 
 
-    const validatePassword = () => {
-      if (!jsonBody.password || !jsonBody.confirmPassword) return; //dont do anything if pwd field empty
-      if(!isLegitPasswordRegex.test(jsonBody.password)){
-        SetLegalFormatBool(true);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          passwordIncorrectFormat: 'Wrong format: Match at least one digit, special character and upper cased character, minimum length of 8 characters',
-        }));
-      }
-      else{
-        SetLegalFormatBool(false);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          passwordIncorrectFormat: '',
-        }));
-      }
-    }
+    // const validatePassword = () => {
+    //   if (!jsonBody.password || !jsonBody.confirmPassword) return; //dont do anything if pwd field empty
+    //   if(!isLegitPasswordRegex.test(jsonBody.password)){
+    //     setLegalFormatBool(true);
+    //     setErrorMessage((prevState) => ({
+    //       ...prevState,
+    //       passwordIncorrectFormat: 'Wrong format: Match at least one digit, special character and upper cased character, minimum length of 8 characters',
+    //     }));
+    //   }
+    //   else{
+    //     setLegalFormatBool(false);
+    //     setErrorMessage((prevState) => ({
+    //       ...prevState,
+    //       passwordIncorrectFormat: '',
+    //     }));
+    //   }
+    // }
 
     const comparePwds = () => {
       if (!jsonBody.password || !jsonBody.confirmPassword) return;
       if(jsonBody.password !== jsonBody.confirmPassword){
-        SetLegalFormatBool(true);
+        setLegalFormatBool(true);
         setErrorMessage((prevState) => ({
           ...prevState,
           passwordNotMatching: "Password fields do not match!",
         }));      }
       else{
-        SetLegalFormatBool(false);
+        setLegalFormatBool(false);
         setErrorMessage((prevState) => ({
           ...prevState,
           passwordNotMatching: "",
@@ -72,14 +71,14 @@ export default function(){
     const emailChecker = () =>{
       if(!errorMessage.emailIncorrectFormat) return;
       if (!emailRegex.test(jsonBody.email)) {
-        SetLegalFormatBool(true);
+        setLegalFormatBool(true);
         setErrorMessage((prevState) => ({
           ...prevState,
           emailIncorrectFormat: "The format of the email is not correct!"
         }));
       }
       else{
-        SetLegalFormatBool(false);
+        setLegalFormatBool(false);
         setErrorMessage((prevState) => ({
           ...prevState,
           emailIncorrectFormat: ""
@@ -99,7 +98,7 @@ export default function(){
     useEffect(()=>{
       emailChecker();
       comparePwds();
-      validatePassword();
+      validatePassword(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
     }, [jsonBody], )
 
     
