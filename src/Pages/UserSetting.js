@@ -6,8 +6,6 @@ import Container from 'react-bootstrap/Container';
 import { useEffect, useState } from 'react';
 import {getCookieValue } from "../Store/store";
 import { comparePasswords, validateEmail, validatePassword } from '../Helpers/FormHelper';
-import { paste } from '@testing-library/user-event/dist/paste';
-
 
 export default function UserSetting(){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;  
@@ -20,7 +18,7 @@ export default function UserSetting(){
         invalidFirstNameFormat: ''
     
     });     
-    const [legalFormatBool, setLegalFormatBool] = useState();
+    const [legalFormatBool, setLegalFormatBool] = useState(false);
 
     const [formValues, setFormValues] = useState({
         "email": "",
@@ -30,17 +28,7 @@ export default function UserSetting(){
 
 
 
-    const [updateEmailBody, setUpdateEmailBody] = useState({
-    "email": "",
-    "firstName": "",
-    "password": "" 
-    });
-
-    const [updatePasswordBody, setUpdatePasswordBody] = useState({
-        "password": "",
-    });
-
-  const headers =  {    
+   const headers =  {    
     "Content-Type": "application/json",
     "Authorization" : getCookieValue('Authorization')
 }
@@ -56,17 +44,14 @@ export default function UserSetting(){
     async function handleSubmitEmail(e){ //you'd want a user to input their password to confirm their identitiy, no?
         e.preventDefault();
 
+        // If this is made into a UseState, randomly the values will be/wont be set. 
+        const newEmailBody =({ 
+            email: formValues.email,
+            firstName: '',  
+            password: '', 
+        });
 
-        //sets the matching keys from one object to the 
-        setUpdateEmailBody(prevState => ({
-            ...prevState,
-            ...Object.keys(prevState).reduce((acc, key) => {
-                if (formValues[key] !== undefined) acc[key] = formValues[key];
-                return acc;
-            }, {})
-        }));
-
-        const res = await fetch(baseUrl+ 'user', {method: "PUT", headers: headers, body: JSON.stringify(updateEmailBody)})
+        const res = await fetch(baseUrl+ 'user', {method: "PUT", headers: headers, body: JSON.stringify(newEmailBody)})
         console.log("updating email");
         if(res.ok){
             console.log("updated! Status code: ", res.status);
@@ -81,15 +66,11 @@ export default function UserSetting(){
     async function handlePasswordSubmit(e){
         e.preventDefault();
 
-        setUpdatePasswordBody(prevState => ({
-            ...prevState,
-            ...Object.keys(prevState).reduce((acc, key) => {
-                if (formValues[key] !== undefined) acc[key] = formValues[key];
-                return acc;
-            }, {})
-        }));
-
-        const res = await fetch(baseUrl + 'user/password-reset/', {method: "PUT", headers: headers, body: JSON.stringify(updatePasswordBody)});
+        const newPasswordBody = {
+            password: formValues.password,
+        };
+  
+        const res = await fetch(baseUrl + 'user/password-reset/', {method: "PUT", headers: headers, body: JSON.stringify(newPasswordBody)});
         console.log("updating password");
 
         if(res.ok){

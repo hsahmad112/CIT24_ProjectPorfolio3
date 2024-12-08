@@ -9,7 +9,7 @@ import { fireEvent } from '@testing-library/react';
 
 export default function(){
 
-  const [legalFormatBool, setLegalFormatBool] = useState();
+  const [legalFormatBool, setLegalFormatBool] = useState(false);
 
   let navigate = useNavigate();
     const [jsonBody, setJsonBody] = useState({ //consider splitting up for readability
