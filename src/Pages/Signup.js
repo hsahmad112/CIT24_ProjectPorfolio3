@@ -1,11 +1,10 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 import {useEffect, useState} from 'react';
 import { comparePasswords, validatePassword, validateEmail, validateName} from '../Helpers/FormHelper';
-import { fireEvent } from '@testing-library/react';
+
 
 export default function(){
 

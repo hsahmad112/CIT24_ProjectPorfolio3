@@ -6,9 +6,14 @@ import Container from 'react-bootstrap/Container';
 import { useEffect, useState } from 'react';
 import {getCookieValue } from "../Store/store";
 import { comparePasswords, validateEmail, validatePassword } from '../Helpers/FormHelper';
+import { useNavigate } from 'react-router';
+import {useUser} from '../Store/store';
 
 export default function UserSetting(){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;  
+    const {logout} = useUser();
+
+    const navigate = useNavigate();
 
     const [errorMessage, setErrorMessage] = useState({
         passwordMismatch: '',
@@ -26,12 +31,11 @@ export default function UserSetting(){
         "confirmPassword": ""
     })
 
-
-
    const headers =  {    
     "Content-Type": "application/json",
     "Authorization" : getCookieValue('Authorization')
-}
+    }
+
 
     function handleChange(e){
         const  {name, value} = e.target;
@@ -58,8 +62,7 @@ export default function UserSetting(){
         }
         else{
             console.warn("Update did not happen. Status code: ", res.status);
-        }
-        
+        }   
     }
 
 
@@ -79,8 +82,19 @@ export default function UserSetting(){
         else{
             console.warn("Update did not happen. Status code: ", res.status);
         }  
-        
+    }
 
+    //logout function should have a warning modal popping up with a password field (to confirm identity) a Proceed button and Cancel button to opt out.
+
+
+
+    async function handleDeleteAccount(e){ 
+        e.preventDefault();
+        const res = await fetch(baseUrl + 'user/', {method: "DELETE", headers});
+        console.log("deleting user");
+        navigate("/");
+        logout();
+        
     }
 
     useEffect(() => {
@@ -91,12 +105,10 @@ export default function UserSetting(){
 
 
     return(
-
        <div>
         <h3> Settings </h3>
         
-        <div className= "d-grid gap-3">
-         <div className="row justify-content-start"> 
+     
         <Container className="mt-5"> 
         <Form onSubmit={handleSubmitEmail}>
             <h5>Change Email</h5>
@@ -125,10 +137,10 @@ export default function UserSetting(){
             </Row>
         </Form >
         </Container>
-        </div>  
-
-        <div>
-           <Form onSubmit={handlePasswordSubmit}>     
+        
+        
+        
+           <Form onSubmit={handlePasswordSubmit} className='= mt-5'>     
            <h5>Change Password</h5>
         <Form.Group className="mb-1" controlId="ChangePasswordForm">
             <Form.Label>Password</Form.Label>
@@ -168,11 +180,16 @@ export default function UserSetting(){
             <Form.Text className ='mt-3 text-danger'
             disabled = {legalFormatBool}> {errorMessage.passwordMismatch}</Form.Text>
             </Form.Group>
+            </Form>
 
-
+           <Form onSubmit={handleDeleteAccount}>
+           <Form.Group className="mt-5">
+            <Button variant="danger" type="submit"> 
+                Delete Account
+            </Button>
+            </Form.Group>
         </Form>
-    </div>
-    </div>
+
     </div>
     );
 }
