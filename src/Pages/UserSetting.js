@@ -1,4 +1,4 @@
-import { Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,9 +11,12 @@ import {useUser} from '../Store/store';
 
 export default function UserSetting(){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;  
+    
     const {logout} = useUser();
-
     const navigate = useNavigate();
+    const [showAccountDeletionModal, setShowAccountDeletionModal] = useState(false);
+   
+
 
     const [errorMessage, setErrorMessage] = useState({
         passwordMismatch: '',
@@ -85,9 +88,6 @@ export default function UserSetting(){
     }
 
     //logout function should have a warning modal popping up with a password field (to confirm identity) a Proceed button and Cancel button to opt out.
-
-
-
     async function handleDeleteAccount(e){ 
         e.preventDefault();
         const res = await fetch(baseUrl + 'user/', {method: "DELETE", headers});
@@ -140,13 +140,12 @@ export default function UserSetting(){
         
         
         
-           <Form onSubmit={handlePasswordSubmit} className='= mt-5'>     
+           <Form onSubmit={handlePasswordSubmit} className='= mt-5'>
            <h5>Change Password</h5>
         <Form.Group className="mb-1" controlId="ChangePasswordForm">
-            <Form.Label>Password</Form.Label>
                 <Form.Control 
                     type="password"
-                    placeholder="Password"
+                    placeholder="New password"
                     name="password"
                     value={formValues.password}
                     onChange={handleChange}
@@ -154,10 +153,9 @@ export default function UserSetting(){
         </Form.Group>
         
         <Form.Group className="mb-1" controlId="ConfirmChangePasswordForm">
-            <Form.Label>Confirm Password</Form.Label>
                 <Form.Control 
                 type="password"
-                placeholder="Confirm Password"
+                placeholder="Confirm new password"
                 name="confirmPassword"
                 value={formValues.confirmPassword}
                 onChange={handleChange}
@@ -182,12 +180,32 @@ export default function UserSetting(){
             </Form.Group>
             </Form>
 
-           <Form onSubmit={handleDeleteAccount}>
+           <Form>
            <Form.Group className="mt-5">
-            <Button variant="danger" type="submit"> 
+            <Button variant="danger" onClick={() => setShowAccountDeletionModal(true)}> 
                 Delete Account
             </Button>
             </Form.Group>
+
+        {showAccountDeletionModal &&      
+       <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
+        <Modal.Dialog >
+          <Modal.Header>
+            <Modal.Title>Delete Account</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Pressing "Proceed" will permanently delete your account together with bookmarks, rating and search history.
+            Are you certain you wish to proceed?
+          </Modal.Body>
+  
+          <Modal.Footer>
+          <Button onClick={() => setShowAccountDeletionModal(false)}> Cancel </Button>
+          <Button type= 'submit' variant='danger' onClick={handleDeleteAccount}> Proceed </Button>
+          </Modal.Footer>
+          </Modal.Dialog>
+        </div>
+      }
+
         </Form>
 
     </div>
