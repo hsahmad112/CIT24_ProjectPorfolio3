@@ -8,7 +8,7 @@ import { comparePasswords, validatePassword, validateEmail, validateName} from '
 
 export default function(){
 
-  const [legalFormatBool, setLegalFormatBool] = useState(false);
+  const [isFieldValid, setIsFieldValid] = useState(false);
 
   let navigate = useNavigate();
     const [jsonBody, setJsonBody] = useState({ //consider splitting up for readability
@@ -28,7 +28,7 @@ export default function(){
       invalidFirstNameFormat: ''
 
     });
-    const formIsValid = !legalFormatBool && !errorMessage.passwordMismatch && !errorMessage.invalidEmailFormat; //tracking validity for whole form 
+    const formIsValid = !isFieldValid && !errorMessage.passwordMismatch && !errorMessage.invalidEmailFormat; //tracking validity for whole form 
 
     function handleChange(e){
         //console.log("live input:", jsonBody); //the most cursed console log
@@ -40,10 +40,10 @@ export default function(){
     };
 
     useEffect(()=>{
-      validateEmail(jsonBody.email, setErrorMessage, setLegalFormatBool);
-      comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
-      validatePassword(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setLegalFormatBool);
-      validateName(jsonBody.firstname, setErrorMessage, setLegalFormatBool);
+      validateEmail(jsonBody.email, setErrorMessage, setIsFieldValid);
+      comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setIsFieldValid);
+      validatePassword(jsonBody.password, setErrorMessage, setIsFieldValid);
+      validateName(jsonBody.firstname, setErrorMessage, setIsFieldValid);
     }, [jsonBody], )
 
     
@@ -149,18 +149,18 @@ return(
 
     <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> {errorMessage.invalidEmailFormat}</Form.Text>
+      disabled = {isFieldValid}> {errorMessage.invalidEmailFormat}</Form.Text>
     </Form.Group>
 
 
     <Form.Group className='mb-1' controlId='PwdNotMatching'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> {errorMessage.passwordMismatch}</Form.Text>
+      disabled = {isFieldValid}> {errorMessage.passwordMismatch}</Form.Text>
     </Form.Group>
 
     <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> 
+      disabled = {isFieldValid}> 
       {errorMessage.invalidPasswordFormat}
       </Form.Text>
     </Form.Group>
@@ -168,7 +168,7 @@ return(
 
     <Form.Group className='mb-1' controlId='firstNameIncorrectFormat'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> 
+      disabled = {isFieldValid}> 
       {errorMessage.invalidFirstNameFormat}
       </Form.Text>
     </Form.Group>
