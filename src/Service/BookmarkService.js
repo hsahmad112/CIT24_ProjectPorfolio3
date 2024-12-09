@@ -145,3 +145,41 @@ export async function DeletePersonBookmarksById(personId){
     }
     
 }
+
+
+export async function SaveTitleBookmarksById(titleId, annotation){
+    try {
+        const response = await axios.post(baseApiUrl + "bookmarks/title/", { titleId, annotation },  {headers});
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+    
+}
+
+export async function DeleteTitleBookmarksById(token, titleId){
+    try {
+        const response = await fetch(baseApiUrl + `bookmarks/title/${titleId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization" : `${token}`}
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+    
+}

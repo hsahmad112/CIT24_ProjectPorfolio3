@@ -20,7 +20,7 @@ export default function UserRating(){
 
     let navigate = useNavigate();
 
-    const {token, userName} = useUser();
+    const {userName} = useUser();
     
     useEffect(() =>{
         const fetchRatings = async () => {
@@ -35,41 +35,41 @@ export default function UserRating(){
             }
             else {
                 console.log("Have NO ratings");
-                // setIsLoading(false);
-                // switch (ratings.message) {
-                //     case "401":
-                //         setErrorMessage("401");
-                //         //navigate("/login");
-                //         break;
+                setIsLoading(false);
+                switch (ratings.message) {
+                    case "401":
+                        setErrorMessage("401");
+                        //navigate("/login");
+                        break;
                 
-                //     default:
-                //         break;
-                // }
+                    default:
+                        break;
+                }
             }
         }
         fetchRatings();
     }, []);
 
     useEffect(() => {
-        // let countDown;
-        // const errorCodeHandler = () => {
-        //     if (errorMessage === "401") {
-        //         console.log("Unauthorized. We redirect in 5 sec my friend");
-        //        // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
-        //          countDown = setInterval(() => {
-        //             setTimer((t) => {
-        //                 if(t <=0){
-        //                     clearInterval(countDown); //Stops countDown timer from continously running
-        //                     navigate("/login");
-        //                     return 0; //timer state is set to 0
-        //                 }
-        //                 return t - 1; //aka subtract 1 sec from timer
-        //             })
-        //         }, 1000);  
-        //     }    
-        // };
-        // errorCodeHandler(); //Calls the above method, to be used within Effect
-        // return () => clearInterval(countDown); //Cleanup function, which gets called upon component unmount or change of state    
+        let countDown;
+        const errorCodeHandler = () => {
+            if (errorMessage === "401") {
+                console.log("Unauthorized. We redirect in 5 sec my friend");
+               // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
+                 countDown = setInterval(() => {
+                    setTimer((t) => {
+                        if(t <=0){
+                            clearInterval(countDown); //Stops countDown timer from continously running
+                            navigate("/login");
+                            return 0; //timer state is set to 0
+                        }
+                        return t - 1; //aka subtract 1 sec from timer
+                    })
+                }, 1000);  
+            }    
+        };
+        errorCodeHandler(); //Calls the above method, to be used within Effect
+        return () => clearInterval(countDown); //Cleanup function, which gets called upon component unmount or change of state    
 
     }, [errorMessage]);
    

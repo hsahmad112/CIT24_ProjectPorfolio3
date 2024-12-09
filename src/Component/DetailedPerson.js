@@ -21,7 +21,7 @@ export default function DetailedPerson({id}){
             DeletePersonBookmarksById(personId.id);
             setBookmark(false);            
         }else{            
-            SavePersonBookmarksById(personId.id, "Test text...");
+            SavePersonBookmarksById(personId.id, "Test text...");  // add annotations!
             setBookmark(true);
         }
     }
@@ -67,7 +67,7 @@ export default function DetailedPerson({id}){
                     <Col md={1}>
                         {/* Toogle function, can be used to save as bookmark! */}                       
                         <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
-                            { bookmark ? <Icon.BookmarkFill size={20}/> : <Icon.Bookmark size={20} /> }
+                            { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                         </div>
                     </Col>
                 </Row>
