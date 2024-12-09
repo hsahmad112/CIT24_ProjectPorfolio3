@@ -2,11 +2,11 @@ import { useUser } from "../Store/store";
 import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
 import TitleSearchCard from "../Component/TitleSearchCard";
-import { displayYears } from "../Component/HelperFunctions";
+import { displayYears, displayRatingCount } from "../Component/HelperFunctions";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
-import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
+import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
 import { SaveTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById} from '../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
@@ -76,11 +76,7 @@ export default function DetailedTitle({id}) {
               setTitleBookmark(res);
               setBookmark(true);
           }
-        
-      
-      
-
-       
+  
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
@@ -141,15 +137,6 @@ export default function DetailedTitle({id}) {
       setAnnotation(value);
   };
 
-  function displayYears(startYear, endYear){
-    if(!startYear && !endYear) return "";
-
-    if(!endYear){
-      return "(" + startYear + ")";
-    }
-    return "(" + startYear + "-" + endYear + ")";
-  }
-
   if(errorMessage){
     return (
       <div className="center-div">
@@ -170,7 +157,17 @@ export default function DetailedTitle({id}) {
     }
   }
 
-  if(title){
+  if(!title){
+    return(
+      <div style={{textAlign: "center !important", transform: "translate(0%, 500%)"}}>
+        <h1 style={{display: "inline"}}><b>loading</b></h1>
+        <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+      </div>
+    );
+  }
+  else{
     // console.log(title)
     // console.log(rating);
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
@@ -180,6 +177,10 @@ export default function DetailedTitle({id}) {
             <Row style={{marginTop: "10px", marginBottom: "10px"}}>
                 <Col width="100%">
                     <span style={{textAlign: "left"}}>
+                        <span style={{position: "absolute"}}>
+                          <b style={{display: "inline"}}>IMDB rating: {title.voteCount ? title.averageRating + "/10" : "no ratings"}</b>
+                          <p style={{textAlign: "center"}}>{displayRatingCount(title.voteCount)}</p>
+                        </span>
                         <h1>
                           {title.primaryTitle}
                           <p style={{fontSize: "28px", display: "inline"}}>{displayYears(title.startYear, title.endYear)}</p> 
@@ -189,7 +190,6 @@ export default function DetailedTitle({id}) {
                          <p style={{fontSize: "15px"}}>{title.titleType}</p>
                          {title.isAdult && <p style={{fontSize: "15px"}}>is adult</p>}
                       </span>
-                    
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
@@ -383,6 +383,5 @@ export default function DetailedTitle({id}) {
       </div>
     );
   }
- 
 
 }

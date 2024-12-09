@@ -51,10 +51,16 @@ import { GetHeader } from "../Store/store";
                 console.error(`Could not fetch ${searchType}`, response.status)
                 
             }      
-    }
+    } 
 }
 
-export default  function SearchResult(){
+// all advanced search is for titles 
+export async function AdvancedSearch(body) {
+// big and one function called in backend?
+// comment
+}
+
+export default function SearchResult(){
     //gives us access to states passed through navigation.js 
     const location = useLocation();
 

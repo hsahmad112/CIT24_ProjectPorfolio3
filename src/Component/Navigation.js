@@ -1,20 +1,37 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router';
-import  {FetchData}  from '../Pages/SearchResult';
+import { FetchData }  from '../Pages/SearchResult';
 import { useUser } from "../Store/store";
-import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row} from 'react-bootstrap';
+import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row, Nav } from 'react-bootstrap';
+import { GetGenres } from '../Service/GenreService';
 
 export default function Navigation(){
-  const {userName, searchType, setSearchType, login, logout } = useUser();
+  const {userName, searchType, setSearchType, logout } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+  const [genres, setGenres] = useState([]);
   //const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
   let navigate = useNavigate();
 
   function handleQuery(e){
     setSearchQuery(e.target.value);
   }
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        setGenres(await GetGenres());
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  },[])
+
+  console.log("genres?");
+  console.log(genres);
 
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
@@ -34,13 +51,11 @@ export default function Navigation(){
     };
  
     try {
-
       const result = await FetchData(searchType, body);
 
       // ideally we want result to be a state
       // const fetchedData = await fetchData(searchType, body);
       // setResult(fetchedData)
-
       
       //when we navigate to search, we "bring along" the current states result (search result list).
       // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
@@ -57,9 +72,12 @@ export default function Navigation(){
     //const result = await fetchData(searchType, body);
  
   }
+
+  const [chosenGenre, setChosenGenre] = useState("none");
    
     return(
       <div>
+        {chosenGenre}
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
           <Container>
             <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>Portfolio Logo</Navbar.Brand>
@@ -67,7 +85,19 @@ export default function Navigation(){
             <Form inline="true" onSubmit={handleSubmit}>
               <Row>
                 <Col md="auto"> 
-                  <Button>Advanced Search</Button>
+                  <Dropdown style={{display: "inline-block"}}>1
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        <div style={{color: "white"}}>Advanced Search</div>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <label for="cars">Genres</label>
+                        <select name="genres" id="genres" onChange={(e) => setChosenGenre(e.target.value)}>
+                          {genres?.map((item) =>
+                            <option value={item.name}>{item.name}</option>
+                          )}
+                        </select> 
+                      </Dropdown.Menu>
+                  </Dropdown>
                 </Col>
                 <Col>
                   <InputGroup>
@@ -95,26 +125,24 @@ export default function Navigation(){
             </Form>
             
             {userName !== null && 
-            <div>
-              <p style={{color:"white"}}>hello {userName}</p>
-                    <Form>
-                    <Form.Group className="mb-3">
-                    <Dropdown>
-                    
+            <div className='user-menu'>
+              <Nav.Item>
+                <Navbar.Text>
+                  <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>hello {userName} </p>
+                  <Dropdown style={{display: "inline-block"}}>
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
-                      Burgermenu
+                        <i className="bi bi-list" style={{color: "white"}}></i>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item onClick = { () => navigate("/profile")}> Profile NOT IMPLEMENETED!</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/profile")}> Profile</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/watchlist")}>Watchlist</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/settings")}>Settings</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/rating")}>Rating</Dropdown.Item>
-                        <Dropdown.Item onClick = { () => logout()} >Sign out</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => logout()}>Sign out</Dropdown.Item>
                       </Dropdown.Menu>
-                    </Dropdown>
-                    </Form.Group>
-
-                    </Form>
+                  </Dropdown>
+                </Navbar.Text>
+              </Nav.Item>
             </div>}
 
             {userName === null && 

@@ -4,7 +4,6 @@ import { GetHeader } from "../Store/store";
 
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
-const api_key = process.env.REACT_APP_TMDB_API_KEY;
 
 // Use find so get title or person from tmdb api: 
 // Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
