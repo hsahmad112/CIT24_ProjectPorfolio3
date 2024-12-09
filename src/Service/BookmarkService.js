@@ -147,10 +147,15 @@ export async function SavePersonBookmarksById(personId, annotation){
 
 }
 
-export async function DeletePersonBookmarksById(personId){
+export async function DeletePersonBookmarksById(token, personId){
     try {
         let headers = GetHeader();
-        const response = await axios.delete(baseApiUrl + `bookmarks/person/${personId}`, {headers});
+        const response = await axios.delete(baseApiUrl + `bookmarks/person/${personId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization" : `${token}`}
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

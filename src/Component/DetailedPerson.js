@@ -16,7 +16,7 @@ export default function DetailedPerson({id}){
     const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
     const params = useParams(id);
     const [personBackdrop, setPersonBackdrop] = useState(null);
-    const [personBookmark, setPersonBookmark] = useState(null);
+    //const [personBookmark, setPersonBookmark] = useState(null);
     
     const [annotation, setAnnotation] = useState("");
     const { token } = useUser();
@@ -28,19 +28,19 @@ export default function DetailedPerson({id}){
             setBookmark(false);
             setShowRemoveBookmarkPop(true)
             setTimeout(() => {
-            setShowRemoveBookmarkPop(false);
-          }, 2500);
+                setShowRemoveBookmarkPop(false);
+            }, 2500);
   
         } else{            
-          SavePersonBookmarksById(params.id, annotation); // add annotations!
-          setBookmark(true);
-          setShowBookmarkPop(true);
-          setShowBookmarkModal(false);
-          setAnnotation("");
-  
-          setTimeout(() => {
+            SavePersonBookmarksById(params.id, annotation); // add annotations!
+            setBookmark(true);
+            setShowBookmarkPop(true);
+            setShowBookmarkModal(false);
+            setAnnotation("");
+
+            setTimeout(() => {
             setShowBookmarkPop(false);
-          }, 2500);
+            }, 2500);
           
         }
         
@@ -54,7 +54,7 @@ export default function DetailedPerson({id}){
                 if(token){
                     const res = await GetPersonBookmarksById(params.id); // should be the right id!
                     if(res){
-                        setPersonBookmark(res);
+                        //setPersonBookmark(res);
                         setBookmark(true);
                     }
                 }
@@ -65,7 +65,7 @@ export default function DetailedPerson({id}){
         };
     
         fetchData();
-    }, [id]);
+    }, [id, params]);
 
     function CloseBookmarkModal(){
         setShowBookmarkModal(false);
