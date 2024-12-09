@@ -6,7 +6,7 @@ import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
-import { SaveTitleBookmarksById, DeleteTitleBookmarksById} from '../Service/BookmarkService';
+import { SaveTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById} from '../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
@@ -28,6 +28,7 @@ export default function DetailedTitle({id}) {
 
   const [errorMessage, setErrorMessage] = useState(null);  
   const [bookmark, setBookmark] = useState(null);
+  //const [titleBookmark, setTitleBookmark] = useState(null);
   const [annotation, setAnnotation] = useState("");
 
   let navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function DetailedTitle({id}) {
         DeleteTitleBookmarksById(token, params.id);
         setBookmark(false);          
         setShowBookmarkModal(false);   
-      }else{            
+      } else{            
         SaveTitleBookmarksById(params.id, annotation); // add annotations!
         setBookmark(true);
         setShowBookmarkPop(true);
@@ -59,6 +60,13 @@ export default function DetailedTitle({id}) {
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
+        if(token){
+          const res = await GetTitleBookmarksById(params.id); // should be the right id!
+          if(res){
+              //setTitleBookmark(res);
+              setBookmark(true);
+          }
+      }
 
         setSimliarMovies(await GetSimilarMovies(params.id));
       } catch (error) {
@@ -336,11 +344,11 @@ export default function DetailedTitle({id}) {
           </div>
         }
 
-      <Toaster header={"Success"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop}></Toaster>
+      <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
        
-      <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop}></Toaster>
+      <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
         
-      <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop}></Toaster>
+      <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop} color={"success"}></Toaster>
 
       {/* {showPop &&
       <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
