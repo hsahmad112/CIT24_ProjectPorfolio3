@@ -1,4 +1,6 @@
 import {GetAllRatings} from '../Service/RatingService';
+import { GetPersonBookmarks, GetTitleBookmarks } from '../Service/BookmarkService';
+
 import { useEffect, useState } from 'react';
 import { useUser } from '../Store/store';
 import { useNavigate } from 'react-router';
@@ -6,6 +8,8 @@ import { useNavigate } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 import {Card, Container, Row, Col, Carousel} from 'react-bootstrap';
 
+import TitleProfile from '../Component/TitleProfile';
+import PersonProfile from '../Component/PersonProfile';
 
 import TitlePlaceholder from '../Component/TitlePlaceholder';
 import Rating from '../Component/Rating';
@@ -14,6 +18,9 @@ import RatingProfile from '../Component/RatingProfile';
 export default function Profile(){
 
     const [userRatings, setUserRatings] = useState([]);
+    const [personBookmarks, setPersonBookmarks] = useState([]);
+    const [titleBookmarks, setTitleBookmarks] = useState([]);
+
     const [errorMessage, setErrorMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     
@@ -53,6 +60,23 @@ export default function Profile(){
         fetchRatings();
     }, []);
 
+    useEffect(() =>{
+        const getBookmarks = async () => {
+        
+            const personBookmarks = await GetPersonBookmarks();
+            const titleBookmarks = await GetTitleBookmarks();
+            try {
+                setPersonBookmarks(personBookmarks); 
+                setTitleBookmarks(titleBookmarks);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }            
+        }   
+       getBookmarks();
+       
+    }, []);
+
     useEffect(() => {
         let countDown;
         const errorCodeHandler = () => {
@@ -79,7 +103,7 @@ export default function Profile(){
     
     return(
         <>
-        {isLoading && 
+        {isLoading &&
             <Container>
             <h1>Ratings are being loaded...</h1>
             <Row xs={1} md={4}>
@@ -89,7 +113,8 @@ export default function Profile(){
             <TitlePlaceholder/> 
             </Row>
             </Container>
-        }
+        } {/* Needs better styling ^^*/}
+
         {!isLoading && errorMessage === "401" && 
             <Alert key={"danger"} variant={"danger"}>
             Warning!! You are not logged in! <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
@@ -99,11 +124,24 @@ export default function Profile(){
             <h1>Profile page for user: {userName}</h1>
         <Container fluid = "true">
 
-                        
+        <Row className="justify-content-center">
                         <h3 style={{textAlign: 'left'}}> Ratings:</h3>
                         {userRatings.map((u) => <RatingProfile title={u} key={u.titleId} navigate={navigate}/>  )/*need of key?, not currently used in Rating component*/} 
-           
-        </Container>            
+                        </Row>  
+                        
+        <Row className="justify-content-end">
+        <p>Vi har her title bookmarks</p>
+        {titleBookmarks.map((title, index) => <TitleProfile data={title} key={index}></TitleProfile>)}  
+        </Row>
+
+        <Row className="justify-content-end">
+        <p>Vi har her persons bookmarks</p>
+        {personBookmarks.map((person, index) => <PersonProfile data={person} key={index}></PersonProfile>)}  
+        </Row>
+                        
+        </Container>      
+
+
 
 
 

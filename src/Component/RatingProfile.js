@@ -9,8 +9,7 @@ import { useUser, GetHeader } from "../Store/store";
 export default function RatingProfile({title, navigate}){
     
    // const navigate = useNavigate();
-   const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");
-console.log("Her har vi title:" + title.posterUrl);
+
     return (
 
         

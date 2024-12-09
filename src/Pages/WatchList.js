@@ -24,6 +24,7 @@ export default function WactList(){
        
     }, []);
     
+    
     return(
         <div className="container">
             <h1>Your Watchlist</h1>
