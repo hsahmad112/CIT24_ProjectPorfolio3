@@ -16,8 +16,6 @@ export default function TitleSearchCard ({title}){
     //     getBackdrop();
     // }, [title]);
 
-    console.log(title);
-
     return (
         <Card className='pointer-on-hover'
             style={{width: '48%', margin: '5px', padding: '10px', height: '200px'}}
