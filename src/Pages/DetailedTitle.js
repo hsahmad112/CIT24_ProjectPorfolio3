@@ -17,9 +17,10 @@ export default function DetailedTitle({id}) {
   
   const [title, setTitle] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [showPop, setShowPop] = useState(false);
+  const [showRatingPop, setShowRatingPop] = useState(false);
   const [showBookmarkModal, setShowBookmarkModal] = useState(false);
   const [showBookmarkPop, setShowBookmarkPop] = useState(false);
+  const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
@@ -33,14 +34,20 @@ export default function DetailedTitle({id}) {
 
   function ToggleBookmark(){
       if(bookmark){            
-          DeleteTitleBookmarksById(token, params.id);
-          setBookmark(false);          
-          setShowBookmarkModal(false);        
+        DeleteTitleBookmarksById(token, params.id);
+        setBookmark(false);          
+        setShowBookmarkModal(false);   
       }else{            
-          SaveTitleBookmarksById(params.id, annotation); // add annotations!
-          setBookmark(true);
-          setShowBookmarkPop(true);
-          setShowBookmarkModal(false);
+        SaveTitleBookmarksById(params.id, annotation); // add annotations!
+        setBookmark(true);
+        setShowBookmarkPop(true);
+        setShowBookmarkModal(false);
+        setAnnotation("");
+
+        setTimeout(() => {
+          setShowBookmarkPop(false);
+        }, 2500);
+        
       }
       
   }
@@ -70,10 +77,10 @@ export default function DetailedTitle({id}) {
   // it would probalby also need at the bottom the relevant/similar movies
 
   async function RateMovie(){
-    setShowPop(true);
+    setShowRatingPop(true);
 
     setTimeout(() => {
-      setShowPop(false);
+      setShowRatingPop(false);
     }, 2500);
     
     setShowModal(false);
@@ -118,7 +125,12 @@ export default function DetailedTitle({id}) {
   }
 
  // if(similarMovies) console.log(similarMovies);
-
+  function RemoveBookmarkPop(){
+    setShowRemoveBookmarkPop(true);
+    setTimeout(() => {
+      setShowRemoveBookmarkPop(false);
+    }, 2500);
+  }
   if(title){
     // console.log(title)
     // console.log(rating);
@@ -143,7 +155,7 @@ export default function DetailedTitle({id}) {
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
-                      <div onClick={bookmark ? ToggleBookmark : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                      <div onClick={bookmark ? RemoveBookmarkPop : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                       </div>                     
                   </Col>
@@ -290,63 +302,45 @@ export default function DetailedTitle({id}) {
           </div>
         }
 
-        {showPop &&
-        <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
-          <Toast.Header>
-            <strong className="me-auto">Success</strong>
-          </Toast.Header>
-          <Toast.Body>
-            Your rating was submitted
-          </Toast.Body>
-        </Toast>
-        }
-
-
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
-          <Modal.Dialog>
-            <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
-              <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
-            </Modal.Header>
-            
-            <Modal.Body>
-                  <textarea
-                      value={annotation}
-                      //placeholder="Insert anntation..."
-                      onChange={(e) => handleAnnotationChange(e)}                  
-                      rows="3"
-                  />
-              {/* <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="name@example.com" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                  <Form.Label>Example textarea</Form.Label>
-                  <Form.Control as="textarea" rows={3} />
-                </Form.Group>
-              </Form> */}
-            </Modal.Body>
+            <Modal.Dialog>
+              <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
+                <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
+              </Modal.Header>
+              
+              <Modal.Body>
+                    <textarea 
+                        value={annotation}
+                        //placeholder="Insert anntation..."
+                        onChange={(e) => handleAnnotationChange(e)}                  
+                        rows="3"
+                    />
+                {/* <Form>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="name@example.com" />
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                    <Form.Label>Example textarea</Form.Label>
+                    <Form.Control as="textarea" rows={3} />
+                  </Form.Group>
+                </Form> */}
+              </Modal.Body>
 
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-              <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
-            </Modal.Footer>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
+                <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
+              </Modal.Footer>
             </Modal.Dialog>
           </div>
         }
-        {showBookmarkPop &&
-          <Toast className="to-front" bg={"primary"} onClose={() => setShowBookmarkPop(false)} show={showBookmarkPop} delay={2500} autohide>
-            <Toast.Header>
-              <strong className="me-auto">Success</strong>
-            </Toast.Header>
-            <Toast.Body>
-              Your have bookmarked this title.
-            </Toast.Body>
-          </Toast>
-        }
 
-      <Toaster header={"Success"} body={"Your rating was submitted"} show={showPop}></Toaster>
+      <Toaster header={"Success"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop}></Toaster>
+       
+      <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop}></Toaster>
+        
+      <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop}></Toaster>
 
       {/* {showPop &&
       <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
