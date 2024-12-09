@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
-import { SaveTitleBookmarksById, DeleteTitleBookmarksById} from '../Service/BookmarkService';
+import { SaveTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById} from '../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
@@ -17,10 +17,11 @@ export default function DetailedTitle({id}) {
   const list = [1,2,3,4,5,6,7,8,9,10];
   
   const [title, setTitle] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [showPop, setShowPop] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showRatingPop, setShowRatingPop] = useState(false);
   const [showBookmarkModal, setShowBookmarkModal] = useState(false);
   const [showBookmarkPop, setShowBookmarkPop] = useState(false);
+  const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
@@ -29,19 +30,31 @@ export default function DetailedTitle({id}) {
 
   const [errorMessage, setErrorMessage] = useState(null);  
   const [bookmark, setBookmark] = useState(null);
+  //const [titleBookmark, setTitleBookmark] = useState(null);
+  const [annotation, setAnnotation] = useState("");
 
   let navigate = useNavigate();
 
   function ToggleBookmark(){
       if(bookmark){            
-          DeleteTitleBookmarksById(token, params.id);
-          setBookmark(false);          
-          setShowBookmarkModal(false);        
-      }else{            
-          SaveTitleBookmarksById(params.id, "Test text..."); // add annotations!
-          setBookmark(true);
-          setShowBookmarkPop(true);
-          setShowBookmarkModal(false);
+        DeleteTitleBookmarksById(token, params.id);
+        setBookmark(false);
+        setShowRemoveBookmarkPop(true)
+        setTimeout(() => {
+          setShowRemoveBookmarkPop(false);
+        }, 2500);
+
+      } else{            
+        SaveTitleBookmarksById(params.id, annotation); // add annotations!
+        setBookmark(true);
+        setShowBookmarkPop(true);
+        setShowBookmarkModal(false);
+        setAnnotation("");
+
+        setTimeout(() => {
+          setShowBookmarkPop(false);
+        }, 2500);
+        
       }
       
   }
@@ -54,8 +67,15 @@ export default function DetailedTitle({id}) {
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
+        if(token){
+          const res = await GetTitleBookmarksById(params.id); // should be the right id!
+          if(res){
+              //setTitleBookmark(res);
+              setBookmark(true);
+          }
+      }
 
-        setSimliarMovies(await GetSimilarMovies(params.id));
+        //setSimliarMovies(await GetSimilarMovies(params.id));
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
@@ -89,10 +109,10 @@ export default function DetailedTitle({id}) {
     setShowPop(true);
 
     setTimeout(() => {
-      setShowPop(false);
+      setShowRatingPop(false);
     }, 2500);
     
-    setShowModal(false);
+    setShowRatingModal(false);
     if(hasRated){
       await PutRating(params.id, rating);
     }
@@ -102,13 +122,27 @@ export default function DetailedTitle({id}) {
     }
   }
 
-  function CloseModal(){
+  function CloseRatingModal(){
     setHoverRating(-1);
-    setShowModal(false);
+    setShowRatingModal(false);
   }
+  
   function CloseBookmarkModal(){
-    //setHoverRating(-1);
     setShowBookmarkModal(false);
+  }
+
+  const handleAnnotationChange = (e) => {
+      const { value } = e.target;
+      setAnnotation(value);
+  };
+
+  function displayYears(startYear, endYear){
+    if(!startYear && !endYear) return "";
+
+    if(!endYear){
+      return "(" + startYear + ")";
+    }
+    return "(" + startYear + "-" + endYear + ")";
   }
 
   if(errorMessage){
@@ -142,7 +176,7 @@ export default function DetailedTitle({id}) {
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
-                      <div onClick={() => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                      <div onClick={bookmark ? ToggleBookmark : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                       </div>                     
                   </Col>
@@ -261,10 +295,10 @@ export default function DetailedTitle({id}) {
         </Container>
         }
 
-        {showModal &&      
+        {showRatingModal &&      
         <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
           <Modal.Dialog >
-            <Modal.Header closeButton onClick={() => CloseModal()}>
+            <Modal.Header closeButton onClick={() => CloseRatingModal()}>
               <Modal.Title>Rate {title.primaryTitle}</Modal.Title>
             </Modal.Header>
     
@@ -279,7 +313,7 @@ export default function DetailedTitle({id}) {
             </Modal.Body>
     
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => CloseModal()}>Cancel</Button>
+              <Button variant="secondary" onClick={() => CloseRatingModal()}>Cancel</Button>
               <Button variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
               <Button style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
             </Modal.Footer>
@@ -289,48 +323,36 @@ export default function DetailedTitle({id}) {
 
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
-          <Modal.Dialog >
-            <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
-              <Modal.Title>Bookmark {title.primaryTitle}</Modal.Title>
-            </Modal.Header>
+            <Modal.Dialog>
+              <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
+                <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
+              </Modal.Header>
+              
+              <Modal.Body>
+                    <textarea 
+                        value={annotation}
+                        //placeholder="Insert anntation..."
+                        onChange={(e) => handleAnnotationChange(e)}                  
+                        rows="3"
+                    />
+                {/* <Form>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="name@example.com" />
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                    <Form.Label>Example textarea</Form.Label>
+                    <Form.Control as="textarea" rows={3} />
+                  </Form.Group>
+                </Form> */}
+              </Modal.Body>
 
-            <Modal.Body>
-              <div className="mb-2">
-                  <textarea
-                      value={"Put annotations..."}
-                      //onChange={(e) => handleChapterChange(e, expandedChapter, 'chapterDescription')}
-                      className={`form-control`}
-                      rows="3"
-                  />
-              </div>
-              {/* <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="name@example.com" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                  <Form.Label>Example textarea</Form.Label>
-                  <Form.Control as="textarea" rows={3} />
-                </Form.Group>
-              </Form> */}
-            </Modal.Body>
-
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-              <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
-            </Modal.Footer>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
+                <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
+              </Modal.Footer>
             </Modal.Dialog>
           </div>
-        }
-        {showBookmarkPop &&
-          <Toast className="to-front" bg={"primary"} onClose={() => setShowBookmarkPop(false)} show={showBookmarkPop} delay={2500} autohide>
-            <Toast.Header>
-              <strong className="me-auto">Success</strong>
-            </Toast.Header>
-            <Toast.Body>
-              Your have bookmarked this title.
-            </Toast.Body>
-          </Toast>
         }
 
         <Toaster header={"Success"} body={toastMessage} show={showPop}></Toaster>
