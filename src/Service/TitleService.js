@@ -6,16 +6,13 @@ const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 const api_key = process.env.REACT_APP_TMDB_API_KEY;
 
 export function GetAllTitles(){
-    //return (await axios.get(baseApiUrl+ "titles/")).data.entities;
-    
-    let page = Math.floor(Math.random() * 100);
+    let page = Math.floor(Math.random() * 500);
     let pageSize = Math.floor(Math.random() * 10 + 7);
     return fetch(baseApiUrl + "titles?page=" + page + "&pageSize=" + pageSize).then(res => res.json());
-    // return (await axios.get(baseApiUrl + "titles?page=" + page + "&pageSize=" + pageSize)).data.entities;
 }
 
 
-export async function GetTitleBackdrop(id, useBackdrop){ // This function does the exact same thing as the function in TitleService: GetTitleBackdrop(id)
+export async function GetTitleBackdrop(id, useBackdrop){
     try {
         const url = baseMovieURL_ById + id + '?external_source=imdb_id&api_key=' + api_key;
         const response = await fetch(url);

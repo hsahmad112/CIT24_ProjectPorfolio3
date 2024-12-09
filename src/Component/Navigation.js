@@ -9,7 +9,7 @@ export default function Navigation(){
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
-  const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
+  //const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
   let navigate = useNavigate();
 
   function handleQuery(e){
@@ -57,13 +57,6 @@ export default function Navigation(){
     //const result = await fetchData(searchType, body);
  
   }
-
-  useEffect(() => {  
-    if(userName){
-      login(userName); 
-    }
-
-  }, [userName, login]);
    
     return(
       <div>

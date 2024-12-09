@@ -33,7 +33,7 @@ export default function DetailedTitle({id}) {
 
   function ToggleBookmark(){
       if(bookmark){            
-          DeleteTitleBookmarksById(token, params.id);
+          DeleteTitleBookmarksById(params.id);
           setBookmark(false);          
           setShowBookmarkModal(false);        
       }else{            

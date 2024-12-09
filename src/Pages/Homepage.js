@@ -23,27 +23,26 @@ export default function Homepage(){
     },[]);
 
       if(titles){
-         console.log(titles);
+        // console.log(titles);
         // some images are 300 & 420, while others are 300 & 375
         // gives issues when they are displayed in the carousel
         // one fix it to set hard code the image ratio, but some images
         // will be streched, not ideal
       }
 
-      if(titles.length > 0 ){
-          return(
-            <div>
-                <Carousel data-bs-theme="dark">
-                  {/* The line below is what throws the hook error */}
-                  {titles?.map((title) => SimpleTitle(title, navigate))}  
-                </Carousel> 
-              <br></br> 
-              {/*<Container>
-                <Row>
-                 {titles?.map((title) => <SimpleTitle title={title} key={title.url}></SimpleTitle> )}   
-                </Row>
-              </Container> */}
-            </div>
-          );
-      }
+      return(
+        <div>
+          {titles?.length > 0 ? <Carousel data-bs-theme="dark">
+              {/* The line below is what throws the hook error */}
+              {titles?.map((title) => SimpleTitle(title, navigate))}  
+            </Carousel> : <b>could not find any titles</b>}   
+          <br></br> 
+          {/*<Container>
+            <Row>
+              {titles?.map((title) => <SimpleTitle title={title} key={title.url}></SimpleTitle> )}   
+            </Row>
+          </Container> */}
+        </div>
+      );
+      
 }

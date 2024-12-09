@@ -2,7 +2,7 @@ import TitleSearchCard from './TitleSearchCard';
 import PersonSearchCard from './PersonSearchCard';
 import {Button, Row} from 'react-bootstrap'
 import { useEffect, useState } from 'react';
-import { useUser, GetHeader } from "../Store/store";
+import { GetHeader } from "../Store/store";
 
 export default function SearchPreview({ componentType, body, searchResult }) {
   const baseUrl = process.env.REACT_APP_BASE_API_LINK;
@@ -14,7 +14,6 @@ export default function SearchPreview({ componentType, body, searchResult }) {
   function FetchUrl(page){
     return "/search?searchTerm=" + body.searchTerm + "&page=" + page + "&pageSize=" + body.pageSize;
   }
- const {token} = useUser();
 
   useEffect(()=>{
     setResult(searchResult.entities);
