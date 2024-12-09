@@ -268,7 +268,7 @@ export default function DetailedTitle({id}) {
                       </Card.Body>
                 </Card>
                 {userName !== null &&
-                  <Card className="rate-movie-box" onClick={() => setShowModal(true)}>
+                  <Card className="rate-movie-box" onClick={() => setShowRatingModal(true)}>
                     <Card.Body>
                       {hasRated ? "Update your rating" : "Rate movie"}
                     </Card.Body>
