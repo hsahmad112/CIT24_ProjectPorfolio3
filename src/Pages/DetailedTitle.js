@@ -290,14 +290,21 @@ export default function DetailedTitle({id}) {
 
 
         {showBookmarkModal &&      
-          <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
+          <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
           <Modal.Dialog >
             <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
               <Modal.Title>Bookmark {title.primaryTitle}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-              Put annotations...
+              <div className="mb-2">
+                  <textarea
+                      value={"Put annotations..."}
+                      //onChange={(e) => handleChapterChange(e, expandedChapter, 'chapterDescription')}
+                      className={`form-control`}
+                      rows="3"
+                  />
+              </div>
               {/* <Form>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                   <Form.Label>Email address</Form.Label>
