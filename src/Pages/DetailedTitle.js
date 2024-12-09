@@ -20,6 +20,8 @@ export default function DetailedTitle({id}) {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showRatingPop, setShowRatingPop] = useState(false);
   const [showBookmarkModal, setShowBookmarkModal] = useState(false);
+  const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
+  
   const [showBookmarkPop, setShowBookmarkPop] = useState(false);
   const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
@@ -30,7 +32,7 @@ export default function DetailedTitle({id}) {
 
   const [errorMessage, setErrorMessage] = useState(null);  
   const [bookmark, setBookmark] = useState(null);
-  //const [titleBookmark, setTitleBookmark] = useState(null);
+  const [titleBookmark, setTitleBookmark] = useState(null);
   const [annotation, setAnnotation] = useState("");
 
   let navigate = useNavigate();
@@ -67,15 +69,18 @@ export default function DetailedTitle({id}) {
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
-        if(token){
-          const res = await GetTitleBookmarksById(params.id); // should be the right id!
+        
+        const res = await GetTitleBookmarksById(params.id); // should be the right id!
+    
           if(res){
-              //setTitleBookmark(res);
+              setTitleBookmark(res);
               setBookmark(true);
           }
-      }
+        
+      
+      
 
-        //setSimliarMovies(await GetSimilarMovies(params.id));
+        setSimliarMovies(await GetSimilarMovies(params.id));
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
@@ -126,7 +131,7 @@ export default function DetailedTitle({id}) {
     setHoverRating(-1);
     setShowRatingModal(false);
   }
-  
+
   function CloseBookmarkModal(){
     setShowBookmarkModal(false);
   }
@@ -153,6 +158,18 @@ export default function DetailedTitle({id}) {
     );  
   }
 
+  // if(similarMovies) console.log(similarMovies);
+  function ShowingBookmarkModal(){
+    if(errorMessage !== "401"){
+      setShowBookmarkModal(true);
+    } else {
+      setShowNotLoggedIn(true);
+      setTimeout(() => {
+        setShowNotLoggedIn(false);
+      }, 2500);
+    }
+  }
+
   if(title){
     // console.log(title)
     // console.log(rating);
@@ -176,7 +193,7 @@ export default function DetailedTitle({id}) {
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
-                      <div onClick={bookmark ? ToggleBookmark : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                      <div onClick={bookmark ? ToggleBookmark : ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                       </div>                     
                   </Col>
@@ -355,8 +372,14 @@ export default function DetailedTitle({id}) {
           </div>
         }
 
-        <Toaster header={"Success"} body={toastMessage} show={showRatingPop}></Toaster>
+        <Toaster header={"Not authorized"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
+
+        <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
         
+        <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
+          
+        <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop} color={"success"}></Toaster>
+
       </div>
     );
   }
