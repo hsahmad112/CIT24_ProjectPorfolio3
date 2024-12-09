@@ -149,6 +149,7 @@ export async function DeletePersonBookmarksById(personId){
 
 export async function SaveTitleBookmarksById(titleId, annotation){
     try {
+        let headers = GetHeader();
         const response = await axios.post(baseApiUrl + "bookmarks/title/", { titleId, annotation },  {headers});
 
         if (!response.ok) {
