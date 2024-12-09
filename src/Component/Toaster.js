@@ -14,9 +14,9 @@ export default function Toaster({header, body, show, color}){
 
     return (
         <Toast className="to-front" bg={color} onClose={() => setShowPop(false)} show={show} delay={3000} autohide>
-            {/* <Toast.Header>
+            <Toast.Header>
                 <strong className="me-auto">{header}</strong>
-            </Toast.Header> */}
+            </Toast.Header>
             <Toast.Body>
                 {body}
             </Toast.Body>
