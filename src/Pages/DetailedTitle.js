@@ -29,7 +29,7 @@ export default function DetailedTitle({id}) {
 
   const [errorMessage, setErrorMessage] = useState(null);  
   const [bookmark, setBookmark] = useState(null);
-  //const [titleBookmark, setTitleBookmark] = useState(null);
+  const [titleBookmark, setTitleBookmark] = useState(null);
   const [annotation, setAnnotation] = useState("");
 
   let navigate = useNavigate();
@@ -65,13 +65,18 @@ export default function DetailedTitle({id}) {
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
-        if(token){
-          const res = await GetTitleBookmarksById(params.id); // should be the right id!
+        
+        const res = await GetTitleBookmarksById(params.id); // should be the right id!
+        if(res.message === "401"){
+          setErrorMessage("401");
+        }else{
           if(res){
-              //setTitleBookmark(res);
+              setTitleBookmark(res);
               setBookmark(true);
           }
-      }
+        }
+      
+      
 
         //setSimliarMovies(await GetSimilarMovies(params.id));
       } catch (error) {
@@ -137,9 +142,8 @@ export default function DetailedTitle({id}) {
   }
 
   // if(similarMovies) console.log(similarMovies);
-
   function ShowingBookmarkModal(){
-    if(token !== null){
+    if(errorMessage !== "401"){
       setShowBookmarkModal(true);
     } else {
       setShowNotLoggedIn(true);
@@ -354,24 +358,14 @@ export default function DetailedTitle({id}) {
           </div>
         }
 
-      <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
+        <Toaster header={"Not authorized"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
 
-      <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
-       
-      <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
+        <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
         
-      <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop} color={"success"}></Toaster>
+        <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
+          
+        <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop} color={"success"}></Toaster>
 
-      {/* {showPop &&
-      <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
-        <Toast.Header>
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>
-          Your rating was submitted
-        </Toast.Body>
-      </Toast>
-      } */}
       </div>
     );
   }
