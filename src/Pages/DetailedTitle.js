@@ -69,7 +69,7 @@ export default function DetailedTitle({id}) {
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
-        
+        setSimliarMovies(await GetSimilarMovies(params.id));
         const res = await GetTitleBookmarksById(params.id); // should be the right id!
     
           if(res){
@@ -80,7 +80,7 @@ export default function DetailedTitle({id}) {
       
       
 
-        setSimliarMovies(await GetSimilarMovies(params.id));
+       
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
