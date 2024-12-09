@@ -332,7 +332,7 @@ export default function DetailedTitle({id}) {
             <Modal.Footer>
               <Button variant="secondary" onClick={() => CloseRatingModal()}>Cancel</Button>
               <Button variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
-              <Button style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
+              <Button variant="danger" style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
             </Modal.Footer>
             </Modal.Dialog>
           </div>
@@ -378,7 +378,7 @@ export default function DetailedTitle({id}) {
         
         <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
           
-        <Toaster header={"Success"} body={"Your rating was submitted"} show={showRatingPop} color={"success"}></Toaster>
+        <Toaster header={"Success"} body={toastMessage} show={showRatingPop} color={"success"}></Toaster>
 
       </div>
     );
