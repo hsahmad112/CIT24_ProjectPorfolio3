@@ -1,22 +1,19 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-
 import { useNavigate } from 'react-router';
 import {useUser} from '../Store/store';
 import {useEffect, useState} from 'react';
-import { prettyDOM } from '@testing-library/react';
-import { toBePartiallyChecked } from '@testing-library/jest-dom/matchers';
+import { comparePasswords, validatePassword, validateEmail, validateName} from '../Helpers/FormHelper';
+
 
 export default function(){
 
-  const [legalFormatBool, SetLegalFormatBool] = useState();
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  
+  const [isFieldValid, setIsFieldValid] = useState(false);
 
   let navigate = useNavigate();
-    const [jsonBody, SetJsonBody] = useState({ //consider splitting up for readability
+    const [jsonBody, setJsonBody] = useState({ //consider splitting up for readability
         email: '',
-        firstName: '',
+        firstname: '',
         password: '',
         confirmPassword: '',
     });
@@ -24,94 +21,68 @@ export default function(){
     const {login} = useUser(); //Get login state, from store.js (UserContext)
     
     const [errorMessage, setErrorMessage] = useState({
-      passwordNotMatching: '',
-      emailIncorrectFormat: '',
-      generalError: '',
+      passwordMismatch: '',
+      invalidEmailFormat: '',
+      genericError: '',
+      invalidPasswordFormat: '',
+      invalidFirstNameFormat: ''
 
     });
-    const formIsValid = !legalFormatBool && !errorMessage.passwordNotMatching && !errorMessage.emailIncorrectFormat; //tracking validity for whole form 
-
-
-    const comparePwds = () => {
-      if (!jsonBody.password || !jsonBody.confirmPassword) return;
-      if(jsonBody.password !== jsonBody.confirmPassword){
-        SetLegalFormatBool(true);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          passwordNotMatching: "Password fields do not match!",
-        }));      }
-      else{
-        SetLegalFormatBool(false);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          passwordNotMatching: "",
-        }));
-      }
-    }
-    
-    const emailChecker = () =>{
-   // if(!errorMessage.emailIncorrectFormat) return; //somehow not working like the one for pwdChecker wtf
-    
-      if (!emailRegex.test(jsonBody.email)) {
-        SetLegalFormatBool(true);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          emailIncorrectFormat: "The format of the email is not correct!"
-        }));
-      }
-      else{
-        SetLegalFormatBool(false);
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          emailIncorrectFormat: ""
-        }));
-      }
-    } 
+    const formIsValid = !isFieldValid && !errorMessage.passwordMismatch && !errorMessage.invalidEmailFormat; //tracking validity for whole form 
 
     function handleChange(e){
         //console.log("live input:", jsonBody); //the most cursed console log
         const  {name, value} = e.target;
-        SetJsonBody((prevData) => ({
+        setJsonBody((prevData) => ({
             ...prevData, 
             [name]:value,
         }));
     };
 
     useEffect(()=>{
-      emailChecker();
-      comparePwds();
+      validateEmail(jsonBody.email, setErrorMessage, setIsFieldValid);
+      comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setIsFieldValid);
+      validatePassword(jsonBody.password, setErrorMessage, setIsFieldValid);
+      validateName(jsonBody.firstname, setErrorMessage, setIsFieldValid);
     }, [jsonBody], )
 
     
 
    async function handleSubmit(e){
         e.preventDefault();
+        const { email, firstname, password } = jsonBody;
         console.log("pressing the submit button", jsonBody);
 
-        try{
-          
+        try{    
        const response = await fetch(process.env.REACT_APP_BASE_API_LINK + "user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(jsonBody)
+            body: JSON.stringify({email, firstname, password })
         });
-        const data = await response.json();
-
-        const expireTime = new Date();
-        expireTime.setMonth(expireTime.getMonth()+1)
-       
         
-        const {token, firstName} = data;
-        console.log(`token: ${token} - firstname${firstName}`);
-        document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
-        document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
+        console.log(response.status);
 
-        console.log("signup success")
+        if(response.ok){
 
-        navigate("/");
-        login(firstName);
+          const data = await response.json();
+          const expireTime = new Date();
+          expireTime.setMonth(expireTime.getMonth()+1)
+
+          const {token, firstname} = data;
+          console.log(`token: ${token} - firstname${firstname}`);
+          document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
+          document.cookie = `FirstName=${firstname}; expires=${expireTime.toUTCString()}; Path=/`;
+  
+          console.log("signup success")
+  
+          navigate("/");
+          login(firstname);
+        }
+        else{
+          console.log("credentials passed the form check, but following server error occured", response.message);
+        }
     
       }
       
@@ -121,15 +92,9 @@ export default function(){
 
         setErrorMessage((prevState) => ({
           ...prevState,
-          generalError: 'An error occurred. Please try again later.'
+          genericError: 'An error occurred. Please try again later.'
         }));
-    }
-      //   }
-      
-      // }
-
-      
-
+    }      
     }
    
 return(
@@ -154,7 +119,7 @@ return(
         type="firstname"
         placeholder="Firstname"
         name="firstname"
-        defaultValue={jsonBody.firstName}
+        defaultValue={jsonBody.firstname}
         onChange={handleChange}
       />
     </Form.Group>
@@ -184,13 +149,28 @@ return(
 
     <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {false}> {errorMessage.emailIncorrectFormat}</Form.Text>
+      disabled = {isFieldValid}> {errorMessage.invalidEmailFormat}</Form.Text>
     </Form.Group>
 
 
     <Form.Group className='mb-1' controlId='PwdNotMatching'>
       <Form.Text className ='mt-3 text-danger'
-      disabled = {legalFormatBool}> {errorMessage.passwordNotMatching}</Form.Text>
+      disabled = {isFieldValid}> {errorMessage.passwordMismatch}</Form.Text>
+    </Form.Group>
+
+    <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
+      <Form.Text className ='mt-3 text-danger'
+      disabled = {isFieldValid}> 
+      {errorMessage.invalidPasswordFormat}
+      </Form.Text>
+    </Form.Group>
+
+
+    <Form.Group className='mb-1' controlId='firstNameIncorrectFormat'>
+      <Form.Text className ='mt-3 text-danger'
+      disabled = {isFieldValid}> 
+      {errorMessage.invalidFirstNameFormat}
+      </Form.Text>
     </Form.Group>
 
     <Button variant="primary" type="submit" disabled = {!formIsValid}> 

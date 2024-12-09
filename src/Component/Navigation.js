@@ -108,7 +108,10 @@ export default function Navigation(){
             {userName !== null && 
             <div>
               <p style={{color:"white"}}>hello {userName}</p>
+                    <Form>
+                    <Form.Group className="mb-3">
                     <Dropdown>
+                    
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
                       Burgermenu
                       </Dropdown.Toggle>
@@ -120,6 +123,9 @@ export default function Navigation(){
                         <Dropdown.Item onClick ={() => logout()} >Sign out</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
+                    </Form.Group>
+
+                    </Form>
             </div>}
 
             {userName === null && 
