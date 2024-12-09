@@ -67,8 +67,7 @@ code {
   border: 1px solid black !important;
   background-color: transparent !important; 
   border-radius: 12px;
-  margin-top: 70px;
-  right: 10%;
+  margin-top: 10px;
 }
 
 .card-no-margin{
@@ -88,7 +87,7 @@ code {
   background-color: transparent !important; 
   margin-top: 250px;
   border-radius: 12px;
-  right: 10%;
+  text-align: center !important;
   transition: .1s;
 }
 

@@ -39,7 +39,7 @@ export default function WactList(){
                     List of Title Bookmarks:
                     <Container>
                         <Row xs={1} md={4}> 
-                            {titleBookmarks?.map((person, index) => <PersonCard data={person} key={index}></PersonCard>)}     
+                            {titleBookmarks?.map((person, index) => <TitleCard data={person} key={index}></TitleCard>)}     
                         </Row>
                     </Container>
                 </Tab>

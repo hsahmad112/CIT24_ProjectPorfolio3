@@ -1,6 +1,7 @@
 import { useUser } from "../Store/store";
 import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
+import TitleSearchCard from "../Component/TitleSearchCard";
 import { displayYears } from "../Component/HelperFunctions";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
@@ -11,7 +12,7 @@ import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
 
-  const {userName, user, token} = useUser();
+  const {userName, token} = useUser();
   const params = useParams(id);
   const list = [1,2,3,4,5,6,7,8,9,10];
   
@@ -45,6 +46,7 @@ export default function DetailedTitle({id}) {
   }
 
   useEffect(()=>{
+    window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         setTitle(await GetTitleById(params.id));
@@ -61,12 +63,6 @@ export default function DetailedTitle({id}) {
 
     fetchData();
   }, [id, params])
-
-
-  // TODO
-  // Oh it still needs the bookmark
-  // 
-  // it would probalby also need at the bottom the relevant/similar movies
 
   async function RateMovie(){
     setShowPop(true);
@@ -110,7 +106,6 @@ export default function DetailedTitle({id}) {
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
     return (
       <div className="container">
-          {user}
           <Container fluid="true">
             <Row style={{marginTop: "10px", marginBottom: "10px"}}>
                 <Col width="100%">
@@ -185,7 +180,7 @@ export default function DetailedTitle({id}) {
                     <Card className="card-no-margin">
                         <Card.Body>
                           <h5>actors</h5>
-                            {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/persons/" + actor.id)} variant={"secondary"} className="pills" key={index}>{actor}</Button>)}
+                            {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/person/" + actor.personId)} variant={"secondary"} className="pills" key={index}>{actor.personName}</Button>)}
                           <Card.Text className="">
                           </Card.Text>
                         </Card.Body>
@@ -197,7 +192,7 @@ export default function DetailedTitle({id}) {
                     <Card className="card-no-margin">
                         <Card.Body>
                           <h5>writers</h5>
-                          {title.writersList.map((writer, index) => <Button onClick={() => navigate("/persons/" + writer.id)} variant={"secondary"} className="pills" key={index}>{writer}</Button>)}
+                          {title.writersList.map((writer, index) => <Button onClick={() => navigate("/person/" + writer.personId)} variant={"secondary"} className="pills" key={index}>{writer.personName}</Button>)}
                           <Card.Text className="">
                           </Card.Text>
                         </Card.Body>
@@ -207,47 +202,44 @@ export default function DetailedTitle({id}) {
               </Col>
               
               {/* column genre, and rate movie button */}
-              <Col xs={2} >
+              <Col xs={2}>
                 <Card className="genre-box">
                       <Card.Body>
                         <h5>genres</h5>
                           {title.genresList.map((genre, index) => <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills" key={index}>{genre}</Button>)}
-                        <Card.Text className="">
+                        <Card.Text>
                         </Card.Text>
                       </Card.Body>
                 </Card>
-                { userName !== null && hasRated === true &&      
-                <Card className="rate-movie-box" onClick={() => setShowModal(true)}>
-                  <Card.Body>
-                    <Card.Text className="">
-                      update your rating
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-                }
-
-                {userName !== null && hasRated === false &&
+                {userName !== null &&
                   <Card className="rate-movie-box" onClick={() => setShowModal(true)}>
-                  <Card.Body>
-                    <Card.Text className="">
-                      Rate movie
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
+                    <Card.Body>
+                      {hasRated ? "Update your rating" : "Rate movie"}
+                    </Card.Body>
+                  </Card>
                 }
               </Col>
             </Row>
           </Container>
-              
-        {similarMovies && 
-            // make a card or something, it should probably contain the same data 
-            similarMovies.map((item) => 
-            <div key={item.primaryTitle}>
-              <h1>{item.primaryTitle}</h1>
-            </div>)
-          // <div>
 
-          // </div>
+        {similarMovies && 
+        <Container fluid="true">
+          <div style={{textAlign: 'left'}}>
+            <h1>Similar movies</h1>
+            <Row md={3}>
+              { similarMovies?.map((item) =>   
+                <div key={item.primaryTitle}>
+                    <TitleSearchCard title={item} key={item.titleId}/>
+                    {item.map((genre) => 
+                      <div>
+                        <p>{genre} hi</p>
+                      </div>
+                    )}
+                </div>)
+              }     
+          </Row>
+        </div>
+        </Container>
         }
 
         {showModal &&      
@@ -274,18 +266,6 @@ export default function DetailedTitle({id}) {
             </Modal.Dialog>
           </div>
         }
-
-        {showPop &&
-        <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
-          <Toast.Header>
-            <strong className="me-auto">Success</strong>
-          </Toast.Header>
-          <Toast.Body>
-            Your rating was submitted
-          </Toast.Body>
-        </Toast>
-        }
-
 
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
@@ -333,18 +313,7 @@ export default function DetailedTitle({id}) {
           </Toast>
         }
 
-      <Toaster header={"Success"} body={"Your rating was submitted"} show={showPop}></Toaster>
-
-      {/* {showPop &&
-      <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
-        <Toast.Header>
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>
-          Your rating was submitted
-        </Toast.Body>
-      </Toast>
-      } */}
+        <Toaster header={"Success"} body={"Your rating was submitted"} show={showPop}></Toaster>
       </div>
     );
   }
