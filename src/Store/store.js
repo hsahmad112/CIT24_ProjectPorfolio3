@@ -2,10 +2,6 @@ import { createContext, useContext } from 'react';
 import { useState } from "react";
 import {useNavigate} from 'react-router';
 
-export const cookieHeaders = {
-  "Content-Type": "application/json",
-  "Authorization" : getCookieValue("Authorization") 
-}
 
 export function getCookieValue(name) {
   const cookies = document.cookie.split(';'); //Splits cookie string from document, into substrings seperated by ";", and returns array
@@ -19,6 +15,19 @@ export function getCookieValue(name) {
     }
   }
   return null;
+}
+
+// it HAS to be named "headers" to work when inserting it into the fetch call
+export function GetHeader(){
+  let cookie = getCookieValue("Authorization");
+  if(cookie != null){
+    return ({
+      "Content-Type": "application/json",
+      "Authorization" : cookie
+    });
+  }
+  else 
+    return {};
 }
 
 const UserContext = createContext();

@@ -1,5 +1,7 @@
 import { useUser } from "../Store/store";
 import { useEffect, useState } from "react";
+import Toaster from "../Component/Toaster";
+import { displayYears } from "../Component/HelperFunctions";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
@@ -69,6 +71,11 @@ export default function DetailedTitle({id}) {
 
   async function RateMovie(){
     setShowPop(true);
+
+    setTimeout(() => {
+      setShowPop(false);
+    }, 2500);
+    
     setShowModal(false);
     if(hasRated){
       await PutRating(params.id, rating);
@@ -248,10 +255,10 @@ export default function DetailedTitle({id}) {
           </Container>
               
         {similarMovies && 
-
+            // make a card or something, it should probably contain the same data 
             similarMovies.map((item) => 
-            <div>
-              <p></p>
+            <div key={item.primaryTitle}>
+              <h1>{item.primaryTitle}</h1>
             </div>)
           // <div>
 
@@ -339,6 +346,18 @@ export default function DetailedTitle({id}) {
           </Toast>
         }
 
+      <Toaster header={"Success"} body={"Your rating was submitted"} show={showPop}></Toaster>
+
+      {/* {showPop &&
+      <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
+        <Toast.Header>
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>
+          Your rating was submitted
+        </Toast.Body>
+      </Toast>
+      } */}
       </div>
     );
   }

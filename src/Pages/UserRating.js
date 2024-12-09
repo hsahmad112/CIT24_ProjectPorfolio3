@@ -12,7 +12,7 @@ import TitlePlaceholder from '../Component/TitlePlaceholder';
 
 export default function UserRating(){
     const [userRatings, setUserRatings] = useState([]);
-    const[errorMessage, setErrorMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [timer, setTimer] = useState(5);
     const [sortingOrder, setSortingOrder] = useState("rating"); //Sort order will default to rating
@@ -20,7 +20,7 @@ export default function UserRating(){
 
     let navigate = useNavigate();
 
-    const {token, userName} = useUser();
+    const {userName} = useUser();
     
     useEffect(() =>{
         const fetchRatings = async () => {
@@ -28,11 +28,13 @@ export default function UserRating(){
             const ratings = await GetAllRatings();
          
             if(ratings.success){
-            setUserRatings(ratings.data);
-            sortRatingsHandler(sortingOrder);
-            setIsLoading(false); //should not render "loading" in UI when rating fetch is successful
+                console.log("Have ratings");
+                setUserRatings(ratings.data);
+                sortRatingsHandler(sortingOrder);
+                setIsLoading(false); //should not render "loading" in UI when rating fetch is successful
             }
             else {
+                console.log("Have NO ratings");
                 setIsLoading(false);
                 switch (ratings.message) {
                     case "401":
@@ -52,7 +54,7 @@ export default function UserRating(){
         let countDown;
         const errorCodeHandler = () => {
             if (errorMessage === "401") {
-                console.log("Unauthorized. We redirect in 5 sec my frined");
+                console.log("Unauthorized. We redirect in 5 sec my friend");
                // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
                  countDown = setInterval(() => {
                     setTimer((t) => {
@@ -139,15 +141,15 @@ export default function UserRating(){
                     console.log("failed to do sorting order for ratings..");
                     break;
             } 
-        })
-            
+        })      
             
     }
     useEffect(() => { //Each time descending state update, calls sortRatingsHandler and sorts result again
         sortRatingsHandler(sortingOrder);    
     },[descending])
-    console.log("user rating is::::");
-    console.log(userRatings);
+
+    console.log(userRatings[0]);
+
     return (
         <>
 

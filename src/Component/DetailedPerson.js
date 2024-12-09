@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GetPerson, GetPersonBackdrop } from "../Service/PersonService";
-import { GetPersonBookmarks, GetPersonBookmarksByID, SavePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
+import { GetPersonBookmarks, GetPersonBookmarksById, SavePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
 import { Card, Col, Row, Container, Stack, Button } from 'react-bootstrap';
 import { useUser } from "../Store/store";
 import * as Icon from 'react-bootstrap-icons';
@@ -13,12 +13,12 @@ export default function DetailedPerson({id}){
     const [personBackdrop, setPersonBackdrop] = useState(null);
     const [personBookmark, setPersonBookmark] = useState(null);
 
-    const { user, token } = useUser();
+    const { token } = useUser();
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
   
     function ToggleBookmark(){
         if(bookmark){            
-            DeletePersonBookmarksById(token, personId.id);
+            DeletePersonBookmarksById(personId.id);
             setBookmark(false);            
         }else{            
             SavePersonBookmarksById(personId.id, "Test text...");  // add annotations!
@@ -32,7 +32,7 @@ export default function DetailedPerson({id}){
                 setPerson(await GetPerson(personId.id));
                 setPersonBackdrop((await GetPersonBackdrop(personId.id)))
                 if(token){
-                    const res = await GetPersonBookmarksByID(token, personId.id); // should be the right id!
+                    const res = await GetPersonBookmarksById(personId.id); // should be the right id!
                     if(res){
                         setPersonBookmark(res);
                         setBookmark(true);
@@ -47,7 +47,7 @@ export default function DetailedPerson({id}){
         fetchData();
     }, [id]);
 
-    if(person && personBackdrop){      
+    if(person){      
            
         let mostRelevantTitles = <>{person.mostRelevantTitles.map((title, index) => <Button variant={"secondary"} className="pills" key={index}>{title}</Button>)}</>
         let primaryProfessions = <>{person.primaryProfessions.map((profession, index) => <Button variant={"secondary"} className="pills" key={index}>{profession}</Button>)}</>
@@ -55,7 +55,6 @@ export default function DetailedPerson({id}){
         // [url, id, name, birthYear, deathYear, mostRelevantTitles, primaryProfessions]
         return (      
             <div className="container">
-              {user}
               <Container fluid="true">
   
                 {/* Row 1) */}
