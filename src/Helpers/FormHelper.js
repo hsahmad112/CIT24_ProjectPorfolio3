@@ -44,12 +44,12 @@ export const validateEmail = (email, setErrorMessage, setLegalFormatBool) => {
 
 export const validateName = (firstname, setErrorMessage, setLegalFormatBool) => {
     const errorKey = "invalidFirstNameFormat";
-    const invalidFirstNameFormatMessage = "The minimum required length for a name is 8 characters. Idk why tho.."
+    const invalidFirstNameFormatMessage = "The minimum required length for a name is 2 characters. Idk why tho.."
 
     if(isFieldEmpty(firstname, setLegalFormatBool, setErrorMessage, errorKey)){
         return;
     }
-    if(firstname === "" || firstname.length < 8){
+    if(firstname === "" || firstname.length < 2){
         setError(setLegalFormatBool, setErrorMessage, errorKey, invalidFirstNameFormatMessage)
     }
     else{

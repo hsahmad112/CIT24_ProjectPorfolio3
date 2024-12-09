@@ -98,8 +98,6 @@ export default function DetailedTitle({id}) {
     );  
   }
 
- // if(similarMovies) console.log(similarMovies);
-
   if(title){
     // console.log(title)
     // console.log(rating);
@@ -227,12 +225,12 @@ export default function DetailedTitle({id}) {
           <div style={{textAlign: 'left'}}>
             <h1>Similar movies</h1>
             <Row md={3}>
-              { similarMovies?.map((item) =>   
+              {similarMovies?.map((item) =>   
                 <div key={item.primaryTitle}>
                     <TitleSearchCard title={item} key={item.titleId}/>
-                    {item.map((genre) => 
-                      <div>
-                        <p>{genre} hi</p>
+                    {item?.genres?.map((genre) => 
+                      <div style={{display: "inline", marginLeft: "3px"}} key={genre}>
+                        <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills">{genre}</Button>
                       </div>
                     )}
                 </div>)
