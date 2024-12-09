@@ -26,6 +26,24 @@ export async function GetTitleBookmarks(){
     
 }
 
+export async function GetTitleBookmarksById(id){
+    try {
+        let headers = GetHeader();
+        const response = await fetch(baseApiUrl + "bookmarks/title/" + id, {headers});
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        //return null;
+    }
+    
+}
+
 export async function GetPersonBookmarks(){
     try {
         let headers = GetHeader();
