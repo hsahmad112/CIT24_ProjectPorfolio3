@@ -1,21 +1,16 @@
-import { useEffect } from "react";
 import SearchPreview from "../Component/SearchPreview";
 import { useLocation } from "react-router";
-import { useUser, getCookieValue } from "../Store/store";
+import { GetHeader } from "../Store/store";
 
 //method only handles fetching data
  export async function FetchData(searchType, body){
+    console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
     const fetchUrl = "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize;
-    //const {token} = useUser();
-    const headers =  {    
-        "Content-Type": "application/json",
-        "Authorization" : getCookieValue('Authorization')
-    }
 
+    let headers = GetHeader();
     switch (searchType) {
         case "everything":
-            
             //returns both titles and persons, fethces concurrently using Promise.All, 
             const [personResponse, titleResponse] = await Promise.all([
                 fetch(baseUrl  + "persons" + fetchUrl, {headers}),
@@ -47,7 +42,7 @@ import { useUser, getCookieValue } from "../Store/store";
             return{persons: personData, titles: titleData};
             
         default:
-            const response = await fetch(baseUrl + searchType + fetchUrl, { headers });
+            const response = await fetch(baseUrl + searchType + fetchUrl, {headers});
             if(response.ok){
                 const data = await response.json();
                 return {persons: data, titles: data}; //Should prop find a better way, than duplicating data in persons/titles....
@@ -62,8 +57,6 @@ import { useUser, getCookieValue } from "../Store/store";
 export default  function SearchResult(){
     //gives us access to states passed through navigation.js 
     const location = useLocation();
-
-
 
     //const { searchType } = useUser();
     
@@ -84,8 +77,8 @@ export default  function SearchResult(){
     const body = location.state.body;
      switch (searchType) {
         case "everything":
-            selectedEntities.persons = result?.persons || {};
-            selectedEntities.titles = result?.titles ||  {};
+            selectedEntities.persons = result?.persons || [];
+            selectedEntities.titles = result?.titles ||  [];
            
             console.log("this is our everything entity");
             console.log(selectedEntities);
@@ -115,10 +108,8 @@ export default  function SearchResult(){
             {result === undefined && <p>Der skete en fejl</p>} {/* Change this error message! */}
             { searchType === 'everything' &&(
                 <>
-
                     <SearchPreview componentType={personType} body={body} searchResult={selectedEntities.persons} />
-                    <SearchPreview componentType={titleType} body={body} searchResult={selectedEntities.titles}  />   
-        
+                    <SearchPreview componentType={titleType} body={body} searchResult={selectedEntities.titles} />   
                 </>       
                 )
             }

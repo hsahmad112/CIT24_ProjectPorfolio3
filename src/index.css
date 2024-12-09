@@ -35,7 +35,11 @@ code {
 }
 
 .less-opacity{
-  opacity: 75%;
+  opacity: 70%;
+}
+
+.card-text{
+  transform: translate(10px);
 }
 
 .movie-card{

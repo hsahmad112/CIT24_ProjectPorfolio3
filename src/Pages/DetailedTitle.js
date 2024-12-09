@@ -1,5 +1,7 @@
 import { useUser } from "../Store/store";
 import { useEffect, useState } from "react";
+import Toaster from "../Component/Toaster";
+import { displayYears } from "../Component/HelperFunctions";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
@@ -41,14 +43,13 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [id, params])
 
-
-// TODO
-// Oh it still needs the bookmark
-// 
-// it would probalby also need at the bottom the relevant/similar movies
-
   async function RateMovie(){
     setShowPop(true);
+
+    setTimeout(() => {
+      setShowPop(false);
+    }, 2500);
+    
     setShowModal(false);
     if(hasRated){
       await PutRating(params.id, rating);
@@ -62,15 +63,6 @@ export default function DetailedTitle({id}) {
   function CloseModal(){
     setHoverRating(-1);
     setShowModal(false);
-  }
-
-  function displayYears(startYear, endYear){
-    if(!startYear && !endYear) return "";
-
-    if(!endYear){
-      return "(" + startYear + ")";
-    }
-    return "(" + startYear + "-" + endYear + ")";
   }
 
   if(errorMessage){
@@ -199,9 +191,8 @@ export default function DetailedTitle({id}) {
         {similarMovies && 
             // make a card or something, it should probably contain the same data 
             similarMovies.map((item) => 
-            <div>
+            <div key={item.primaryTitle}>
               <h1>{item.primaryTitle}</h1>
-              <p>{item.primaryTitle}</p>
             </div>)
           // <div>
 
@@ -233,7 +224,9 @@ export default function DetailedTitle({id}) {
         </div>
       }
 
-      {showPop &&
+      <Toaster header={"Success"} body={"Your rating was submitted"} show={showPop}></Toaster>
+
+      {/* {showPop &&
       <Toast className="to-front" bg={"primary"} onClose={() => setShowPop(false)} show={showPop} delay={2500} autohide>
         <Toast.Header>
           <strong className="me-auto">Success</strong>
@@ -242,7 +235,7 @@ export default function DetailedTitle({id}) {
           Your rating was submitted
         </Toast.Body>
       </Toast>
-      }
+      } */}
       </div>
     );
   }

@@ -1,7 +1,7 @@
 export default function Error(){
     return(
         <div>
-            error
+            An error occurred. 
         </div>
     )
 }
