@@ -25,6 +25,7 @@ export default function DetailedTitle({id}) {
 
   const [errorMessage, setErrorMessage] = useState(null);  
   const [bookmark, setBookmark] = useState(null);
+  const [annotation, setAnnotation] = useState("");
 
   let navigate = useNavigate();
 
@@ -34,7 +35,7 @@ export default function DetailedTitle({id}) {
           setBookmark(false);          
           setShowBookmarkModal(false);        
       }else{            
-          SaveTitleBookmarksById(params.id, "Test text..."); // add annotations!
+          SaveTitleBookmarksById(params.id, annotation); // add annotations!
           setBookmark(true);
           setShowBookmarkPop(true);
           setShowBookmarkModal(false);
@@ -87,6 +88,11 @@ export default function DetailedTitle({id}) {
     setShowBookmarkModal(false);
   }
 
+  const handleAnnotationChange = (e) => {
+    const { value } = e.target;
+    setAnnotation(value);
+};
+
   function displayYears(startYear, endYear){
     if(!startYear && !endYear) return "";
 
@@ -130,7 +136,7 @@ export default function DetailedTitle({id}) {
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
-                      <div onClick={() => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                      <div onClick={bookmark ? ToggleBookmark : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                       </div>                     
                   </Col>
@@ -291,20 +297,18 @@ export default function DetailedTitle({id}) {
 
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
-          <Modal.Dialog >
+          <Modal.Dialog>
             <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
-              <Modal.Title>Bookmark {title.primaryTitle}</Modal.Title>
+              <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
             </Modal.Header>
-
+            
             <Modal.Body>
-              <div className="mb-2">
                   <textarea
-                      value={"Put annotations..."}
-                      //onChange={(e) => handleChapterChange(e, expandedChapter, 'chapterDescription')}
-                      className={`form-control`}
+                      value={annotation}
+                      //placeholder="Insert anntation..."
+                      onChange={(e) => handleAnnotationChange(e)}                  
                       rows="3"
                   />
-              </div>
               {/* <Form>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                   <Form.Label>Email address</Form.Label>
