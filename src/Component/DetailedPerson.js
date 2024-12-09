@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 import Toaster from "../Component/Toaster";
 import { GetPerson, GetPersonBackdrop } from "../Service/PersonService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
@@ -9,8 +9,9 @@ import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson({id}){
     const params = useParams(id);
-    const { token } = useUser();
-
+    const { token, loggedIn } = useUser();
+    const location = useLocation();
+    let pathname = location.pathname;
     const [person, setPerson] = useState(null);
     const [bookmark, setBookmark] = useState(null);
     
@@ -53,13 +54,15 @@ export default function DetailedPerson({id}){
             try {
                 setPerson(await GetPerson(params.id));
                 setPersonBackdrop((await GetPersonBackdrop(params.id)))
-                if(token){
-                    const res = await GetPersonBookmarksById(params.id); // should be the right id!
-                    if(res){
-                        //setPersonBookmark(res);
-                        setBookmark(true);
-                    }
+               
+                const res = await GetPersonBookmarksById(params.id);
+                if(res){
+                    //setPersonBookmark(res);
+                    setBookmark(true);
+                }else {
+                    setBookmark(false);
                 }
+                
           
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -67,8 +70,8 @@ export default function DetailedPerson({id}){
         };
     
         fetchData();
-    }, [id, params]);
-
+    }, [id, location.pathname]);
+        console.log("location path is:" + location.pathname);
     function CloseBookmarkModal(){
         setShowBookmarkModal(false);
       }

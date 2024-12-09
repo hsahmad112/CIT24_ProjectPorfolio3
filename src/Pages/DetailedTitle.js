@@ -70,16 +70,13 @@ export default function DetailedTitle({id}) {
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
         setSimliarMovies(await GetSimilarMovies(params.id));
-        const res = await GetTitleBookmarksById(params.id); // should be the right id!
-    
+        const res = await GetTitleBookmarksById(params.id);
+        
           if(res){
               setTitleBookmark(res);
               setBookmark(true);
-          }
+          }   
         
-      
-      
-
        
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
@@ -160,15 +157,15 @@ export default function DetailedTitle({id}) {
 
   // if(similarMovies) console.log(similarMovies);
   function ShowingBookmarkModal(){
-    if(errorMessage !== "401"){
-      setShowBookmarkModal(true);
+    if(token !== null){
+        setShowBookmarkModal(true);
     } else {
-      setShowNotLoggedIn(true);
-      setTimeout(() => {
+        setShowNotLoggedIn(true);
+        setTimeout(() => {
         setShowNotLoggedIn(false);
-      }, 2500);
+        }, 2500);
     }
-  }
+}
 
   if(title){
     // console.log(title)

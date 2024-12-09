@@ -36,6 +36,7 @@ export const UserProvider = ({ children }) => {
       const [searchType, setSearchType] = useState("everything");
       const [userName, setUserName] = useState(getCookieValue("FirstName"));  
       const [token, setToken] = useState(getCookieValue("Authorization"));
+      const [loggedIn, setLoggedIn] = useState(false);
       const [searchResult, setSearchResult] = useState([{
         persons: [],
         titles: []
@@ -45,12 +46,14 @@ export const UserProvider = ({ children }) => {
 
       const login = (userData) => {
         console.log(`Setting userName: ${userData}`);
-          setUserName(userData);
+        setUserName(userData);
+        setLoggedIn(true);
       };
 
       const logout = () => {
           setUserName(null);
           setToken(null);
+          setLoggedIn(false);
           console.log("Logging out");
           document.cookie = "FirstName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -58,7 +61,7 @@ export const UserProvider = ({ children }) => {
       };
 
       return (
-        <UserContext.Provider value={{userName, token, searchType, searchResult, setSearchResult, setSearchType, login, logout}}>
+        <UserContext.Provider value={{userName, token, searchType, searchResult, loggedIn, setSearchResult, setSearchType, login, logout}}>
           {children}         
         </UserContext.Provider>
       );
