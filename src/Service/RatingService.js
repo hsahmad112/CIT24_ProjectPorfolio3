@@ -47,3 +47,11 @@ export async function PutRating(titleId, rating) {
     console.log(rating);
     return await axios.put(baseRatingApiUrl + titleId, {rating}, {headers});   
 }
+
+
+export async function DeleteRating(titleId){
+    let headers = GetHeader();
+    console.log("deleting");
+    console.log(baseRatingApiUrl + titleId);
+    return await axios.delete(baseRatingApiUrl + titleId, {headers});   
+}

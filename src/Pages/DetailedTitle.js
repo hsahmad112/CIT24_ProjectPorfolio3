@@ -5,7 +5,7 @@ import TitleSearchCard from "../Component/TitleSearchCard";
 import { displayYears } from "../Component/HelperFunctions";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
-import { PostRating, GetRatingById, PutRating } from "../Service/RatingService";
+import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
 import { SaveTitleBookmarksById, DeleteTitleBookmarksById} from '../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
@@ -25,6 +25,7 @@ export default function DetailedTitle({id}) {
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
   const [similarMovies, setSimliarMovies] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
 
   const [errorMessage, setErrorMessage] = useState(null);  
   const [bookmark, setBookmark] = useState(null);
@@ -64,7 +65,27 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [id, params])
 
+
+  async function RemoveRating(){
+
+    try{
+    DeleteRating(params.id);
+    setToastMessage('Your rating was removed');  
+    setShowPop(true);
+    setTimeout(() => {
+      setShowPop(false);
+    }, 2500);
+    setShowModal(false);
+    setHasRated(false);
+    setRating(-1);
+  }
+  catch(error){
+    console.log("something went wrong");
+  }
+  }
+
   async function RateMovie(){
+    setToastMessage('Your rating was submitted');
     setShowPop(true);
 
     setTimeout(() => {
@@ -230,7 +251,8 @@ export default function DetailedTitle({id}) {
               { similarMovies?.map((item) =>   
                 <div key={item.primaryTitle}>
                     <TitleSearchCard title={item} key={item.titleId}/>
-                    {item.map((genre) => 
+                    {item?.genre?.length}
+                    {item?.genre?.map((genre) => 
                       <div>
                         <p>{genre} hi</p>
                       </div>
@@ -262,6 +284,7 @@ export default function DetailedTitle({id}) {
             <Modal.Footer>
               <Button variant="secondary" onClick={() => CloseModal()}>Cancel</Button>
               <Button variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
+              <Button style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
             </Modal.Footer>
             </Modal.Dialog>
           </div>
@@ -313,7 +336,8 @@ export default function DetailedTitle({id}) {
           </Toast>
         }
 
-        <Toaster header={"Success"} body={"Your rating was submitted"} show={showPop}></Toaster>
+        <Toaster header={"Success"} body={toastMessage} show={showPop}></Toaster>
+        
       </div>
     );
   }
