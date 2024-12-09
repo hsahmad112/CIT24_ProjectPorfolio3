@@ -8,18 +8,20 @@ import { useUser } from "../Store/store";
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson({id}){
+    const params = useParams(id);
+    const { token } = useUser();
+
     const [person, setPerson] = useState(null);
     const [bookmark, setBookmark] = useState(null);
     
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showBookmarkPop, setShowBookmarkPop] = useState(false);
-    const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
-    const params = useParams(id);
+    const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false); 
+    const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
     const [personBackdrop, setPersonBackdrop] = useState(null);
-    //const [personBookmark, setPersonBookmark] = useState(null);
+    //const [personBookmark, setPersonBookmark] = useState(null);   
     
     const [annotation, setAnnotation] = useState("");
-    const { token } = useUser();
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
   
     function ToggleBookmark(){
@@ -71,10 +73,21 @@ export default function DetailedPerson({id}){
         setShowBookmarkModal(false);
       }
     
-      const handleAnnotationChange = (e) => {
-          const { value } = e.target;
-          setAnnotation(value);
-      };
+    const handleAnnotationChange = (e) => {
+        const { value } = e.target;
+        setAnnotation(value);
+    };
+
+    function ShowingBookmarkModal(){
+    if(token !== null){
+        setShowBookmarkModal(true);
+    } else {
+        setShowNotLoggedIn(true);
+        setTimeout(() => {
+        setShowNotLoggedIn(false);
+        }, 2500);
+    }
+    }
 
     if(person){      
            
@@ -98,7 +111,7 @@ export default function DetailedPerson({id}){
                         {/* <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                             { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                         </div> */}
-                        <div onClick={bookmark ? ToggleBookmark : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                        <div onClick={bookmark ? ToggleBookmark : ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                       </div>  
                     </Col>
@@ -221,6 +234,8 @@ export default function DetailedPerson({id}){
                         </Modal.Dialog>
                     </div>
                 }
+                
+                <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
 
                 <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
                 

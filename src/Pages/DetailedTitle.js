@@ -9,16 +9,17 @@ import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bo
 import { SaveTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById} from '../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
-export default function DetailedTitle({id}) {
-
-  const {userName, user, token} = useUser();
+export default function DetailedTitle({id}) {  
   const params = useParams(id);
+  const {userName, user, token} = useUser();
   const list = [1,2,3,4,5,6,7,8,9,10];
   
   const [title, setTitle] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showRatingPop, setShowRatingPop] = useState(false);
   const [showBookmarkModal, setShowBookmarkModal] = useState(false);
+  const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
+  
   const [showBookmarkPop, setShowBookmarkPop] = useState(false);
   const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
@@ -82,7 +83,6 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [id, params])
 
-
   // TODO
   // Oh it still needs the bookmark
   // 
@@ -109,7 +109,7 @@ export default function DetailedTitle({id}) {
     setHoverRating(-1);
     setShowRatingModal(false);
   }
-  
+
   function CloseBookmarkModal(){
     setShowBookmarkModal(false);
   }
@@ -136,7 +136,18 @@ export default function DetailedTitle({id}) {
     );  
   }
 
- // if(similarMovies) console.log(similarMovies);
+  // if(similarMovies) console.log(similarMovies);
+
+  function ShowingBookmarkModal(){
+    if(token !== null){
+      setShowBookmarkModal(true);
+    } else {
+      setShowNotLoggedIn(true);
+      setTimeout(() => {
+        setShowNotLoggedIn(false);
+      }, 2500);
+    }
+  }
 
   if(title){
     // console.log(title)
@@ -162,7 +173,7 @@ export default function DetailedTitle({id}) {
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
-                      <div onClick={bookmark ? ToggleBookmark : () => setShowBookmarkModal(true)} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                      <div onClick={bookmark ? ToggleBookmark : ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
                       </div>                     
                   </Col>
@@ -342,6 +353,8 @@ export default function DetailedTitle({id}) {
             </Modal.Dialog>
           </div>
         }
+
+      <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
 
       <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
        
