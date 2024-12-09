@@ -26,7 +26,7 @@ export default function DetailedPerson({id}){
   
     function ToggleBookmark(){
         if(bookmark){            
-            DeletePersonBookmarksById(token, params.id);
+            DeletePersonBookmarksById(params.id);
             setBookmark(false);
             setShowRemoveBookmarkPop(true)
             setTimeout(() => {
