@@ -70,18 +70,16 @@ export default function DetailedTitle({id}) {
         if(tempRating > -1) setHasRated(true);
         
         const res = await GetTitleBookmarksById(params.id); // should be the right id!
-        if(res.message === "401"){
-          setErrorMessage("401");
-        }else{
+    
           if(res){
               setTitleBookmark(res);
               setBookmark(true);
           }
-        }
+        
       
       
 
-        //setSimliarMovies(await GetSimilarMovies(params.id));
+        setSimliarMovies(await GetSimilarMovies(params.id));
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);

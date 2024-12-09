@@ -79,14 +79,14 @@ export default function DetailedPerson({id}){
     };
 
     function ShowingBookmarkModal(){
-    if(token !== null){
-        setShowBookmarkModal(true);
-    } else {
-        setShowNotLoggedIn(true);
-        setTimeout(() => {
-        setShowNotLoggedIn(false);
-        }, 2500);
-    }
+        if(token !== null){
+            setShowBookmarkModal(true);
+        } else {
+            setShowNotLoggedIn(true);
+            setTimeout(() => {
+            setShowNotLoggedIn(false);
+            }, 2500);
+        }
     }
 
     if(person){      
