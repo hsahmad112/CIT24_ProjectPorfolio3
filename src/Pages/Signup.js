@@ -6,7 +6,7 @@ import {useEffect, useState} from 'react';
 import { comparePasswords, validatePassword, validateEmail, validateName} from '../Helpers/FormHelper';
 
 
-export default function(){
+export default function Signup(){
 
   const [isFieldValid, setIsFieldValid] = useState(false);
 

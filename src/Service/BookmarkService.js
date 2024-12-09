@@ -9,9 +9,10 @@ const api_key = process.env.REACT_APP_TMDB_API_KEY;
 // Use find so get title or person from tmdb api: 
 // Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
 
+let headers = GetHeader();
+
 export async function GetTitleBookmarks(){ 
     try {
-        let headers = GetHeader();
         const response = await fetch(baseApiUrl + "bookmarks/title/", {headers});
 
         if (!response.ok) {
@@ -46,7 +47,6 @@ export async function GetTitleBookmarksById(id){
 
 export async function GetPersonBookmarks(){
     try {
-        let headers = GetHeader();
         const response = await fetch(baseApiUrl + "bookmarks/person/", {headers});
 
         if (!response.ok) {
@@ -63,7 +63,6 @@ export async function GetPersonBookmarks(){
 
 export async function GetPersonBookmarksById(id){
     try {
-        let headers = GetHeader();
         const response = await fetch(baseApiUrl + "bookmarks/person/" + id, {headers});
 
         if (!response.ok) {
@@ -81,7 +80,6 @@ export async function GetPersonBookmarksById(id){
 
 export async function SavePersonBookmarksById(personId, annotation){
     try {
-        let headers = GetHeader();
         const response = await axios.post(baseApiUrl + "bookmarks/person/", { personId, annotation }, {headers});
 
         if (!response.ok) {
@@ -96,15 +94,9 @@ export async function SavePersonBookmarksById(personId, annotation){
 
 }
 
-export async function DeletePersonBookmarksById(token, personId){
+export async function DeletePersonBookmarksById(personId){
     try {
-        let headers = GetHeader();
-        const response = await axios.delete(baseApiUrl + `bookmarks/person/${personId}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization" : `${token}`}
-        });
+        const response = await axios.delete(baseApiUrl + `bookmarks/person/${personId}`, {headers});
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -118,10 +110,8 @@ export async function DeletePersonBookmarksById(token, personId){
     
 }
 
-
 export async function SaveTitleBookmarksById(titleId, annotation){
     try {
-        let headers = GetHeader();
         const response = await axios.post(baseApiUrl + "bookmarks/title/", { titleId, annotation },  {headers});
 
         if (!response.ok) {
@@ -136,14 +126,9 @@ export async function SaveTitleBookmarksById(titleId, annotation){
     
 }
 
-export async function DeleteTitleBookmarksById(token, titleId){
+export async function DeleteTitleBookmarksById(titleId){
     try {
-        const response = await fetch(baseApiUrl + `bookmarks/title/${titleId}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization" : `${token}`}
-        });
+        const response = await axios.delete(baseApiUrl + `bookmarks/title/${titleId}`, {headers});
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

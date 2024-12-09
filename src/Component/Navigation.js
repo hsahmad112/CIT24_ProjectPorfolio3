@@ -69,7 +69,7 @@ export default function Navigation(){
       <div>
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
           <Container>
-            <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>React-Bootstrap</Navbar.Brand>
+            <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>Portfolio Logo</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Form inline="true" onSubmit={handleSubmit}>
               <Row>
@@ -95,7 +95,7 @@ export default function Navigation(){
                       aria-describedby="nav-bar-search"     
                       onChange= {handleQuery}
                     />
-                    <Button type='submit'> Search</Button>
+                    <Button type='submit'><i className="bi bi-search"></i></Button>
                   </InputGroup>
                 </Col>
               </Row>
