@@ -14,6 +14,7 @@ import Signup from './Pages/Signup';
 import UserRating from './Pages/UserRating';
 import UserSetting from './Pages/UserSetting';
 import SearchResult from './Pages/SearchResult';
+import Profile from './Pages/Profile';
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
             <Route path="/person/:id" element={<DetailedPerson/>} />
             <Route path="/login" element={<Login/>}></Route>
             <Route path="/signup" element={<Signup/>}></Route>
+            <Route path="/profile" element={<Profile/>}></Route>
             <Route path="/watchlist" element={<WactList/>}></Route>
             <Route path="/search" element={<SearchResult/>}></Route>
             <Route path="/rating" element={<UserRating/>}></Route>

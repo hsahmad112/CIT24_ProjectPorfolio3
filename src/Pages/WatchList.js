@@ -24,6 +24,7 @@ export default function WactList(){
        
     }, []);
     
+    
     return(
         <div className="container">
             <h1>Your Watchlist</h1>
@@ -39,7 +40,7 @@ export default function WactList(){
                     List of Title Bookmarks:
                     <Container>
                         <Row xs={1} md={4}> 
-                            {titleBookmarks?.map((person, index) => <TitleCard data={person} key={index}></TitleCard>)}     
+                            {titleBookmarks?.map((title, index) => <TitleCard data={title} key={index}></TitleCard>)}     
                         </Row>
                     </Container>
                 </Tab>
