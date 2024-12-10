@@ -102,16 +102,16 @@ export default function UserRating(){
                         }
                     } else {
                         //Ascending order
-                    if(titleA < titleB){
-                        return -1;
+                        if(titleA < titleB){
+                            return -1;
+                        }
+                        else if (titleA > titleB){
+                            return 1;
+                        } else {
+                        return 0;
+                        }
                     }
-                    else if (titleA > titleB){
-                        return 1;
-                    } else {
-                    return 0;
-                    }
-                    }
-                    });
+                });
                    
                 
                 case "createdAt" : //maybe not good with string uppercase?
@@ -153,7 +153,7 @@ export default function UserRating(){
         sortRatingsHandler(sortingOrder);    
     },[descending])
 
-    console.log(userRatings[0]);
+    console.log(userRatings);
 
     return (
         <>
