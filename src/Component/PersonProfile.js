@@ -14,7 +14,7 @@ return(
 
             <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + person.data.personId)}>
                 <Card.Body>
-                    <Card.Title> {person.data.personId} </Card.Title>
+                    <Card.Title> {person.data.personName} </Card.Title>
                     <Card.Text> {person.data.annotation} </Card.Text>
                     <Button variant="primary">Go to person</Button>
                 </Card.Body>
