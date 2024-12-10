@@ -78,7 +78,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
 
           {
             searchResult.entities?.length > 0 ?
-            result.map((e) => (
+            result?.map((e) => (
               componentType === "personType" ? 
               <PersonSearchCard person={e} key={e.personId}/> :
               <TitleSearchCard title={e} key={e.titleId}/>
