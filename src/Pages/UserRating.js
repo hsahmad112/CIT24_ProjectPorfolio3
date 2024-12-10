@@ -9,6 +9,7 @@ import {Container, Row} from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 import TitlePlaceholder from '../Component/TitlePlaceholder';
+import Pagination from 'react-bootstrap/Pagination';
 
 export default function UserRating(){
     const [userRatings, setUserRatings] = useState([]);
@@ -18,13 +19,20 @@ export default function UserRating(){
     const [sortingOrder, setSortingOrder] = useState("rating"); //Sort order will default to rating
     const [descending, setDescending] = useState(true); //will default to descending sort order
 
+    const[page, setPage] = useState(0); //The page we are on
+    const [totalPages, setTotalPages] = useState(1) //number of pages in total, we will set state to value recieved from backend
+    const [pagenationItems, setPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
+    
+
+    const pageSize = 5; //For now, hard-backed.
+
     let navigate = useNavigate();
 
     const {userName} = useUser();
     
-    const queryParams = //Used for pagenation, we send these queryParams when fetching ratings in RatingService
-    { page: '0', 
-      pageSize: '5' 
+    const queryParams = //Used for pagenation, we send these queryParams when fetching bookmarks in BookmarkService
+    { page: page,  //Both params are set to state
+      pageSize: pageSize  
     };
 
     useEffect(() =>{
@@ -35,6 +43,8 @@ export default function UserRating(){
             if(ratings.success){
                 console.log("Have ratings");
                 setUserRatings(ratings.data.entities);
+                setTotalPages(ratings.data.numberOfPages) //Value from backend
+                
                 sortRatingsHandler(sortingOrder);
                 setIsLoading(false); //should not render "loading" in UI when rating fetch is successful
             }
@@ -53,7 +63,31 @@ export default function UserRating(){
             }
         }
         fetchRatings();
-    }, []);
+    }, [page]); //trigger event when page is changed, e.g from page 0 to 1
+
+    useEffect(() =>{ //Effect for Rating pagenation
+
+        const items = [];
+              
+        for (let number = 0; number <= totalPages-1; number++) {
+            items.push(
+              <Pagination.Item
+                key={number}
+                active={number === page}
+                onClick={() => handlePageChange(number)}
+              >
+                {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
+              </Pagination.Item>
+            );
+          }
+          setPagenationItems(items);
+        
+        }, [totalPages, page]);
+
+    const handlePageChange = (page) => {
+        setPage(page);
+        console.log("Changing page to: " + page );
+      };
 
     useEffect(() => {
         let countDown;
@@ -175,6 +209,7 @@ export default function UserRating(){
     <Container>
         <h1>Ratings for user: {userName}</h1>
         <Dropdown>
+            <h2 style ={{color: 'red'}}>Sorting only works on frontend part!!!!!!!!!!!!</h2>
       <Dropdown.Toggle variant="success" id="dropdown-basic">
       {`Sort by ${sortingOrder}`}
       </Dropdown.Toggle>
@@ -191,7 +226,13 @@ export default function UserRating(){
         }}>Order: {descending ? "descending" : "ascending"}</Button> 
     </Dropdown>
     <Row xs={1} md={4}> 
-        {userRatings.map((u, i) => <Rating key={i} {...u} />)/*need of key?, not currently used in Rating component*/} 
+        {userRatings.map((u, i) => <Rating key={i} {...u} />)/*need of key?, not currently used in Rating component*/}
+    </Row>
+    <Row>
+        <div>
+            <Pagination>{pagenationItems}</Pagination>
+            <br/>
+        </div> 
     </Row>
 </Container>
 
