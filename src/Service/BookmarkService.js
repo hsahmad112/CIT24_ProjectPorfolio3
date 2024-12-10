@@ -65,7 +65,7 @@ export async function isPersonBookmarked(id, setIsBookmarked, headers) {
     }
 }
 
-export async function GetTitleBookmarks(queryParams){ // not in use
+export async function GetTitleBookmarks(queryParams){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/title?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
         
