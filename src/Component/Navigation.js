@@ -52,20 +52,20 @@ export default function Navigation(){
  
     try {
 
-      let result;
-      if(DoAdvancedSearch){
-        console.log("Doing advanced search");
-        result = await AdvancedSearch(body);
-        console.log("my advanced search result");
-        console.log(result);
-        navigate('/search', {
-          state: {result, searchType, body },
-        });
-      }
-      else{
+      // let result;
+      // if(DoAdvancedSearch){
+      //   console.log("Doing advanced search");
+      //   result = await AdvancedSearch(body);
+      //   console.log("my advanced search result");
+      //   console.log(result);
+      //   navigate('/search', {
+      //     state: {result, searchType, body },
+      //   });
+      // }
+      // else{
 
-        result = await FetchData(searchType, body);
-      }
+      // }
+      let result = await FetchData(searchType, body); 
 
       // ideally we want result to be a state
       // const fetchedData = await fetchData(searchType, body);
