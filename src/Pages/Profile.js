@@ -6,7 +6,7 @@ import { useUser } from '../Store/store';
 import { useNavigate } from 'react-router';
 
 import Alert from 'react-bootstrap/Alert';
-import {Card, Container, Row, Col, Carousel} from 'react-bootstrap';
+import {Card, Container, Row, Col, Carousel, Stack} from 'react-bootstrap';
 
 import TitleProfile from '../Component/TitleProfile';
 import PersonProfile from '../Component/PersonProfile';
@@ -124,21 +124,31 @@ export default function Profile(){
             <h1>Profile page for user: {userName}</h1>
         <Container fluid = "true">
 
-        <Row className="justify-content-center">
+        <Row>
+                <Col xs ={4}>
                         <h3 style={{textAlign: 'left'}}> Ratings:</h3>
                         {userRatings.map((u) => <RatingProfile title={u} key={u.titleId} navigate={navigate}/>  )/*need of key?, not currently used in Rating component*/} 
-                        </Row>  
+                        </Col>
+        
                         
-        <Row className="justify-content-end">
-        <p>Vi har her title bookmarks</p>
+        
+        
+                        <Col xs = {7} >
+                        <Stack className="align-items-end">
+        <h3 style={{textAlign: 'right'}}> Title Bookmarks: </h3>
+        <div className="p-2"> 
+       
         {titleBookmarks.map((title, index) => <TitleProfile data={title} key={index}></TitleProfile>)}  
-        </Row>
+        </div>
 
-        <Row className="justify-content-end">
-        <p>Vi har her persons bookmarks</p>
-        {personBookmarks.map((person, index) => <PersonProfile data={person} key={index}></PersonProfile>)}  
+        <h3 style={{textAlign: 'right'}}> Person Bookmarks: </h3>
+        <div className="p-2">
+        {personBookmarks.map((person, index) => <PersonProfile data={person} key={index}></PersonProfile>)} 
+        </div>
+        </Stack>
+        </Col>
         </Row>
-                        
+                            
         </Container>      
 
 
