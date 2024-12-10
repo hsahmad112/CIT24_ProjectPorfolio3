@@ -117,7 +117,7 @@ export async function SaveTitleBookmarksById(titleId, annotation, setIsBookmarke
 
 export async function UpdateTitleBookmark(titleId, headers, body){
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/title/" + titleId, {method: "PUT", header: headers, body: body, });
+        const response = await fetch(baseApiUrl + "bookmarks/title/" + titleId, {method: "PUT", header: headers, body: JSON.stringify(body)});
         
         switch (response.status) {
             case 400:
@@ -126,20 +126,20 @@ export async function UpdateTitleBookmark(titleId, headers, body){
             case 401:
                 console.log("Unauthorized/ Not Logged in.");
                 return false;
-            case 200:
-                console.log("Added annotation to bookmark on " + titleId + " for current user");
+            case 204:
+                console.log("Updated bookmark on " + titleId + " with annotation for current user");
                 return true;
             case 404: //should this case even be possible?4
                 console.log("Current user does not have this title " +  titleId + " bookmarked");
                 return false;
             default:
-                console.log("unknown status code");
+                console.log("unknown status code", response.status);
                 return false; 
         }
         
     }
     catch (error) {
-        console.error("Error fetching data:");
+        console.error("Error fetching data:", error);
         return false;
     }
     

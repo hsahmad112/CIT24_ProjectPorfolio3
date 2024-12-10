@@ -156,8 +156,12 @@ let navigate = useNavigate();
   }
 
   const handleAnnotationChange = (e) => {
-      const { value } = e.target;
-      setAnnotation(value);
+      const {name, value } = e.target;
+      setAnnotation((prevdata) => ({
+        ...prevdata,
+        [name]:value,
+  }));
+      console.log(annotation);
   };
 
   const updateAnnotation = (e) => {
@@ -365,7 +369,7 @@ let navigate = useNavigate();
 
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
-            <Form onSubmit={updateAnnotation}>
+           
             <Modal.Dialog>
               <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
                 <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
@@ -373,9 +377,9 @@ let navigate = useNavigate();
               
               <Modal.Body>
                     <textarea 
-                        value={annotation}
                         //placeholder="Insert anntation..."
-                        onChange={(e) => handleAnnotationChange(e)}                  
+                        name ="annotation"
+                        onChange={handleAnnotationChange}                  
                         rows="3"
                     />
                 {/* <Form>
@@ -392,10 +396,10 @@ let navigate = useNavigate();
 
               <Modal.Footer>
                 <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-                <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
+                <Button  variant="primary" onClick={() => updateAnnotation()}>Yes, bookmark it!</Button>
               </Modal.Footer>
             </Modal.Dialog>
-            </Form>
+           
           </div>
         }
 
