@@ -22,14 +22,19 @@ export default function UserRating(){
 
     const {userName} = useUser();
     
+    const queryParams = //Used for pagenation, we send these queryParams when fetching ratings in RatingService
+    { page: '0', 
+      pageSize: '5' 
+    };
+
     useEffect(() =>{
         const fetchRatings = async () => {
 
-            const ratings = await GetAllRatings();
+            const ratings = await GetAllRatings(queryParams);
          
             if(ratings.success){
                 console.log("Have ratings");
-                setUserRatings(ratings.data);
+                setUserRatings(ratings.data.entities);
                 sortRatingsHandler(sortingOrder);
                 setIsLoading(false); //should not render "loading" in UI when rating fetch is successful
             }

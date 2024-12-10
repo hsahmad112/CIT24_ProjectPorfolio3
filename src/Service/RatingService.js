@@ -5,10 +5,10 @@ import { GetHeader } from "../Store/store";
 const baseRatingApiUrl = process.env.REACT_APP_BASE_API_LINK + "users/rating/";
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 
-export async function GetAllRatings(){     
+export async function GetAllRatings(queryParams){     
     try{
         let headers = GetHeader();
-        const response = await fetch(baseRatingApiUrl, {headers});
+        const response = await fetch(baseRatingApiUrl+"?page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
         if(!response.ok){
             throw new Error (response.status);
         }
