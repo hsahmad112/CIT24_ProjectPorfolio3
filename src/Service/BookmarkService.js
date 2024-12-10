@@ -26,15 +26,14 @@ export async function isTitleBookmarked(id, setIsBookmarked, headers) {
     switch (response.status) {
         case 401:
             console.log("Unauthorized/ Not Logged in");
- 
             return false;
         case 200:
             console.log("Current user has this title bookmarked");
-            setIsBookmarked(true)
+            setIsBookmarked(true);
             return true;
         case 404:
             console.log("Current user does not have this title bookmarked");
-    
+            setIsBookmarked(false);
             return false;
     }
     
@@ -83,8 +82,15 @@ export async function GetTitleBookmarksById(id, headers){
 
 
 export async function SaveTitleBookmarksById(titleId, annotation, setIsBookmarked, headers){
+
+    console.log(titleId, annotation);
     try {
-        const response = await axios.post(baseApiUrl + "bookmarks/title/", {titleId, annotation}, {headers});
+
+        const response = await fetch(baseApiUrl + "bookmarks/title", {
+            method: "POST",
+            headers: (headers),
+            body: JSON.stringify({"titleId": titleId, "annotation" :annotation})
+        });
 
     
         switch (response.status) {
@@ -98,7 +104,7 @@ export async function SaveTitleBookmarksById(titleId, annotation, setIsBookmarke
                 console.log("Saved this bookmark " + titleId + "for current user");
                 setIsBookmarked(true);
                 return true;
-            case 404: //should this case even be possible?4
+            case 404: //should this case even be possible?
                 console.log("Current user does not have this title " +  titleId + " bookmarked");
                 return false;
             default:
@@ -115,9 +121,9 @@ export async function SaveTitleBookmarksById(titleId, annotation, setIsBookmarke
 }
 
 
-export async function UpdateTitleBookmark(titleId, headers, body){
+export async function UpdateTitleBookmark(titleId, headers, annotation){ //if it fails, check bodys non object value status
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/title/" + titleId, {method: "PUT", header: headers, body: JSON.stringify(body)});
+        const response = await fetch(baseApiUrl + "bookmarks/title/" + titleId, {method: "PUT",  body: JSON.stringify({"annotation" : annotation}), headers: (headers)});
         
         switch (response.status) {
             case 400:
@@ -129,7 +135,7 @@ export async function UpdateTitleBookmark(titleId, headers, body){
             case 204:
                 console.log("Updated bookmark on " + titleId + " with annotation for current user");
                 return true;
-            case 404: //should this case even be possible?4
+            case 404: //should this case even be possible?
                 console.log("Current user does not have this title " +  titleId + " bookmarked");
                 return false;
             default:

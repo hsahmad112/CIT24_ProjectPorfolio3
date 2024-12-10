@@ -35,28 +35,32 @@ export default function DetailedTitle({id}) {
   const [errorMessage, setErrorMessage] = useState(null);  
   const [isBookmarked, setIsBookmarked] = useState(false);
   
-  const [annotation, setAnnotation] = useState({
-    annotation: ''
-  });
+  
+  
+  const [annotation, setAnnotation] = useState('');
 
   
   
 let headers = GetHeader();
 
 
-
 let navigate = useNavigate();
 
-  async function ToggleBookmark(){
+function ToggleBookmark(){
+
+
       if(isBookmarked === false)
         {
-          console.log("Attempting to create a bookmark")
-          const success = await SaveTitleBookmarksById(params.id, annotation.annotation, setIsBookmarked, headers)
+        
+
+
+          console.log("Attempting to create a bookmark");
+          const success =  SaveTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
+      
           if( success){ 
             console.log("Bookmark was set");
             setShowBookmarkPop(true);
             setDisplayEditAnnotationButton(true);
-            setAnnotation("");
             setTimeout(() => {setShowBookmarkPop(false)}, 2500);
           }
           else{
@@ -66,7 +70,7 @@ let navigate = useNavigate();
       }
       if(isBookmarked === true){
         console.log("Attempting to remove bookmark");
-        const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
+        const success=  DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
         if(success){
           console.log("Bookmark removed successfully")
           setShowRemoveBookmarkPop(true);
@@ -83,17 +87,18 @@ let navigate = useNavigate();
 
 
   useEffect(()=>{
+    isTitleBookmarked(params.id, setIsBookmarked, headers);
 
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         setTitle(await GetTitleById(params.id));
 
-        if(await isTitleBookmarked(params.id, setIsBookmarked, headers)){
-          console.log("Current status ", isBookmarked);
-        }else{
-          console.log("Current status", isBookmarked);
-        }
+        // if(await isTitleBookmarked(params.id, setIsBookmarked, headers)){
+        //   console.log("Current status ", isBookmarked);
+        // }else{
+        //   console.log("Current status", isBookmarked);
+        // }
         
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
@@ -156,13 +161,10 @@ let navigate = useNavigate();
   }
 
   const handleAnnotationChange = (e) => {
-      const {name, value } = e.target;
-      setAnnotation((prevdata) => ({
-        ...prevdata,
-        [name]:value,
-  }));
-      console.log(annotation);
-  };
+      const {value } = e.target;
+      setAnnotation(value);
+  console.log(annotation);
+};
 
   const updateAnnotation = (e) => {
     UpdateTitleBookmark(params.id, headers, annotation);
