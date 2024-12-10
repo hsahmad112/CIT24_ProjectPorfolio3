@@ -34,7 +34,11 @@ code {
   border: 1px solid black !important;
 }
 
-.dropdown-toggle:after {
+/* .dropdown-toggle:after {
+  display: none !important;
+} */
+
+.advanced-dropdown:after{
   display: none !important;
 }
 

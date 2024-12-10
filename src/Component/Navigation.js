@@ -91,7 +91,6 @@ export default function Navigation(){
    
     return(
       <div>
-        {chosenGenre}
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
           <Container>
             <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>Portfolio Logo</Navbar.Brand>
@@ -99,15 +98,15 @@ export default function Navigation(){
             <Form inline="true" onSubmit={handleSubmit}>
               <Row>
                 <Col md="auto"> 
-                  <Dropdown style={{display: "inline-block"}}>1
-                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <Dropdown style={{display: "inline-block"}}>
+                      <Dropdown.Toggle className='advanced-dropdown' variant="success">
                         <div style={{color: "white"}}>Advanced Search</div>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <label for="cars">Genres</label>
                         <select name="genres" id="genres" onChange={(e) => setChosenGenre(e.target.value)}>
                           {genres?.map((item, index) =>
-                            <option value={index}>{item.name}</option>
+                            <option value={index + 1} key={item.name}>{item.name}</option>
                           )}
                         </select> 
                       </Dropdown.Menu>
@@ -122,8 +121,8 @@ export default function Navigation(){
 
                       <Dropdown.Menu>
                         <Dropdown.Item onClick = {handleType} str="everything" name= "Everything" >Everything</Dropdown.Item>
-                        <Dropdown.Item onClick = {handleType} str= "titles" name= "Titles" >Title</Dropdown.Item>
-                        <Dropdown.Item onClick = {handleType} str= "persons"  name="Persons">Person</Dropdown.Item>
+                        <Dropdown.Item onClick = {handleType} str="titles" name= "Titles" >Title</Dropdown.Item>
+                        <Dropdown.Item onClick = {handleType} str="persons" name="Persons">Person</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                     <Form.Control
