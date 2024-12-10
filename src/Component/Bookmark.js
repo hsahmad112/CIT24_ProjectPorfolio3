@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
-import { GetPersonBookmarks, GetPersonBookmarksById, SavePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
+import { GetPersonBookmarks, GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
 import { useUser } from "../Store/store";
 import * as Icon from 'react-bootstrap-icons';
 
@@ -43,7 +43,7 @@ export default function Bookmark ({person}){
             }, 2500);
   
         } else if(bookmark === false){            
-            SavePersonBookmarksById(person.id, annotation); // add annotations!
+            CreatePersonBookmarksById(person.id, annotation); // add annotations!
             setBookmark(true);
             setShowBookmarkPop(true);
             setShowBookmarkModal(false);
