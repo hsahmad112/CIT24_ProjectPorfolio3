@@ -11,19 +11,14 @@ export default function PersonProfile(person){
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;  
 console.log("Vi har her persons:" + person.personId);
 return(
-    <div className="d-flex align-items-center no-border">
-            <Row>
-            <Col>
+
             <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + person.data.personId)}>
                 <Card.Body>
-                    <Card.Title> {person.data.personId} </Card.Title>
+                    <Card.Title> {person.data.personName} </Card.Title>
                     <Card.Text> {person.data.annotation} </Card.Text>
                     <Button variant="primary">Go to person</Button>
                 </Card.Body>
             </Card>
-          </Col>
-          </Row>
-          </div> 
       
 
 );
