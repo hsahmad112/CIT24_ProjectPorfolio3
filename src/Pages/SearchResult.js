@@ -3,12 +3,12 @@ import { useLocation } from "react-router";
 import { GetHeader } from "../Store/store";
 
 //method only handles fetching data
+let headers = GetHeader();
  export async function FetchData(searchType, body){
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
     const fetchUrl = "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize;
 
-    let headers = GetHeader();
     switch (searchType) {
         case "everything":
             //returns both titles and persons, fethces concurrently using Promise.All, 
@@ -51,10 +51,31 @@ import { GetHeader } from "../Store/store";
                 console.error(`Could not fetch ${searchType}`, response.status)
                 
             }      
-    }
+    } 
+}   
+
+// all advanced search is for titles 
+export async function AdvancedSearch(body) {
+    const baseUrl = process.env.REACT_APP_BASE_API_LINK;
+    const searchTerm = body.searchTerm === undefined ? "" : body.searchTerm;
+    const genreId = body.genreId === undefined ? "" : body.genreId;
+    const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&page=" + body.page + "&pageSize=" + body.pageSize;
+
+// big and one function called in backend?
+// we can search for genre, multiples?
+// can search for minimum title rating
+// can search for start year and older
+// can search for end year and younger
+// can search for between start and end year
+
+// can search for best match?
+const titleResponse = await fetch(baseUrl  + "titles" + fetchAdvancedUrl, {headers});
+const response = await titleResponse.json();
+return{titles: response};
+
 }
 
-export default  function SearchResult(){
+export default function SearchResult(){
     //gives us access to states passed through navigation.js 
     const location = useLocation();
 
@@ -124,8 +145,7 @@ export default  function SearchResult(){
                     <SearchPreview componentType={titleType} body={body} searchResult={selectedEntities.titles} />  
                 </>
                 )
-            }
-           
+            }     
 
         </div>
     );

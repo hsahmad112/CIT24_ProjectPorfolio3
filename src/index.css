@@ -34,6 +34,20 @@ code {
   border: 1px solid black !important;
 }
 
+/* .dropdown-toggle:after {
+  display: none !important;
+} */
+
+.advanced-dropdown:after{
+  display: none !important;
+}
+
+.user-menu{
+  display: inline !important;
+  width: auto !important;
+  padding-right: 10px;
+}
+
 .less-opacity{
   opacity: 70%;
 }
@@ -83,14 +97,6 @@ code {
   padding: 5px; /* Adjust the padding as needed */
 }
 
-.rate-movie-box{
-  background-color: transparent !important; 
-  margin-top: 250px;
-  border-radius: 12px;
-  text-align: center !important;
-  transition: .1s;
-}
-
 .center-div{
   display: flex;
   justify-content: center;
@@ -103,6 +109,14 @@ code {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.rate-movie-box{
+  background-color: transparent !important; 
+  margin-top: 225px;
+  border-radius: 12px;
+  text-align: center !important;
+  transition: .1s;
 }
 
 .rate-movie-box:hover{

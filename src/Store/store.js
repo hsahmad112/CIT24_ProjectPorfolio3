@@ -46,13 +46,8 @@ export const UserProvider = ({ children }) => {
 
       const login = (userData) => {
         console.log(`Setting userName: ${userData}`);
-        setToken(userData.token)
-        setUserName(userData.firstName);
-        setTimeout(() => {
-            console.log("token from store: " + token);
-        }, 500);
-      
-        setLoggedIn(true);
+          setUserName(userData.userName);
+          setToken(userData.token);     
       };
 
       const logout = () => {

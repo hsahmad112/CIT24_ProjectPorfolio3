@@ -28,10 +28,10 @@ export async function GetRatingById(id){
     const response = await fetch(baseRatingApiUrl + id, {headers});
     
     if(!response.ok) {
-        console.log("returning false");
+        //console.log("returning false");
         return -2;
     }
-    console.log("returning true");
+    //console.log("returning true");
     return response.json();
 }
 

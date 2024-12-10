@@ -2,12 +2,13 @@ import { useUser, GetHeader } from "../Store/store";
 import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
 import TitleSearchCard from "../Component/TitleSearchCard";
-import { displayYears } from "../Component/HelperFunctions";
-import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
 import { useParams, useNavigate, Form } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
 import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark} from '../Service/BookmarkService';
+import { displayYears, displayRatingCount } from "../Component/HelperFunctions";
+
+import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
@@ -147,15 +148,6 @@ export default function DetailedTitle({id}) {
     setShowBookmarkModal(false);
   }
 
-  function displayYears(startYear, endYear){
-    if(!startYear && !endYear) return "";
-
-    if(!endYear){
-      return "(" + startYear + ")";
-    }
-    return "(" + startYear + "-" + endYear + ")";
-  }
-
   if(errorMessage){
     return (
       <div className="center-div">
@@ -176,7 +168,15 @@ export default function DetailedTitle({id}) {
     }
   }
 
-  if(title){
+  if(!title){
+    return(
+      <div style={{textAlign: "center !important", transform: "translate(0%, 500%)"}}>
+        <h1 style={{display: "inline"}}><b>loading... </b></h1>
+        <Spinner animation="border" role="status"/>
+      </div>
+    );
+  }
+  else{
     // console.log(title)
     // console.log(rating);
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
@@ -186,6 +186,10 @@ export default function DetailedTitle({id}) {
             <Row style={{marginTop: "10px", marginBottom: "10px"}}>
                 <Col width="100%">
                   <span style={{textAlign: "left"}}>
+                    <span style={{position: "absolute"}}>
+                          <b style={{display: "inline"}}>IMDB rating: {title.voteCount ? title.averageRating + "/10" : "no ratings"}</b>
+                          <p style={{textAlign: "center"}}>{displayRatingCount(title.voteCount)}</p>
+                      </span>
                       <h1>
                         {title.primaryTitle}
                         <p style={{fontSize: "28px", display: "inline"}}>{displayYears(title.startYear, title.endYear)}</p> 
@@ -382,6 +386,5 @@ export default function DetailedTitle({id}) {
       </div>
     );
   }
- 
 
 }

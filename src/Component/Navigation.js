@@ -1,14 +1,16 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router';
-import  {FetchData}  from '../Pages/SearchResult';
+import { FetchData, AdvancedSearch }  from '../Pages/SearchResult';
 import { useUser } from "../Store/store";
-import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row} from 'react-bootstrap';
+import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row, Nav } from 'react-bootstrap';
+import { GetGenres } from '../Service/GenreService';
 
 export default function Navigation(){
-  const {userName, searchType, setSearchType, login, logout } = useUser();
+  const {userName, searchType, setSearchType, logout } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+  const [genres, setGenres] = useState([]);
   //const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
   let navigate = useNavigate();
 
@@ -16,13 +18,27 @@ export default function Navigation(){
     setSearchQuery(e.target.value);
   }
 
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        setGenres(await GetGenres());
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  },[])
+
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
       const newSelectedType = e.target.getAttribute('str');
       setSearchType(newSelectedType);
       setSearchCategory(newSelectedCategory);
-      setPlaceholderText("Search for "+ newSelectedCategory); 
+      setPlaceholderText("Search for " + newSelectedCategory); 
     }
+
+    const DoAdvancedSearch = true;
 
   async function handleSubmit(e){
     e.preventDefault();
@@ -30,17 +46,30 @@ export default function Navigation(){
     { id: null, 
       searchTerm: searchQuery, 
       page: '0', 
-      pageSize: searchType === 'everything' ? '5' : '10' 
+      pageSize: searchType === 'everything' ? '5' : '10',
+      genreId: chosenGenre
     };
  
     try {
 
-      const result = await FetchData(searchType, body);
+      let result;
+      if(DoAdvancedSearch){
+        console.log("Doing advanced search");
+        result = await AdvancedSearch(body);
+        console.log("my advanced search result");
+        console.log(result);
+        navigate('/search', {
+          state: {result, searchType, body },
+        });
+      }
+      else{
+
+        result = await FetchData(searchType, body);
+      }
 
       // ideally we want result to be a state
       // const fetchedData = await fetchData(searchType, body);
       // setResult(fetchedData)
-
       
       //when we navigate to search, we "bring along" the current states result (search result list).
       // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
@@ -57,6 +86,8 @@ export default function Navigation(){
     //const result = await fetchData(searchType, body);
  
   }
+
+  const [chosenGenre, setChosenGenre] = useState("none");
    
     return(
       <div>
@@ -67,7 +98,19 @@ export default function Navigation(){
             <Form inline="true" onSubmit={handleSubmit}>
               <Row>
                 <Col md="auto"> 
-                  <Button>Advanced Search</Button>
+                  <Dropdown style={{display: "inline-block"}}>
+                      <Dropdown.Toggle className='advanced-dropdown' variant="success">
+                        <div style={{color: "white"}}>Advanced Search</div>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <label for="cars">Genres</label>
+                        <select name="genres" id="genres" onChange={(e) => setChosenGenre(e.target.value)}>
+                          {genres?.map((item, index) =>
+                            <option value={index + 1} key={item.name}>{item.name}</option>
+                          )}
+                        </select> 
+                      </Dropdown.Menu>
+                  </Dropdown>
                 </Col>
                 <Col>
                   <InputGroup>
@@ -78,8 +121,8 @@ export default function Navigation(){
 
                       <Dropdown.Menu>
                         <Dropdown.Item onClick = {handleType} str="everything" name= "Everything" >Everything</Dropdown.Item>
-                        <Dropdown.Item onClick = {handleType} str= "titles" name= "Titles" >Title</Dropdown.Item>
-                        <Dropdown.Item onClick = {handleType} str= "persons"  name="Persons">Person</Dropdown.Item>
+                        <Dropdown.Item onClick = {handleType} str="titles" name= "Titles" >Title</Dropdown.Item>
+                        <Dropdown.Item onClick = {handleType} str="persons" name="Persons">Person</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                     <Form.Control
@@ -95,26 +138,24 @@ export default function Navigation(){
             </Form>
             
             {userName !== null && 
-            <div>
-              <p style={{color:"white"}}>hello {userName}</p>
-                    <Form>
-                    <Form.Group className="mb-3">
-                    <Dropdown>
-                    
+            <div className='user-menu'>
+              <Nav.Item>
+                <Navbar.Text>
+                  <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>hello {userName} </p>
+                  <Dropdown style={{display: "inline-block"}}>
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
-                      Burgermenu
+                        <i className="bi bi-list" style={{color: "white"}}></i>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item onClick = { () => navigate("/profile")}> Profile NOT IMPLEMENETED!</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/profile")}> Profile</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/watchlist")}>Watchlist</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/settings")}>Settings</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/rating")}>Rating</Dropdown.Item>
-                        <Dropdown.Item onClick = { () => logout()} >Sign out</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => logout()}>Sign out</Dropdown.Item>
                       </Dropdown.Menu>
-                    </Dropdown>
-                    </Form.Group>
-
-                    </Form>
+                  </Dropdown>
+                </Navbar.Text>
+              </Nav.Item>
             </div>}
 
             {userName === null && 

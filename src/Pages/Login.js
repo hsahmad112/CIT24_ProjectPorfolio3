@@ -62,7 +62,7 @@ export default function Login(){
         default:
             setErrorMessage('Unknown error happened, try again');
       }
-      {formResetter()}
+      formResetter()
       
     }
 
