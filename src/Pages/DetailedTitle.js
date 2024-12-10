@@ -1,14 +1,15 @@
-import { useUser } from "../Store/store";
+import { GetHeader, useUser } from "../Store/store";
 import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
 import TitleSearchCard from "../Component/TitleSearchCard";
 import { displayYears } from "../Component/HelperFunctions";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Form } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
-import { SaveTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById} from '../Service/BookmarkService';
+import { SaveTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark} from '../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 
 export default function DetailedTitle({id}) {
 
@@ -26,61 +27,79 @@ export default function DetailedTitle({id}) {
   const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
   const [hoverRating, setHoverRating] = useState(-1);
+  const [displayEditAnnotationButton ,setDisplayEditAnnotationButton] = useState(false);
   const [hasRated, setHasRated] = useState(false);
   const [similarMovies, setSimliarMovies] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
   const [errorMessage, setErrorMessage] = useState(null);  
-  const [bookmark, setBookmark] = useState(null);
-  const [titleBookmark, setTitleBookmark] = useState(null);
-  const [annotation, setAnnotation] = useState("");
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  
+  const [annotation, setAnnotation] = useState({
+    annotation: ''
+  });
 
-  let navigate = useNavigate();
+  
+  
+let headers = GetHeader();
 
-  function ToggleBookmark(){
-      if(bookmark){            
-        DeleteTitleBookmarksById(token, params.id);
-        setBookmark(false);
-        setShowRemoveBookmarkPop(true)
-        setTimeout(() => {
-          setShowRemoveBookmarkPop(false);
-        }, 2500);
 
-      } else{            
-        SaveTitleBookmarksById(params.id, annotation); // add annotations!
-        setBookmark(true);
-        setShowBookmarkPop(true);
-        setShowBookmarkModal(false);
-        setAnnotation("");
 
-        setTimeout(() => {
-          setShowBookmarkPop(false);
-        }, 2500);
+let navigate = useNavigate();
+
+  async function ToggleBookmark(){
+      if(isBookmarked === false)
+        {
+          console.log("Attempting to create a bookmark")
+          const success = await SaveTitleBookmarksById(params.id, annotation.annotation, setIsBookmarked, headers)
+          if( success){ 
+            console.log("Bookmark was set");
+            setShowBookmarkPop(true);
+            setDisplayEditAnnotationButton(true);
+            setAnnotation("");
+            setTimeout(() => {setShowBookmarkPop(false)}, 2500);
+          }
+          else{
+            console.log("did not happen.")
+          }
+
+      }
+      if(isBookmarked === true){
+        console.log("Attempting to remove bookmark");
+        const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
+        if(success){
+          console.log("Bookmark removed successfully")
+          setShowRemoveBookmarkPop(true);
+          setDisplayEditAnnotationButton(false);
+          setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
+        } else{
+          console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
+        }
         
+
       }
       
   }
 
+
   useEffect(()=>{
+
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         setTitle(await GetTitleById(params.id));
+
+        if(await isTitleBookmarked(params.id, setIsBookmarked, headers)){
+          console.log("Current status ", isBookmarked);
+        }else{
+          console.log("Current status", isBookmarked);
+        }
+        
         let tempRating = (await GetRatingById(params.id)).rating;
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
         setSimliarMovies(await GetSimilarMovies(params.id));
-        const res = await GetTitleBookmarksById(params.id); // should be the right id!
-    
-          if(res){
-              setTitleBookmark(res);
-              setBookmark(true);
-          }
         
-      
-      
-
-       
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
@@ -88,7 +107,7 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [id, params])
+  }, [isBookmarked] )
 
 
   async function RemoveRating(){
@@ -141,6 +160,10 @@ export default function DetailedTitle({id}) {
       setAnnotation(value);
   };
 
+  const updateAnnotation = (e) => {
+    UpdateTitleBookmark(params.id, headers, annotation);
+  }
+
   function displayYears(startYear, endYear){
     if(!startYear && !endYear) return "";
 
@@ -160,13 +183,14 @@ export default function DetailedTitle({id}) {
 
   // if(similarMovies) console.log(similarMovies);
   function ShowingBookmarkModal(){
-    if(errorMessage !== "401"){
+    if(isBookmarked){
       setShowBookmarkModal(true);
     } else {
-      setShowNotLoggedIn(true);
-      setTimeout(() => {
-        setShowNotLoggedIn(false);
-      }, 2500);
+
+      // setShowNotLoggedIn(true);
+      // setTimeout(() => {
+      //   setShowNotLoggedIn(false);
+      // }, 2500);
     }
   }
 
@@ -193,9 +217,10 @@ export default function DetailedTitle({id}) {
                   </Col>
                   <Col md={1}>
                       {/* Toogle function, can be used to save as bookmark! */}                       
-                      <div onClick={bookmark ? ToggleBookmark : ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
-                          { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
-                      </div>                     
+                      <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                          { isBookmarked  ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: ''}}/> }
+                      </div>    
+                          {displayEditAnnotationButton ? <Button onClick={ShowingBookmarkModal}>Edit Annotation</Button> : null}                 
                   </Col>
               </Row>
             <Row>
@@ -340,6 +365,7 @@ export default function DetailedTitle({id}) {
 
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
+            <Form onSubmit={updateAnnotation}>
             <Modal.Dialog>
               <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
                 <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
@@ -369,6 +395,7 @@ export default function DetailedTitle({id}) {
                 <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
               </Modal.Footer>
             </Modal.Dialog>
+            </Form>
           </div>
         }
 

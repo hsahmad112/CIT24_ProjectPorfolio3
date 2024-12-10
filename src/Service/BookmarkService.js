@@ -2,16 +2,53 @@
 import axios from 'axios';
 import { GetHeader } from "../Store/store";
 
+
+
+
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 const api_key = process.env.REACT_APP_TMDB_API_KEY;
 
+
 // Use find so get title or person from tmdb api: 
 // Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
 
-let headers = GetHeader();
 
-export async function GetTitleBookmarks(){ 
+
+//
+//Person Title Service
+//
+
+export async function isTitleBookmarked(id, setIsBookmarked, headers) {
+    try{
+    const response = await fetch(baseApiUrl + "bookmarks/title/" + id, {headers});
+    
+    switch (response.status) {
+        case 401:
+            console.log("Unauthorized/ Not Logged in");
+ 
+            return false;
+        case 200:
+            console.log("Current user has this title bookmarked");
+            setIsBookmarked(true)
+            return true;
+        case 404:
+            console.log("Current user does not have this title bookmarked");
+    
+            return false;
+    }
+    
+}
+catch (error) {
+    console.error("Error fetching data:");
+    return false;
+}
+}
+
+
+
+
+export async function GetTitleBookmarks(headers){ 
     try {
         const response = await fetch(baseApiUrl + "bookmarks/title/", {headers});
 
@@ -27,9 +64,8 @@ export async function GetTitleBookmarks(){
     
 }
 
-export async function GetTitleBookmarksById(id){
+export async function GetTitleBookmarksById(id, headers){
     try {
-        let headers = GetHeader();
         const response = await fetch(baseApiUrl + "bookmarks/title/" + id, {headers});
 
         if (!response.ok) {
@@ -45,7 +81,106 @@ export async function GetTitleBookmarksById(id){
     
 }
 
-export async function GetPersonBookmarks(){
+
+export async function SaveTitleBookmarksById(titleId, annotation, setIsBookmarked, headers){
+    try {
+        const response = await axios.post(baseApiUrl + "bookmarks/title/", {titleId, annotation}, {headers});
+
+    
+        switch (response.status) {
+            case 400:
+                console.log("bad request");
+                return false;
+            case 401:
+                console.log("Unauthorized/ Not Logged in. Implement a case here that stops the code here in this case");
+                return false;
+            case 200:
+                console.log("Saved this bookmark " + titleId + "for current user");
+                setIsBookmarked(true);
+                return true;
+            case 404: //should this case even be possible?4
+                console.log("Current user does not have this title " +  titleId + " bookmarked");
+                return false;
+            default:
+                console.log("unknown status code");
+                return false; 
+        }
+        
+    }
+    catch (error) {
+        console.error("Error fetching data:");
+        return false;
+    }
+    
+}
+
+
+export async function UpdateTitleBookmark(titleId, headers, body){
+    try {
+        const response = await fetch(baseApiUrl + "bookmarks/title/" + titleId, {method: "PUT", header: headers, body: body, });
+        
+        switch (response.status) {
+            case 400:
+                console.log("bad request");
+                return false;
+            case 401:
+                console.log("Unauthorized/ Not Logged in.");
+                return false;
+            case 200:
+                console.log("Added annotation to bookmark on " + titleId + " for current user");
+                return true;
+            case 404: //should this case even be possible?4
+                console.log("Current user does not have this title " +  titleId + " bookmarked");
+                return false;
+            default:
+                console.log("unknown status code");
+                return false; 
+        }
+        
+    }
+    catch (error) {
+        console.error("Error fetching data:");
+        return false;
+    }
+    
+}
+
+
+export async function DeleteTitleBookmarksById(titleId, setIsBookmarked, headers){
+    try {
+        const response = await axios.delete(baseApiUrl + `bookmarks/title/${titleId}`, {headers});
+
+        switch (response.status) {
+            case 401:
+                console.log("Unauthorized/ Not Logged in");
+            
+                return false;
+            case 204:
+                console.log("Deleted this bookmark " + titleId + "for current user");
+                setIsBookmarked(false);
+                return true;
+            case 404: //should this case even be possible?
+                console.log("Current user does not have this title " + titleId + " bookmarked");
+            
+                return false;
+        }
+    }
+    catch (error) {
+        console.error("Error fetching data:");
+        return false;
+    }
+    
+}
+
+
+
+
+
+//
+//Person Bookmark Service
+//
+
+export async function GetPersonBookmarks(headers){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/person/", {headers});
 
@@ -61,7 +196,7 @@ export async function GetPersonBookmarks(){
     
 }
 
-export async function GetPersonBookmarksById(id){
+export async function GetPersonBookmarksById(id, headers){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/person/" + id, {headers});
 
@@ -78,11 +213,13 @@ export async function GetPersonBookmarksById(id){
     
 }
 
-export async function SavePersonBookmarksById(personId, annotation){
+export async function SavePersonBookmarksById(personId, annotation, headers){
     try {
-        const response = await axios.post(baseApiUrl + "bookmarks/person/", { personId, annotation }, {headers});
+        const response = await axios.post(baseApiUrl + "bookmarks/person/", {personId, annotation }, {headers});
 
         if (!response.ok) {
+            console.log("bookmarking this: ")
+
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
@@ -94,7 +231,7 @@ export async function SavePersonBookmarksById(personId, annotation){
 
 }
 
-export async function DeletePersonBookmarksById(personId){
+export async function DeletePersonBookmarksById(personId, headers){
     try {
         const response = await axios.delete(baseApiUrl + `bookmarks/person/${personId}`, {headers});
 
@@ -110,34 +247,3 @@ export async function DeletePersonBookmarksById(personId){
     
 }
 
-export async function SaveTitleBookmarksById(titleId, annotation){
-    try {
-        const response = await axios.post(baseApiUrl + "bookmarks/title/", { titleId, annotation },  {headers});
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        return data
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-    
-}
-
-export async function DeleteTitleBookmarksById(titleId){
-    try {
-        const response = await axios.delete(baseApiUrl + `bookmarks/title/${titleId}`, {headers});
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        return data
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-    
-}
