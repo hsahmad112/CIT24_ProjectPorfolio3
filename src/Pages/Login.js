@@ -49,7 +49,7 @@ export default function Login(){
 
       console.log("login success");
       navigate("/");
-      login(firstName);
+      login(response.data);
       
     } catch(error){
         console.log('login failed')
@@ -62,7 +62,7 @@ export default function Login(){
         default:
             setErrorMessage('Unknown error happened, try again');
       }
-      {formResetter()}
+      formResetter()
       
     }
 

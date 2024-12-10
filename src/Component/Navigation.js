@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router';
-import { FetchData }  from '../Pages/SearchResult';
+import { FetchData, AdvancedSearch }  from '../Pages/SearchResult';
 import { useUser } from "../Store/store";
 import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row, Nav } from 'react-bootstrap';
 import { GetGenres } from '../Service/GenreService';
@@ -30,16 +30,15 @@ export default function Navigation(){
     fetchData();
   },[])
 
-  console.log("genres?");
-  console.log(genres);
-
   function handleType(e){
       const newSelectedCategory = e.target.getAttribute('name');
       const newSelectedType = e.target.getAttribute('str');
       setSearchType(newSelectedType);
       setSearchCategory(newSelectedCategory);
-      setPlaceholderText("Search for "+ newSelectedCategory); 
+      setPlaceholderText("Search for " + newSelectedCategory); 
     }
+
+    const DoAdvancedSearch = true;
 
   async function handleSubmit(e){
     e.preventDefault();
@@ -47,11 +46,26 @@ export default function Navigation(){
     { id: null, 
       searchTerm: searchQuery, 
       page: '0', 
-      pageSize: searchType === 'everything' ? '5' : '10' 
+      pageSize: searchType === 'everything' ? '5' : '10',
+      genreId: chosenGenre
     };
  
     try {
-      const result = await FetchData(searchType, body);
+
+      let result;
+      if(DoAdvancedSearch){
+        console.log("Doing advanced search");
+        result = await AdvancedSearch(body);
+        console.log("my advanced search result");
+        console.log(result);
+        navigate('/search', {
+          state: {result, searchType, body },
+        });
+      }
+      else{
+
+        result = await FetchData(searchType, body);
+      }
 
       // ideally we want result to be a state
       // const fetchedData = await fetchData(searchType, body);
@@ -92,8 +106,8 @@ export default function Navigation(){
                       <Dropdown.Menu>
                         <label for="cars">Genres</label>
                         <select name="genres" id="genres" onChange={(e) => setChosenGenre(e.target.value)}>
-                          {genres?.map((item) =>
-                            <option value={item.name}>{item.name}</option>
+                          {genres?.map((item, index) =>
+                            <option value={index}>{item.name}</option>
                           )}
                         </select> 
                       </Dropdown.Menu>

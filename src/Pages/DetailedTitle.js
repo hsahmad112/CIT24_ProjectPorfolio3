@@ -160,10 +160,8 @@ export default function DetailedTitle({id}) {
   if(!title){
     return(
       <div style={{textAlign: "center !important", transform: "translate(0%, 500%)"}}>
-        <h1 style={{display: "inline"}}><b>loading</b></h1>
-        <Spinner animation="border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
+        <h1 style={{display: "inline"}}><b>loading... </b></h1>
+        <Spinner animation="border" role="status"/>
       </div>
     );
   }

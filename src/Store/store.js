@@ -45,7 +45,8 @@ export const UserProvider = ({ children }) => {
 
       const login = (userData) => {
         console.log(`Setting userName: ${userData}`);
-          setUserName(userData);
+          setUserName(userData.userName);
+          setToken(userData.token);     
       };
 
       const logout = () => {
