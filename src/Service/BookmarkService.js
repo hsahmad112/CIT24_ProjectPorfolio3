@@ -2,9 +2,6 @@
 import axios from 'axios';
 import { GetHeader } from "../Store/store";
 
-
-
-
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 const api_key = process.env.REACT_APP_TMDB_API_KEY;
@@ -13,11 +10,10 @@ const api_key = process.env.REACT_APP_TMDB_API_KEY;
 // Use find so get title or person from tmdb api: 
 // Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
 
-
-
 //
 //Person Title Service
 //
+let headers = GetHeader();
 
 export async function isTitleBookmarked(id, setIsBookmarked, headers) {
     try{
@@ -69,16 +65,14 @@ export async function isPersonBookmarked(id, setIsBookmarked, headers) {
     }
 }
 
-
-export async function GetTitleBookmarks(headers){ 
+export async function GetTitleBookmarks(queryParams){ // not in use
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/title/", {headers});
-
+        const response = await fetch(baseApiUrl + "bookmarks/title?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
+        
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-
         return data
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -200,17 +194,13 @@ export async function DeleteTitleBookmarksById(titleId, setIsBookmarked, headers
     
 }
 
-
-
-
-
 //
 //Person Bookmark Service
 //
 
-export async function GetPersonBookmarks(headers){
+export async function GetPersonBookmarks(queryParams){
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/person/", {headers});
+        const response = await fetch(baseApiUrl + "bookmarks/person?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

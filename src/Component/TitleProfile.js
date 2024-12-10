@@ -8,7 +8,6 @@ export default function TitleProfile(title){
 
     const navigate = useNavigate();
      
-console.log("PRIMT ",title.data);
 return(
        
             <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + title.data.titleId)}>
