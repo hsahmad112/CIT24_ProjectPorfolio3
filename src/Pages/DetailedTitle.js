@@ -1,9 +1,9 @@
-import { useUser } from "../Store/store";
+import { useUser, GetHeader } from "../Store/store";
 import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
 import TitleSearchCard from "../Component/TitleSearchCard";
 import { displayYears } from "../Component/HelperFunctions";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Form } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
@@ -15,7 +15,8 @@ export default function DetailedTitle({id}) {
   const {userName, token} = useUser();
   const params = useParams(id);
   const list = [1,2,3,4,5,6,7,8,9,10];
-  
+  let headers = GetHeader();
+
   const [title, setTitle] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showRatingPop, setShowRatingPop] = useState(false);
@@ -39,7 +40,7 @@ export default function DetailedTitle({id}) {
 
   function ToggleBookmark(){
       if(bookmark){            
-        DeleteTitleBookmarksById(token, params.id);
+        DeleteTitleBookmarksById(token, params.id, headers);
         setBookmark(false);
         setShowRemoveBookmarkPop(true)
         setTimeout(() => {
@@ -47,7 +48,7 @@ export default function DetailedTitle({id}) {
         }, 2500);
 
       } else{            
-        SaveTitleBookmarksById(params.id, annotation); // add annotations!
+        SaveTitleBookmarksById(params.id, annotation, headers); // add annotations!
         setBookmark(true);
         setShowBookmarkPop(true);
         setShowBookmarkModal(false);
@@ -70,7 +71,7 @@ export default function DetailedTitle({id}) {
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
         setSimliarMovies(await GetSimilarMovies(params.id));
-        const res = await GetTitleBookmarksById(params.id);
+        const res = await GetTitleBookmarksById(params.id, headers);
         
           if(res){
               setTitleBookmark(res);
@@ -91,28 +92,23 @@ export default function DetailedTitle({id}) {
   async function RemoveRating(){
 
     try{
-    DeleteRating(params.id);
-    setToastMessage('Your rating was removed');  
-    setShowRatingPop(true);
-    setTimeout(() => {
-      setShowRatingPop(false);
-    }, 2500);
-    setShowRatingModal(false);
-    setHasRated(false);
-    setRating(-1);
-  }
-  catch(error){
-    console.log("something went wrong");
-  }
+      DeleteRating(params.id);
+      setToastMessage('Your rating was removed');  
+      setShowRatingPop(true);
+      setTimeout(() => {setShowRatingPop(false)}, 2500);
+      setShowRatingModal(false);
+      setHasRated(false);
+      setRating(-1);
+    }
+    catch(error){
+      console.log("something went wrong");
+    }
   }
 
   async function RateMovie(){
     setToastMessage('Your rating was submitted');
     setShowRatingPop(true);
-
-    setTimeout(() => {
-      setShowRatingPop(false);
-    }, 2500);
+    setTimeout(() => {setShowRatingPop(false)}, 2500);
     
     setShowRatingModal(false);
     if(hasRated){
@@ -136,6 +132,9 @@ export default function DetailedTitle({id}) {
   const handleAnnotationChange = (e) => {
       const { value } = e.target;
       setAnnotation(value);
+  };
+  const Handleupdate = (e) => {
+    
   };
 
   function displayYears(startYear, endYear){
@@ -192,7 +191,8 @@ export default function DetailedTitle({id}) {
                       {/* Toogle function, can be used to save as bookmark! */}                       
                       <div onClick={bookmark ? ToggleBookmark : ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                           { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
-                      </div>                     
+                      </div>
+                 
                   </Col>
               </Row>
             <Row>
@@ -337,35 +337,28 @@ export default function DetailedTitle({id}) {
 
         {showBookmarkModal &&      
           <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
-            <Modal.Dialog>
-              <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
-                <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
-              </Modal.Header>
-              
-              <Modal.Body>
-                    <textarea 
-                        value={annotation}
-                        //placeholder="Insert anntation..."
-                        onChange={(e) => handleAnnotationChange(e)}                  
-                        rows="3"
-                    />
-                {/* <Form>
-                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="name@example.com" />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Example textarea</Form.Label>
-                    <Form.Control as="textarea" rows={3} />
-                  </Form.Group>
-                </Form> */}
-              </Modal.Body>
+            <Form>
+              <Modal.Dialog>
+                <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
+                  <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
+                </Modal.Header>
+                
+                <Modal.Body>
+                      <textarea 
+                          value={annotation}
+                          //placeholder="Insert anntation..."
+                          onChange={(e) => handleAnnotationChange(e)}                  
+                          rows="3"
+                      />
+                </Modal.Body>
 
-              <Modal.Footer>
-                <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-                <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
-              </Modal.Footer>
-            </Modal.Dialog>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
+                  <Button variant="primary" onClick={() => Handleupdate()}>Update</Button>
+                </Modal.Footer>
+              </Modal.Dialog>
+            </Form>
+           
           </div>
         }
 

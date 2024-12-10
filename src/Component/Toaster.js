@@ -17,7 +17,7 @@ export default function Toaster({header, body, show, color}){
             <Toast.Header>
                 <strong className="me-auto">{header}</strong>
             </Toast.Header>
-            <Toast.Body>
+            <Toast.Body style={{color: "white"}}>
                 {body}
             </Toast.Body>
         </Toast>

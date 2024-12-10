@@ -5,7 +5,7 @@ import Homepage from './Pages/Homepage';
 import Navigation from './Component/Navigation';
 import { Routes, Route } from "react-router";
 import DetailedTitle from './Pages/DetailedTitle';
-import DetailedPerson from './Component/DetailedPerson';
+import DetailedPerson from './Pages/DetailedPerson';
 import Error from './Component/Error';
 import { UserProvider } from "./Store/store";
 import WactList from './Pages/WatchList';
