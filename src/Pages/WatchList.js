@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { GetPersonBookmarks, GetTitleBookmarks } from '../Service/BookmarkService';
 import { Container, Row, Tab, Tabs, ButtonGroup } from 'react-bootstrap';
 import TitleCard from '../Component/TitleCard';
-import PersonCard from '../Component/PersonCard';
+import PersonCard from '../Component/PersonComponents/PersonCard';
 import { useNavigate } from "react-router";
 import Pagination from 'react-bootstrap/Pagination';
 

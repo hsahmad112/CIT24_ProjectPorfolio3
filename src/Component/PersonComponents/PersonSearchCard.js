@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Card, CardTitle } from 'react-bootstrap';
-import { GetPersonBackdrop } from '../Service/PersonService';
+import { GetPersonBackdrop } from '../../Service/PersonService';
 import { useNavigate } from "react-router"; 
-import { displayYears } from './HelperFunctions';
+import { displayYears } from '../../Helpers/HelperFunctions';
 
 export default function PersonSearchCard ({person}){
     const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");

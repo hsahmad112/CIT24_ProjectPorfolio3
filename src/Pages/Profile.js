@@ -9,7 +9,7 @@ import Alert from 'react-bootstrap/Alert';
 import {Card, Container, Row, Col, Carousel, Stack} from 'react-bootstrap';
 
 import TitleProfile from '../Component/TitleProfile';
-import PersonProfile from '../Component/PersonProfile';
+import PersonProfile from '../Component/PersonComponents/PersonProfile';
 
 import TitlePlaceholder from '../Component/TitlePlaceholder';
 import Rating from '../Component/Rating';

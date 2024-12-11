@@ -6,7 +6,7 @@ import { useParams, useNavigate, Form } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
 import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark} from '../Service/BookmarkService';
-import { displayYears, displayRatingCount } from "../Component/HelperFunctions";
+import { displayYears, displayRatingCount } from "../Helpers/HelperFunctions";
 
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';

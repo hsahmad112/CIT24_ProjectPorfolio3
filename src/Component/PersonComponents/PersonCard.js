@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useNavigate } from "react-router";
-import { GetPersonBackdrop } from '../Service/PersonService';
+import { GetPersonBackdrop } from '../../Service/PersonService';
 
 export default function PersonCard(person){
     const [personBookmark, setPersonBookmark] = useState(null);

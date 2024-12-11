@@ -1,5 +1,5 @@
 import TitleSearchCard from './TitleSearchCard';
-import PersonSearchCard from './PersonSearchCard';
+import PersonSearchCard from './PersonComponents/PersonSearchCard';
 import {Button, Row} from 'react-bootstrap'
 import { useEffect, useState } from 'react';
 import { GetHeader } from "../Store/store";

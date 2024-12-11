@@ -1,7 +1,7 @@
 import Carousel from 'react-bootstrap/Carousel';
 import { useNavigate } from "react-router";
 import TitleSearchCard from './TitleSearchCard';
-import PersonSearchCard from './PersonSearchCard';
+import PersonSearchCard from './PersonComponents/PersonSearchCard';
 import {Button, Row, Col, Card, CardTitle} from 'react-bootstrap'
 import { useEffect, useState } from 'react';
 import { useUser, GetHeader } from "../Store/store";
