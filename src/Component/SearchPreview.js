@@ -24,7 +24,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       const type = "persons";
       const nextPage = page + 1;
 
-      const personResponse = await fetch(baseUrl + type + FetchUrl(nextPage));
+      const personResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {});
       const data = (await personResponse.json()).entities;
       
       if(data) {
@@ -39,8 +39,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
     else{
       const type = "titles";
       const nextPage = page + 1;
-      let headers = GetHeader();
-      const titleResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {headers});
+      const titleResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {});
       const data = (await titleResponse.json()).entities;
 
       if(data) {
@@ -57,18 +56,6 @@ export default function SearchPreview({ componentType, body, searchResult }) {
   // console.log("rendering search preview");
   // console.log(searchResult);
 
-  // if(!Array.isArray(searchResult.entities)){  // isn't this what is inside the code below?
-  //   return(
-
-  //     <div style={{textAlign: 'left'}}>
-  //       <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
-  //       <Row md={2}>
-  //         <p>No results for {componentType === "personType" ? "persons" : "titles"}</p>
-  //       </Row>     
-  //     </div>
-
-  //   );
-  // }else{
     return (
       <div style={{textAlign: 'left'}}>
         <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
@@ -76,7 +63,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
 
           {
             searchResult.entities?.length > 0 ?
-            result.map((e) => (
+            result?.map((e) => (
               componentType === "personType" ? 
               <PersonSearchCard person={e} key={e.personId}/> :
               <TitleSearchCard title={e} key={e.titleId}/>
@@ -88,5 +75,5 @@ export default function SearchPreview({ componentType, body, searchResult }) {
         {(errorMessage || !Array.isArray(searchResult.entities)) ? <p>{errorMessage}</p> : <Button style={{float: 'right', marginRight: "10px"}} onClick={()=> LoadMore()}>See More</Button>}
       </div>
     );
-  //}
+
 }

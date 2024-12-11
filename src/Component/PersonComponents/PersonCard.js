@@ -54,7 +54,6 @@ export default function PersonCard(person){
                     </ButtonGroup>
                 </Card.Body>             
             </Card>
-            );
-    
+        );
     }
 }

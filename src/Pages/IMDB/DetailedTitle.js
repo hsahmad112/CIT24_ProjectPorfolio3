@@ -2,7 +2,7 @@ import { useUser, GetHeader } from "../../Store/store";
 import { useEffect, useState } from "react";
 import Toaster from "../../Component/Toaster";
 import TitleSearchCard from "../../Component/TitleComponents/TitleSearchCard";
-import { useParams, useNavigate, Form } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
 import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
@@ -12,10 +12,9 @@ import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
-  const {userName, token} = useUser();
+  const {userName} = useUser();
   const params = useParams(id);
   const list = [1,2,3,4,5,6,7,8,9,10];
-  let headers = GetHeader();
 
   const [title, setTitle] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
@@ -40,23 +39,19 @@ export default function DetailedTitle({id}) {
 
   let navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(()=>{ 
+    let headers = GetHeader();
     isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
 
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         setTitle(await GetTitleById(params.id));
-
-        // if(await isTitleBookmarked(params.id, setIsBookmarked, headers)){
-        //   console.log("Current status ", isBookmarked);
-        // }else{
-        //   console.log("Current status", isBookmarked);
-        // }
         
-        let tempRating = (await GetRatingById(params.id)).rating;
+        let tempRating = await GetRatingById(params.id);
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
+        else setHasRated(false);
         setSimliarMovies(await GetSimilarMovies(params.id));
         
       } catch (error) {
@@ -66,28 +61,27 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [isBookmarked, , params.id] );
+  }, [isBookmarked, params.id]);
 
  async function ToggleBookmark(){
-    if(isBookmarked === false)
-      {      
-        console.log("Attempting to create a bookmark");
-        console.log(headers);
-        const success =  await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
-        console.log(success);
-        if( success){ 
-          console.log("Bookmark was set");
-          setShowBookmarkPop(true);
-          setTimeout(() => {setShowBookmarkPop(false)}, 2500);
-        }
-        else{
-          console.log("did not happen.")
-        }
-
+   let headers = GetHeader();
+    if(isBookmarked === false){      
+      console.log("Attempting to create a bookmark");
+      //console.log(headers);
+      const success =  await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
+      console.log(success);
+      if( success){ 
+        console.log("Bookmark was set");
+        setShowBookmarkPop(true);
+        setTimeout(() => {setShowBookmarkPop(false)}, 2500);
+      }
+      else{
+        console.log("did not happen.")
+      }
     }
     if(isBookmarked === true){
       console.log("Attempting to remove bookmark");
-      console.log(headers);
+      //console.log(headers);
       const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
       if(success){
         console.log("Bookmark removed successfully")
@@ -146,6 +140,7 @@ export default function DetailedTitle({id}) {
   };
 
   const updateAnnotation = (e) => {
+    let headers = GetHeader();
     UpdateTitleBookmark(params.id, headers, annotation);    
     setShowBookmarkModal(false);
     setShowUpdateBookmarkPop(true);
@@ -333,10 +328,6 @@ export default function DetailedTitle({id}) {
             </Modal.Header>
     
             <Modal.Body>
-              {/* <div >
-                <p className="inline-p-1">5</p>
-                <p className="inline-p-2">10</p>
-              </div> */}
               {list.map((id) => (hoverRating >= id || (0 > hoverRating && rating >= id)) ?
               <i className="bi bi-star-fill rate-star" key={id} onClick={() => setRating(id)} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i> : 
               <i className="bi bi-star rate-star" key={id} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i>)}

@@ -11,8 +11,9 @@ export default function Navigation(){
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+  const [chosenGenre, setChosenGenre] = useState(undefined);
   const [genres, setGenres] = useState([]);
-  //const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
+  // const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
   let navigate = useNavigate();
 
   function handleQuery(e){
@@ -42,8 +43,6 @@ export default function Navigation(){
       setPlaceholderText("Search for " + newSelectedCategory); 
     }
 
-    const DoAdvancedSearch = true;
-
   async function handleSubmit(e){
     e.preventDefault();
     const body = 
@@ -56,20 +55,23 @@ export default function Navigation(){
  
     try {
 
-      // let result;
-      // if(DoAdvancedSearch){
-      //   console.log("Doing advanced search");
-      //   result = await AdvancedSearch(body);
-      //   console.log("my advanced search result");
-      //   console.log(result);
-      //   navigate('/search', {
-      //     state: {result, searchType, body },
-      //   });
-      // }
-      // else{
-
-      // }
-      let result = await FetchData(searchType, body); 
+      let result;
+      if(chosenGenre !== undefined){
+        result = await AdvancedSearch(body);
+        // console.log("reuslt?");
+        // console.log(result);
+        //console.log("my advanced search result");
+        //console.log(result);
+      }
+      else{
+        result = await FetchData(searchType, body);
+        console.log("check fetch everythinr result")
+        console.log(result);
+        navigate('/search', {
+          state: {result, searchType, body },
+        });
+      }
+      setChosenGenre(undefined);
 
       // ideally we want result to be a state
       // const fetchedData = await fetchData(searchType, body);
@@ -79,7 +81,7 @@ export default function Navigation(){
       // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
       //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
       //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
-      navigate('/search', {
+       navigate('/search', {
         state: {result, searchType, body },
       });
 
@@ -90,8 +92,6 @@ export default function Navigation(){
     //const result = await fetchData(searchType, body);
  
   }
-
-  const [chosenGenre, setChosenGenre] = useState("none");
    
     return(
       <div>
@@ -102,9 +102,9 @@ export default function Navigation(){
             <Form inline="true" onSubmit={handleSubmit}>
               <Row>
                 <Col md="auto"> 
-                  <Dropdown style={{display: "inline-block"}}>
-                      <Dropdown.Toggle className='advanced-dropdown' variant="success">
-                        <div style={{color: "white"}}>Advanced Search</div>
+                  <Dropdown>
+                      <Dropdown.Toggle style={{display: "inline-block", backgroundColor: chosenGenre === undefined ? "": "black"}} className='advanced-dropdown' variant="success">
+                        <div style={{ color: "white" }}>Advanced Search</div>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <label for="cars">Genres</label>
@@ -147,7 +147,7 @@ export default function Navigation(){
                 <Navbar.Text>
                   <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>hello {name} </p>
                   <Dropdown style={{display: "inline-block"}}>
-                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                      <Dropdown.Toggle className='advanced-dropdown' variant="success" id="dropdown-basic">
                         <i className="bi bi-list" style={{color: "white"}}></i>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
