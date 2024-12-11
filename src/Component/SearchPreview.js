@@ -1,4 +1,4 @@
-import TitleSearchCard from './TitleSearchCard';
+import TitleSearchCard from './TitleComponents/TitleSearchCard';
 import PersonSearchCard from './PersonComponents/PersonSearchCard';
 import {Button, Row} from 'react-bootstrap'
 import { useEffect, useState } from 'react';

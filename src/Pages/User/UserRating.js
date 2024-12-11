@@ -1,14 +1,14 @@
-import {GetAllRatings} from '../Service/RatingService';
+import {GetAllRatings} from '../../Service/RatingService';
 import { useEffect, useState } from 'react';
-import { GetTitle } from "../Service/TitleService";
-import Rating from '../Component/Rating';
-import { useUser } from '../Store/store';
+import { GetTitle } from "../../Service/TitleService";
+import Rating from '../../Component/RatingComponents/Rating';
+import { useUser } from '../../Store/store';
 import { useNavigate } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 import {Container, Row} from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import TitlePlaceholder from '../Component/TitlePlaceholder';
+import TitlePlaceholder from '../../Component/TitleComponents/TitlePlaceholder';
 import Pagination from 'react-bootstrap/Pagination';
 
 export default function UserRating(){

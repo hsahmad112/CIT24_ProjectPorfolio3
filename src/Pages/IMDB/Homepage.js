@@ -1,9 +1,9 @@
-import './../App.css';
+import '../../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
-import {GetAllTitles } from './../Service/TitleService';
+import {GetAllTitles } from '../../Service/TitleService';
 import {Carousel, Container, Row} from 'react-bootstrap';
-import SimpleTitle from '../Component/SimpleTitle';
+import SimpleTitle from '../../Component/TitleComponents/SimpleTitle';
 import { useNavigate } from "react-router";
 
 export default function Homepage(){

@@ -4,10 +4,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { useEffect, useState } from 'react';
-import {getCookieValue } from "../Store/store";
-import { comparePasswords, validateEmail, validatePassword } from '../Helpers/FormHelper';
+import {getCookieValue } from "../../Store/store";
+import { comparePasswords, validateEmail, validatePassword } from '../../Helpers/FormValidation';
 import { useNavigate } from 'react-router';
-import {useUser} from '../Store/store';
+import {useUser} from '../../Store/store';
 
 export default function UserSetting(){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;  

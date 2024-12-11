@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { GetPersonBookmarks, GetTitleBookmarks } from '../Service/BookmarkService';
+import { GetPersonBookmarks, GetTitleBookmarks } from '../../Service/BookmarkService';
 import { Container, Row, Tab, Tabs, ButtonGroup } from 'react-bootstrap';
-import TitleCard from '../Component/TitleCard';
-import PersonCard from '../Component/PersonComponents/PersonCard';
+import TitleCard from '../../Component/TitleComponents/TitleCard';
+import PersonCard from '../../Component/PersonComponents/PersonCard';
 import { useNavigate } from "react-router";
 import Pagination from 'react-bootstrap/Pagination';
 
-export default function WactList(){
+export default function WatchList(){
     const [personBookmarks, setPersonBookmarks] = useState(null);
     const [titleBookmarks, setTitleBookmarks] = useState(null);
 

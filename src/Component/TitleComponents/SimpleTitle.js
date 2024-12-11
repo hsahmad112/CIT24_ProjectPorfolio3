@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Card, Placeholder } from 'react-bootstrap';
-import { useUser } from "../Store/store";
+import { useUser } from "../../Store/store";
 
 export default function SimpleTitle(title, navigate) {
   

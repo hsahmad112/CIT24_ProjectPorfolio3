@@ -1,12 +1,9 @@
 import { Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-import { GetTitle, GetTitleById } from '../Service/TitleService';
+import { GetTitle, GetTitleById } from '../../Service/TitleService';
 import { useEffect, useState } from 'react';
 import { data } from 'react-router';
 import { useNavigate } from 'react-router';
-import Placeholder from 'react-bootstrap/Placeholder';
-import TitlePlaceholder from './TitlePlaceholder';
-
 
 export default function Rating({...props}){
 

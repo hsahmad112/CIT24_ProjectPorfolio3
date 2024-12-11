@@ -1,6 +1,6 @@
-import SearchPreview from "../Component/SearchPreview";
+import SearchPreview from "../../Component/SearchPreview";
 import { useLocation } from "react-router";
-import { GetHeader } from "../Store/store";
+import { GetHeader } from "../../Store/store";
 
 //method only handles fetching data
 let headers = GetHeader();

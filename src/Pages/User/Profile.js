@@ -1,19 +1,15 @@
-import {GetAllRatings} from '../Service/RatingService';
-import { GetPersonBookmarks, GetTitleBookmarks } from '../Service/BookmarkService';
-
+import {GetAllRatings} from '../../Service/RatingService';
+import { GetPersonBookmarks, GetTitleBookmarks } from '../../Service/BookmarkService';
 import { useEffect, useState } from 'react';
-import { useUser } from '../Store/store';
+import { useUser } from '../../Store/store';
 import { useNavigate } from 'react-router';
-
 import Alert from 'react-bootstrap/Alert';
 import {Card, Container, Row, Col, Carousel, Stack} from 'react-bootstrap';
-
-import TitleProfile from '../Component/TitleProfile';
-import PersonProfile from '../Component/PersonComponents/PersonProfile';
-
-import TitlePlaceholder from '../Component/TitlePlaceholder';
-import Rating from '../Component/Rating';
-import RatingProfile from '../Component/RatingProfile';
+import TitleProfile from '../../Component/TitleComponents/TitleProfile';
+import PersonProfile from '../../Component/PersonComponents/PersonProfile';
+import TitlePlaceholder from '../../Component/TitleComponents/TitlePlaceholder';
+import Rating from '../../Component/RatingComponents/Rating';
+import RatingProfile from '../../Component/RatingComponents/RatingProfile';
 import Pagination from 'react-bootstrap/Pagination';
 
 export default function Profile(){

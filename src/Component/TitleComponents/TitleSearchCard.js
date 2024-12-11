@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardTitle } from 'react-bootstrap';
-import { GetTitlePoster } from '../Service/TitleService';
+import { GetTitlePoster } from '../../Service/TitleService';
 import { useNavigate } from "react-router"; 
 
 export default function TitleSearchCard ({title}){

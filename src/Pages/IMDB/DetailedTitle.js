@@ -1,12 +1,12 @@
-import { useUser, GetHeader } from "../Store/store";
+import { useUser, GetHeader } from "../../Store/store";
 import { useEffect, useState } from "react";
-import Toaster from "../Component/Toaster";
-import TitleSearchCard from "../Component/TitleSearchCard";
+import Toaster from "../../Component/Toaster";
+import TitleSearchCard from "../../Component/TitleComponents/TitleSearchCard";
 import { useParams, useNavigate, Form } from "react-router";
-import { GetTitleById, GetSimilarMovies } from "../Service/TitleService";
-import { PostRating, GetRatingById, PutRating, DeleteRating} from "../Service/RatingService";
-import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark} from '../Service/BookmarkService';
-import { displayYears, displayRatingCount } from "../Helpers/HelperFunctions";
+import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
+import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
+import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
+import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
 
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router';
-import { FetchData, AdvancedSearch }  from '../Pages/SearchResult';
+import { FetchData, AdvancedSearch }  from '../Pages/IMDB/SearchResult';
 import { useUser } from "../Store/store";
 import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row, Nav } from 'react-bootstrap';
 import { GetGenres } from '../Service/GenreService';

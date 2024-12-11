@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useNavigate } from "react-router";
-import { GetTitleBackdrop } from '../Service/TitleService';
+import { GetTitleBackdrop } from '../../Service/TitleService';
 
 export default function TitleCard(title){
     const [titleBookmark, setTitleBookmark] = useState(null);        

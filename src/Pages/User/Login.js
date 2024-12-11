@@ -2,10 +2,10 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useContext } from 'react';
-import { UserContext, UserProvider } from "../Store/store";
+import { UserContext, UserProvider } from "../../Store/store";
 import {useState} from 'react';
 import { useNavigate } from 'react-router';
-import {useUser} from '../Store/store';
+import {useUser} from '../../Store/store';
 
 export default function Login(){
 

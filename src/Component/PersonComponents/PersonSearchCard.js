@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardTitle } from 'react-bootstrap';
 import { GetPersonBackdrop } from '../../Service/PersonService';
 import { useNavigate } from "react-router"; 
-import { displayYears } from '../../Helpers/HelperFunctions';
+import { displayYears } from '../../Helpers/DisplayHelpers';
 
 export default function PersonSearchCard ({person}){
     const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");
