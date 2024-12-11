@@ -1,8 +1,5 @@
 import { Card } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import { GetTitle, GetTitleById } from '../../Service/TitleService';
-import { useEffect, useState } from 'react';
-import { data } from 'react-router';
+import {useState } from 'react';
 import { useNavigate } from 'react-router';
 
 export default function Rating({...props}){
@@ -16,24 +13,17 @@ export default function Rating({...props}){
     const onClickHandler = () => {
         navigate("/title/"+titleId);
     }
-    console.log("FROM Ratings:: Title id is:")
-  console.log(rating);
-    return(
-        <>
-  
-   
-   {/* STill in progress, should utilize TitlePlaceHolder */}
-    <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" onClick = {posterUrl ? onClickHandler : undefined} src={posterUrl || "https://upload.wikimedia.org/wikipedia/commons/3/37/YouTube_loading_symbol_2_%28stable%29.gif"} alt={primaryTitle}/> {/*Should be nullable or not?*/}
-            <Card.Body>
-                <Card.Title style = {{color: 'red'}}>{errorMessage}</Card.Title>
-                <Card.Title  style = {primaryTitle ? {cursor: 'pointer'}: {color: 'red'}} onClick ={primaryTitle ? onClickHandler : undefined}>{primaryTitle || "Loading..."}</Card.Title> {/* Like with the img, Title of movie is only clickable when loaded */}
-                <Card.Text> {`Rating: ${rating}` || "Rating not loaded"} </Card.Text>
-               {/*<Button variant="primary">Go somewhere</Button>*/}
-            </Card.Body>
-        </Card>    
+    console.log("FROM Ratings:: Title id is: " + rating);
 
-     
-</>
-        );
+    return(
+
+        <Card style={{ width: '18rem' }}>
+            <Card.Img variant="top" onClick = {posterUrl ? onClickHandler : undefined} src={posterUrl || "./no-image.jpg"} alt={primaryTitle}/> 
+                <Card.Body>
+                    <Card.Title style = {{color: 'red'}}>{errorMessage}</Card.Title>
+                    <Card.Title  style = {primaryTitle ? {cursor: 'pointer'}: {color: 'red'}} onClick ={primaryTitle ? onClickHandler : undefined}>{primaryTitle || "Loading..."}</Card.Title> {/* Like with the img, Title of movie is only clickable when loaded */}
+                    <Card.Text> {`Rating: ${rating}` || "Rating not loaded"} </Card.Text>
+                </Card.Body>
+        </Card>   
+    );
 }

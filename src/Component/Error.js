@@ -1,7 +1,9 @@
+import Alert from 'react-bootstrap/Alert';
+
 export default function Error(){
     return(
-        <div>
-            An error occurred. 
-        </div>
+        <Alert variant="danger">
+          404 not found. 
+        </Alert>
     )
 }

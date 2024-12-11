@@ -2,9 +2,11 @@ import SearchPreview from "../../Component/SearchPreview";
 import { useLocation } from "react-router";
 import { GetHeader } from "../../Store/store";
 
-//method only handles fetching data
-let headers = GetHeader();
+
  export async function FetchData(searchType, body){
+    //method only handles fetching data
+    let headers = GetHeader();
+    
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
     const fetchUrl = "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize;
@@ -56,6 +58,9 @@ let headers = GetHeader();
 
 // all advanced search is for titles 
 export async function AdvancedSearch(body) {
+    //method only handles fetching data
+    let headers = GetHeader();
+    
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
     const searchTerm = body.searchTerm === undefined ? "" : body.searchTerm;
     const genreId = body.genreId === undefined ? "" : body.genreId;

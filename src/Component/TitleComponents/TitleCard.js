@@ -10,14 +10,12 @@ export default function TitleCard(title){
 
     useEffect(() =>{
         const getTitleBookmark = async () => {
-            if(title){
-                try {
-                    setTitleBookmark(await GetTitleBackdrop(title.data.titleId, true));
-                } catch (error) {
-                    console.log(error);
-                }
+            try {
+                setTitleBookmark(await GetTitleBackdrop(title.data.titleId, true));
+            } catch (error) {
+                console.error("Error in TitleCard: " + error);
             }
-    
+
         }
         getTitleBookmark();
     }, [title]);
@@ -27,11 +25,11 @@ export default function TitleCard(title){
             <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}  onClick={()=> navigate("/title/" + title.data.titleId)}>
                 <Card.Img variant="top" src={imageUrl + titleBookmark}/>
                 <Card.Body>
-                    <Card.Title> {title.primaryTitle} </Card.Title>
+                    <Card.Title>{title.data.titlePrimaryTitle} </Card.Title> {/* Naming convention of .... data.titlePrimaryTitle could be diffenrent. E.g. could be called primaryTitle*/}
                     <Card.Text> {title.data.annotation} </Card.Text>
                     <Button variant="primary">Go to title</Button>
                 </Card.Body>
             </Card>
-            );
+        );
     }  
 }

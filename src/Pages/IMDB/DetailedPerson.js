@@ -157,7 +157,7 @@ export default function DetailedPerson({id}){
                                 variant="bottom"
                                 className=""
                                 src={                      
-                                        personBackdrop?.profile_path !== undefined ? 
+                                        personBackdrop?.profile_path !== null ? 
                                         imageUrl + personBackdrop?.profile_path :
                                         "/no-image.jpg"
                                     }            

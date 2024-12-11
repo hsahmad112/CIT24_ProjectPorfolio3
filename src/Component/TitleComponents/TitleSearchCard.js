@@ -22,7 +22,7 @@ export default function TitleSearchCard ({title}){
             onClick={()=> navigate("/title/" + title.titleId)}>
             <div className="col-md-4" style={{height: '100%', width: '100%'}}>
                 {/* <img className='personSearchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl} /> */}
-                <img className='personSearchCard' src={title.posterUrl !== "" ? title.posterUrl : "./no-image.jpg"} alt="poster" />
+                <img className='searchCard' src={title.posterUrl !== "" ? title.posterUrl : "./no-image.jpg"} alt="poster" />
                 <CardTitle className='card-text'>{title.primaryTitle}</CardTitle>
                 {title.originalTitle !== title.primaryTitle &&
                    <CardTitle className='card-text less-opacity' style={{fontSize: "15px"}}>{title.originalTitle}</CardTitle>}  
