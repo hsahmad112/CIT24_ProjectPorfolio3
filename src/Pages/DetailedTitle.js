@@ -68,13 +68,13 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [isBookmarked] );
 
-  function ToggleBookmark(){
+ async function ToggleBookmark(){
     if(isBookmarked === false)
       {      
         console.log("Attempting to create a bookmark");
         console.log(headers);
-        const success =  CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
-    
+        const success =  await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
+        console.log(success);
         if( success){ 
           console.log("Bookmark was set");
           setShowBookmarkPop(true);
@@ -88,7 +88,7 @@ export default function DetailedTitle({id}) {
     if(isBookmarked === true){
       console.log("Attempting to remove bookmark");
       console.log(headers);
-      const success=  DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
+      const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
       if(success){
         console.log("Bookmark removed successfully")
         setShowRemoveBookmarkPop(true);

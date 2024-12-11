@@ -53,11 +53,11 @@ export default function DetailedPerson({id}){
         console.log(isBookmarked);
     }, [isBookmarked] );
 
-    function ToggleBookmark(){
+    async function ToggleBookmark(){
         if(isBookmarked === false){      
             console.log("Attempting to create a bookmark");
             //console.log(headers);
-            const success =  CreatePersonBookmarksById(params.id, annotation, setIsBookmarked, headers);
+            const success = await CreatePersonBookmarksById(params.id, annotation, setIsBookmarked, headers);
         
             if( success){ 
                 console.log("Bookmark was set");
@@ -72,7 +72,7 @@ export default function DetailedPerson({id}){
         if(isBookmarked === true){
           console.log("Attempting to remove bookmark");
           //console.log(headers);
-          const success =  DeletePersonBookmarksById(params.id, setIsBookmarked, headers);
+          const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);
         
           if(success){
             console.log("Bookmark removed successfully")
