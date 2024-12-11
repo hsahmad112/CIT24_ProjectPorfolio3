@@ -66,7 +66,7 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [isBookmarked] );
+  }, [isBookmarked, , params.id] );
 
  async function ToggleBookmark(){
     if(isBookmarked === false)

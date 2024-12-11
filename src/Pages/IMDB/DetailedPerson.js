@@ -51,7 +51,7 @@ export default function DetailedPerson({id}){
     
         fetchData();
         console.log(isBookmarked);
-    }, [isBookmarked] );
+    }, [isBookmarked, params.id] );
 
     async function ToggleBookmark(){
         if(isBookmarked === false){      

@@ -11,7 +11,6 @@ export default function PersonSearchCard ({person}){
 
     useEffect(()=>{
         async function getBackdrop(){
-           // console.log("personid: " + person.personId)
             const res = (await GetPersonBackdrop(person.personId));
             if(res?.profile_path) {
                 setBackdropUrl(res.profile_path);
