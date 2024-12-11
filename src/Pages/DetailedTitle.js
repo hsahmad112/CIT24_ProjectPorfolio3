@@ -25,6 +25,7 @@ export default function DetailedTitle({id}) {
   
   const [showBookmarkPop, setShowBookmarkPop] = useState(false);
   const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
+  const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
@@ -40,7 +41,7 @@ export default function DetailedTitle({id}) {
   let navigate = useNavigate();
 
   useEffect(()=>{
-    isTitleBookmarked(params.id, setIsBookmarked, headers);
+    isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
 
     window.scrollTo(0, 0);
     const fetchData = async () => {
@@ -65,12 +66,13 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [isBookmarked] )
+  }, [isBookmarked] );
 
   function ToggleBookmark(){
     if(isBookmarked === false)
       {      
         console.log("Attempting to create a bookmark");
+        console.log(headers);
         const success =  CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
     
         if( success){ 
@@ -85,6 +87,7 @@ export default function DetailedTitle({id}) {
     }
     if(isBookmarked === true){
       console.log("Attempting to remove bookmark");
+      console.log(headers);
       const success=  DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
       if(success){
         console.log("Bookmark removed successfully")
@@ -98,7 +101,6 @@ export default function DetailedTitle({id}) {
   }
 
   async function RemoveRating(){
-
     try{
       DeleteRating(params.id);
       setToastMessage('Your rating was removed');  
@@ -146,6 +148,8 @@ export default function DetailedTitle({id}) {
   const updateAnnotation = (e) => {
     UpdateTitleBookmark(params.id, headers, annotation);    
     setShowBookmarkModal(false);
+    setShowUpdateBookmarkPop(true);
+    setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
   }
 
   if(errorMessage){
@@ -160,11 +164,6 @@ export default function DetailedTitle({id}) {
   function ShowingBookmarkModal(){
     if(isBookmarked){
       setShowBookmarkModal(true);
-    } else {
-      // setShowNotLoggedIn(true);
-      // setTimeout(() => {
-      //   setShowNotLoggedIn(false);
-      // }, 2500);
     }
   }
 
@@ -202,11 +201,14 @@ export default function DetailedTitle({id}) {
                 </Col>
                 <Col md={1}>
                     {/* Toogle function, can be used to save as bookmark! */}                       
-                    <div onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
-                        { isBookmarked  ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: ''}}/> }
-                    </div>    
-                        {isBookmarked ? <Button onClick={ShowingBookmarkModal}>Edit Annotation</Button> : null}              
-                
+                    <Row>
+                        <Col onClick={ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                            <Icon.PencilFill  style={{color: 'purple', visibility:isBookmarked ? "visible" : "hidden"}} />
+                        </Col>
+                        <Col onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                            { isBookmarked  ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: ''}}/> }
+                        </Col> 
+                    </Row>  
                 </Col>
               </Row>
             <Row>
@@ -366,7 +368,6 @@ export default function DetailedTitle({id}) {
                 </Modal.Body>
 
                 <Modal.Footer>
-                  {/* <Button variant="danger" style={{position: "left"}} onClick={() => handleDeleteBookmark()}>Delete</Button> */}
                   <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
                   <Button variant="primary" onClick={() => updateAnnotation()}>Update</Button>
                 </Modal.Footer>
@@ -376,10 +377,9 @@ export default function DetailedTitle({id}) {
         }
 
         <Toaster header={"Not authorized"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
-
-        <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
-        
+        <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>        
         <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
+        <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"}></Toaster>
           
         <Toaster header={"Success"} body={toastMessage} show={showRatingPop} color={"success"}></Toaster>
 

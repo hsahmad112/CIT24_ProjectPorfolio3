@@ -71,18 +71,18 @@ export default function Profile(){
 
 useEffect(() =>{ //Effect for Rating pagenation
 
-const ratings = [];
+  const ratings = [];
       
-for (let number = 0; number <= ratingTotalPages-1; number++) {
-    ratings.push(
-      <Pagination.Item
-        key={number}
-        active={number === ratingPage}
-        onClick={() => handleRatingPageChange(number)}
-      >
-        {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
-      </Pagination.Item>
-    );
+  for (let number = 0; number <= ratingTotalPages-1; number++) {
+      ratings.push(
+        <Pagination.Item
+          key={number}
+          active={number === ratingPage}
+          onClick={() => handleRatingPageChange(number)}
+        >
+          {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
+        </Pagination.Item>
+      );
   }
   setRatingPagenationItems(ratings);
 
