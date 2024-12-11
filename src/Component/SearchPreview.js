@@ -24,7 +24,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       const type = "persons";
       const nextPage = page + 1;
       let headers = GetHeader();
-      console.log(headers);
+      //console.log(headers);
 
       const personResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {headers});
       const data = (await personResponse.json()).entities;

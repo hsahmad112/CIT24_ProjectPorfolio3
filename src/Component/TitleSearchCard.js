@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardTitle } from 'react-bootstrap';
 import { GetTitlePoster } from '../Service/TitleService';
 import { useNavigate } from "react-router"; 
+import { displayYears } from './HelperFunctions';
 
 export default function TitleSearchCard ({title}){
     const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");
@@ -23,7 +24,7 @@ export default function TitleSearchCard ({title}){
             <div className="col-md-4" style={{height: '100%', width: '100%'}}>
                 {/* <img className='personSearchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl} /> */}
                 <img className='personSearchCard' src={title.posterUrl !== "" ? title.posterUrl : "./no-image.jpg"} alt="poster" />
-                <CardTitle className='card-text'>{title.primaryTitle}</CardTitle>
+                <CardTitle className='card-text'>{title.primaryTitle} {displayYears(title.startYear, title.endYear)}</CardTitle>
                 {title.originalTitle !== title.primaryTitle &&
                    <CardTitle className='card-text less-opacity' style={{fontSize: "15px"}}>{title.originalTitle}</CardTitle>}  
             </div>

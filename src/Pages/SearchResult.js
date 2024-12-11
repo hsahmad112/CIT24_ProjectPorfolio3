@@ -61,18 +61,9 @@ export async function AdvancedSearch(body) {
     const genreId = body.genreId === undefined ? "" : body.genreId;
     const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&page=" + body.page + "&pageSize=" + body.pageSize;
 
-// big and one function called in backend?
-// we can search for genre, multiples?
-// can search for minimum title rating
-// can search for start year and older
-// can search for end year and younger
-// can search for between start and end year
-
-// can search for best match?
-const titleResponse = await fetch(baseUrl  + "titles" + fetchAdvancedUrl, {headers});
-const response = await titleResponse.json();
-return{titles: response};
-
+    const titleResponse = await fetch(baseUrl  + "titles" + fetchAdvancedUrl, {headers});
+    const response = await titleResponse.json();
+    return{titles: response};   
 }
 
 export default function SearchResult(){
