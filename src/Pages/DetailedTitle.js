@@ -46,16 +46,11 @@ export default function DetailedTitle({id}) {
     const fetchData = async () => {
       try {
         setTitle(await GetTitleById(params.id));
-
-        // if(await isTitleBookmarked(params.id, setIsBookmarked, headers)){
-        //   console.log("Current status ", isBookmarked);
-        // }else{
-        //   console.log("Current status", isBookmarked);
-        // }
         
-        let tempRating = (await GetRatingById(params.id)).rating;
+        let tempRating = await GetRatingById(params.id);
         setRating(tempRating);
         if(tempRating > -1) setHasRated(true);
+        else setHasRated(false);
         setSimliarMovies(await GetSimilarMovies(params.id));
         
       } catch (error) {
@@ -65,7 +60,7 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [isBookmarked] )
+  }, [isBookmarked, params.id] )
 
   function ToggleBookmark(){
     if(isBookmarked === false)

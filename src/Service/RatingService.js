@@ -32,7 +32,7 @@ export async function GetRatingById(id){
         return -2;
     }
     //console.log("returning true");
-    return response.json();
+    return (await response.json()).rating;
 }
 
 export async function PostRating(titleId, rating){
