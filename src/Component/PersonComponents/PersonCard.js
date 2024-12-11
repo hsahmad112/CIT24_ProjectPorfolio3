@@ -42,7 +42,6 @@ export default function PersonCard(person){
                     <Button variant="primary">Go to person</Button>
                 </Card.Body>             
             </Card>
-            );
-    
+        );
     }
 }
