@@ -7,6 +7,7 @@ import { GetGenres } from '../Service/GenreService';
 
 export default function Navigation(){
   const {userName, searchType, setSearchType, logout } = useUser();
+  const [name, setName] = useState();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
@@ -19,14 +20,17 @@ export default function Navigation(){
   }
 
   useEffect(()=>{
+   
     const fetchData = async () => {
       try {
+        setName(userName);
         setGenres(await GetGenres());
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+    
+  
     fetchData();
   },[])
 
@@ -141,7 +145,7 @@ export default function Navigation(){
             <div className='user-menu'>
               <Nav.Item>
                 <Navbar.Text>
-                  <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>hello {userName} </p>
+                  <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>hello {name} </p>
                   <Dropdown style={{display: "inline-block"}}>
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
                         <i className="bi bi-list" style={{color: "white"}}></i>

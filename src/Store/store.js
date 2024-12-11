@@ -45,9 +45,9 @@ export const UserProvider = ({ children }) => {
       let navigate = useNavigate();
 
       const login = (userData) => {
-        console.log(`Setting userName: ${userData}`);
-          setUserName(userData.userName);
-          setToken(userData.token);     
+        console.log(`Setting userName: ${userData.userName}`);
+          setUserName( userData.userName);
+          setToken( userData.token);     
       };
 
       const logout = () => {
