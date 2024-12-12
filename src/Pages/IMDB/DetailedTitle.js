@@ -7,6 +7,7 @@ import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
 import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
 import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
+import Badge from 'react-bootstrap/Badge';
 
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
@@ -313,7 +314,7 @@ export default function DetailedTitle({id}) {
                 <Card className="genre-box">
                       <Card.Body>
                         <h5>genres</h5>
-                          {title.genresList.map((genre, index) => <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills" key={index}>{genre}</Button>)}
+                          {title.genresList.map((genre, index) => <Badge bg="secondary" className="pills" key={index}>{genre}</Badge>)}
                         <Card.Text>
                         </Card.Text>
                       </Card.Body>
