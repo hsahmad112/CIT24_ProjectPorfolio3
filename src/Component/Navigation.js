@@ -15,7 +15,7 @@ export default function Navigation(){
   const [chosenEndYear, setChosenEndYear] = useState(undefined);
   const [chosenRating, setChosenRating] = useState(undefined);
   const [genres, setGenres] = useState([]);
-  // const [result, setResult] = useState({}); //Search result state, to be parsed to SearchResult component
+
   let navigate = useNavigate();
 
   function handleQuery(e){
@@ -27,7 +27,7 @@ export default function Navigation(){
       try {
         setGenres(await GetGenres());
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data in Navigation:', error);
       }
     };
 
