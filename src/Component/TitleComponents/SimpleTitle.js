@@ -25,6 +25,7 @@ export default function SimpleTitle({title, navigate, keyID}) {
 
   return(
     <Card
+    className='carousel-card'
     border={keyID === 2 ? '2px solid yellow' : null}
     style={{
       height: '400px',
@@ -37,9 +38,9 @@ export default function SimpleTitle({title, navigate, keyID}) {
   >
     <Card.Img
       variant="top"
+      className='arosel-img'
       style={{
         width: '100%',
-        height: '200px',
         objectFit: 'cover', // Ensures image covers and crops
         border: keyID === 2 ? '4px solid yellow' : '4px solid transparent'
       }}

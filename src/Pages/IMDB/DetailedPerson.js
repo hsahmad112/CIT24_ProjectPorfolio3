@@ -10,7 +10,6 @@ import Bookmark from "../../Component/Bookmark";
 import Badge from 'react-bootstrap/Badge';
 
 export default function DetailedPerson({id}){
-    //const {userName, token} = useUser();
     const params = useParams(id);    
     const headers = GetHeader();
     const [person, setPerson] = useState(null);  
@@ -34,9 +33,7 @@ export default function DetailedPerson({id}){
 
     useEffect(()=>{
         isPersonBookmarked(params.id, setIsBookmarked, headers);
-        const res = 
 
-        //setAnnotation();
         window.scrollTo(0, 0);
         const fetchData = async () => {
           try {

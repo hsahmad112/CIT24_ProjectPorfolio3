@@ -5,7 +5,7 @@ import { GetPersonBookmarks, GetPersonBookmarksById, CreatePersonBookmarksById, 
 import { useUser } from "../Store/store";
 import * as Icon from 'react-bootstrap-icons';
 
-export default function Bookmark ({person}){
+export default function Bookmark ({person, isBookmarked, showModal, ToggleBookmark, ShowingBookmarkModal}){
     const { token } = useUser();
     const [bookmark, setBookmark] = useState(null);
     
@@ -78,9 +78,14 @@ export default function Bookmark ({person}){
 
     return(
         <>
-            <div onClick={bookmark ? ToggleBookmark : ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
-                { bookmark ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: 'darkgreen'}}/> }
-            </div>
+            <Row>
+                <Col onClick={ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                    <Icon.PencilFill  style={{color: 'purple', visibility:isBookmarked ? "visible" : "hidden"}} />
+                </Col>
+                <Col onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                    { isBookmarked  ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: ''}}/> }
+                </Col> 
+            </Row> 
 
             {showBookmarkModal &&      
                     <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
@@ -92,26 +97,27 @@ export default function Bookmark ({person}){
                         <Modal.Body>
                                 <textarea 
                                     value={annotation}
-                                    //placeholder="Insert anntation..."
                                     onChange={(e) => handleAnnotationChange(e)}                  
-                                    rows="3"
+                                    rows="3"                                    
+                                    style={{width: "100%"}}
                                 />
                         </Modal.Body>
 
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-                            <Button variant="primary" onClick={() => ToggleBookmark()}>Yes, bookmark it!</Button>
+                            <Button variant="primary" onClick={() => updateAnnotation()}>Update</Button>
                         </Modal.Footer>
                         </Modal.Dialog>
                     </div>
                 }
                 
                 <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
-
-                <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>
-                
+                <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>                
                 <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
-        </>
+                <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"}></Toaster>
+        
+                
+      </>
 
     )
 }

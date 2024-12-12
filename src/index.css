@@ -193,7 +193,6 @@ code {
   position: relative;
   width: 80%;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 
@@ -223,4 +222,9 @@ code {
 }
 .carousel-arrow.right {
   right: 0;
+}
+.carosel-img {
+  height: 70%;
+  width: 100%;
+  overflow-x: hidden;
 }
