@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from 'axios';
 import {useState} from 'react';
 import {useUser} from '../../Store/store';
+import {PostLogin} from '../../Service/UserService';
 
 export default function Login(){
 
@@ -19,26 +19,20 @@ export default function Login(){
     setFormData({
       email: '',
       password: '',
-    });
-    
+    }); 
   }
 
   async function handleSubmit(e){
     e.preventDefault();
   
     try{
-      const response = await axios.post('https://localhost:7154/api/user/login', formData,{
-          headers: {
-              'Content-Type': 'application/json' 
-          }
-      });
+      const response = await PostLogin(formData);
       login(response.data);
-      
     } 
     catch(error){
-      console.error('login failed')
+      console.error('login failed ' + error.data)
 
-      switch(error.response.status){
+      switch(error.status){
         case 401: 
           setErrorMessage('Invalid username or password, please try again');
           break;

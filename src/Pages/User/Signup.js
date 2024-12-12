@@ -1,15 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router';
 import {useUser} from '../../Store/store';
 import {useEffect, useState} from 'react';
-import { comparePasswords, validatePassword, validateEmail, validateName} from '../../Helpers/FormValidation';
+import {PostUser} from '../../Service/UserService';
+import {comparePasswords, validatePassword, validateEmail, validateName} from '../../Helpers/FormValidation';
 
 export default function Signup(){
 
   const [isFieldValid, setIsFieldValid] = useState(false);
-
-  let navigate = useNavigate();
 
   const [jsonBody, setJsonBody] = useState({
       email: '',
@@ -18,7 +16,7 @@ export default function Signup(){
       confirmPassword: '',
   });
 
-  const {login} = useUser(); //Gets the login state, from store.js (UserContext)
+  const {login} = useUser(); 
     
   const [errorMessage, setErrorMessage] = useState({
     passwordMismatch: '',
@@ -47,27 +45,13 @@ export default function Signup(){
 
   async function handleSubmit(e){
     e.preventDefault();
-    const { email, firstname, password } = jsonBody;
 
-    try{    
-      const response = await fetch(process.env.REACT_APP_BASE_API_LINK + "user", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({email, firstname, password })
-      });
-    
+    try{  
+      const response = await PostUser({jsonBody});
 
-      if(response.ok){
-
-        const data = await response.json();
-        login(data);
-      }
-      else{
-        console.error("credentials passed the form check, but got error. Email might be taken");
-      }
-
+      if(response.ok) login(response.data);
+      else
+        console.error("credentials passed the form check, but got error. Email might be taken");   
     }
   
     catch (error) {
@@ -92,8 +76,7 @@ return(
           value = {jsonBody.email}
           onChange= {handleChange}
         />
-      </Form.Group>
-      
+      </Form.Group> 
 
       <Form.Group className="mb-1" controlId="SignupFormFirstname">
         <Form.Label>First name</Form.Label>
@@ -105,8 +88,7 @@ return(
           onChange={handleChange}
         />
       </Form.Group>
-
-      
+ 
       <Form.Group className="mb-1" controlId="SignupFormPassword">
         <Form.Label>Password</Form.Label>
         <Form.Control 
@@ -134,7 +116,6 @@ return(
         disabled = {isFieldValid}> {errorMessage.invalidEmailFormat}</Form.Text>
       </Form.Group>
 
-
       <Form.Group className='mb-1' controlId='PwdNotMatching'>
         <Form.Text className ='mt-3 text-danger'
         disabled = {isFieldValid}> {errorMessage.passwordMismatch}</Form.Text>
@@ -146,7 +127,6 @@ return(
         {errorMessage.invalidPasswordFormat}
         </Form.Text>
       </Form.Group>
-
 
       <Form.Group className='mb-1' controlId='firstNameIncorrectFormat'>
         <Form.Text className ='mt-3 text-danger'
