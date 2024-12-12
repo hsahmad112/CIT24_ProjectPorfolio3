@@ -64,8 +64,14 @@ export async function AdvancedSearch(body) {
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
     const searchTerm = body.searchTerm === undefined ? "" : body.searchTerm;
     const genreId = body.genreId === undefined ? "" : body.genreId;
-    const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&page=" + body.page + "&pageSize=" + body.pageSize;
-
+    const startYear = body.startYear === undefined ? "" : body.startYear;
+    const endYear = body.endYear === undefined ? "" : body.endYear;
+    const rating = body.rating === undefined ? "" : body.rating;
+    const paging = "&page=" + body.page + "&pageSize=" + body.pageSize;
+    //const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + paging;
+    const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
+    
+    console.log(fetchAdvancedUrl);
     const titleResponse = await fetch(baseUrl  + "titles" + fetchAdvancedUrl, {headers});
     const response = await titleResponse.json();
     return{titles: response};   

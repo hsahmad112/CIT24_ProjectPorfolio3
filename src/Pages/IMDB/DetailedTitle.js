@@ -146,7 +146,43 @@ export default function DetailedTitle({id}) {
     setShowUpdateBookmarkPop(true);
     setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
   }
+  // async function handleSubmit(e){
+  //   e.preventDefault();
+  //   const body = 
+  //   { id: null, 
+  //     page: '0', 
+  //     pageSize: searchType === 'everything' ? '5' : '10',
+  //     genreId: chosenGenre,
+  //   };
+ 
+  //   try {
 
+  //       let result = await AdvancedSearch(body);
+  //       // console.log("reuslt?");
+  //       // console.log(result);
+
+  //     //setChosenGenre(undefined);
+
+
+  //      navigate('/search', {
+  //       state: {result, searchType, body },
+  //     });
+
+  //   } catch (error) {
+  //     console.error("Error in fetching of data, in Navigation.js", error);
+  //     //throw new Error (error); --Do we want to throw error here on in SearchResult?
+  //   }
+ 
+  // }
+
+  
+  // if(similarMovies) console.log(similarMovies);
+  function ShowingBookmarkModal(){
+    if(isBookmarked){
+      setShowBookmarkModal(true);
+    }
+
+  }
   if(errorMessage){
     return (
       <div className="center-div">
@@ -154,14 +190,7 @@ export default function DetailedTitle({id}) {
       </div>
     );  
   }
-
-  // if(similarMovies) console.log(similarMovies);
-  function ShowingBookmarkModal(){
-    if(isBookmarked){
-      setShowBookmarkModal(true);
-    }
-  }
-
+  
   if(!title){
     return(
       <div style={{textAlign: "center !important", transform: "translate(0%, 500%)"}}>
