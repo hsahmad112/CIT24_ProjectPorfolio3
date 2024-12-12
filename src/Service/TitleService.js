@@ -1,6 +1,3 @@
-import axios from 'axios';
-
-const baseMovieUrl = process.env.REACT_APP_TMDB_API_MOVIE_LINK;
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 const api_key = process.env.REACT_APP_TMDB_API_KEY;

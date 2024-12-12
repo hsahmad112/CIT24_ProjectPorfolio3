@@ -39,7 +39,7 @@ export const UserProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([{
     persons: [],
     titles: []
-    }]);
+  }]);
 
   let navigate = useNavigate();
 

@@ -8,7 +8,7 @@ const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 
 // ** Title Bookmark Service: **
 
-export async function isTitleBookmarked(id, setIsBookmarked,setTitleBookmark, headers) {
+export async function isTitleBookmarked(id, setIsBookmarked, setTitleBookmark, headers) {
     try{
         const response = await fetch(baseApiUrl + "bookmarks/title/" + id, {headers});
         
