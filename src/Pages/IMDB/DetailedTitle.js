@@ -183,7 +183,7 @@ async function ToggleBookmark(){
 
 
   function CloseRatingModal(){
-    setHoverRating(-1);
+    setHoverRating(0);
     setShowRatingModal(false);
   }
 
