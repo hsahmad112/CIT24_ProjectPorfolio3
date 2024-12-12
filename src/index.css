@@ -196,10 +196,7 @@ code {
   overflow: hidden;
 }
 
-.carousel-cards {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
+
 
 .carousel-card {
   min-width: 20%; /* Ensures 5 cards fit in the container */
