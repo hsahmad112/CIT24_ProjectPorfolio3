@@ -163,7 +163,7 @@ async function ToggleBookmark(){
     setTitleRating(true);
     
     console.log("user created a new rating ", rating)
-
+    CloseRatingModal(true);
     setToastMessage('Your rating was submitted');
     setShowRatingPop(true);
     setTimeout(() => {setShowRatingPop(false)}, 2500);
@@ -174,7 +174,7 @@ async function ToggleBookmark(){
     await PutRating(params.id, rating);
 
     console.log("user updated their rating to", rating)
-
+    CloseRatingModal(true);
     setToastMessage('Your rating was submitted');
     setShowRatingPop(true);
     setTimeout(() => {setShowRatingPop(false)}, 2500);
