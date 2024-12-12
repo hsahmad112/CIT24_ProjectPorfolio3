@@ -6,7 +6,7 @@ import { useUser } from "../Store/store";
 import * as Icon from 'react-bootstrap-icons';
 
 export default function Bookmark ({person}){
-    const { token, loggedIn } = useUser();
+    const { token } = useUser();
     const [bookmark, setBookmark] = useState(null);
     
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
@@ -16,7 +16,6 @@ export default function Bookmark ({person}){
     const [annotation, setAnnotation] = useState("");
 
     useEffect(()=>{
-        console.log(loggedIn)
         const fetchData = async () => {
                
             const data = await GetPersonBookmarksById(person.id);
@@ -29,7 +28,7 @@ export default function Bookmark ({person}){
         };
     
         fetchData();
-    }, [person.id, bookmark, loggedIn]);
+    }, [person.id, bookmark, token]);
 
     console.log(person.id);
     console.log("is bookmarked: " + bookmark);
@@ -76,8 +75,6 @@ export default function Bookmark ({person}){
             }, 2500);
         }
     }
-
-
 
     return(
         <>

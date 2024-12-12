@@ -14,12 +14,11 @@ import Signup from './Pages/User/Signup';
 import UserRating from './Pages/User/UserRating';
 import UserSetting from './Pages/User/UserSetting';
 import SearchResult from './Pages/IMDB/SearchResult';
-
 import Profile from './Pages/User/Profile';
 
 function App() {
   
-    return (
+  return (
     <div className="App">
       <UserProvider >
         <Routes>

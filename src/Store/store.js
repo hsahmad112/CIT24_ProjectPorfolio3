@@ -2,16 +2,16 @@ import { createContext, useContext } from 'react';
 import { useState } from "react";
 import {useNavigate} from 'react-router';
 
-
 export function getCookieValue(name) {
   const cookies = document.cookie.split(';'); //Splits cookie string from document, into substrings seperated by ";", and returns array
   for (let cookie of cookies) {
-    cookie = cookie.trim(); //removing whitespace
+    cookie = cookie.trim(); //removes whitespace
 
     if (cookie.startsWith(`${name}=`)) { //true if substring equals specified name, e.g. "FirstName"
-      
-      return cookie.substring(name.length + 1); //Returns substring, from index at length of name +1. E.g. Cookie name string is FirstName, we say +1, aka get string from = sign onways.
-                                                //If string is FirstName=Jacob, then returned string is Jacob
+      return cookie.substring(name.length + 1);
+       // Returns substring, from index at length of name +1. E.g. Cookie name string is FirstName,
+       // We say +1, aka get string from = sign onways.
+       // If string is FirstName=Jacob, then returned string is Jacob
     }
   }
   return null;
@@ -33,46 +33,45 @@ export function GetHeader(){
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-      const [searchType, setSearchType] = useState("everything");
-      const [userName, setUserName] = useState(getCookieValue("FirstName"));  
-      const [token, setToken] = useState(getCookieValue("Authorization"));
-      const [loggedIn, setLoggedIn] = useState(false);
-      const [searchResult, setSearchResult] = useState([{
-        persons: [],
-        titles: []
-        }]);
+  const [searchType, setSearchType] = useState("everything");
+  const [userName, setUserName] = useState(getCookieValue("FirstName"));  
+  const [token, setToken] = useState(getCookieValue("Authorization"));
+  const [searchResult, setSearchResult] = useState([{
+    persons: [],
+    titles: []
+    }]);
 
-      let navigate = useNavigate();
+  let navigate = useNavigate();
 
-      const login = (userData) => {
-        const {token, firstName} = userData;
-        console.log(`Setting userName: ${firstName}`);
-          
-        const expireTime = new Date();
-        expireTime.setMonth(expireTime.getMonth()+1)
+  const login = (userData) => {
+    const {token, firstName} = userData;
+    console.log(`Setting userName: ${firstName}`);
+      
+    const expireTime = new Date();
+    expireTime.setMonth(expireTime.getMonth()+1)
+
+    document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
+    document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
     
-        document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
-        document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
-        
-        setUserName(firstName);
-        setToken(token);    
-        navigate("/"); 
-      };
+    setUserName(firstName);
+    setToken(token);   
+    navigate("/"); 
+  };
 
-      const logout = () => {
-          setUserName(null);
-          setToken(null);
-          setLoggedIn(false);
-          console.log("Logging out");
-          document.cookie = "FirstName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          navigate("/")
-      };
+  const logout = () => {
+    console.log("Logging out");
+    document.cookie = "FirstName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-      return (
-        <UserContext.Provider value={{userName, token, searchType, searchResult, loggedIn, setSearchResult, setSearchType, login, logout}}>
-          {children}         
-        </UserContext.Provider>
-      );
+    setUserName(null);
+    setToken(null);
+    navigate("/")
+  };
+
+  return (
+    <UserContext.Provider value={{userName, token, searchType, searchResult, setSearchResult, setSearchType, login, logout}}>
+      {children}         
+    </UserContext.Provider>
+  );
 }
 export const useUser = () => useContext(UserContext);
