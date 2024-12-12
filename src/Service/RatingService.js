@@ -29,10 +29,11 @@ export async function GetRatingById(id){
     
     if(!response.ok) {
         //console.log("returning false");
-        return -2;
+        return { rating: null, success: false };
     }
     //console.log("returning true");
-    return (await response.json()).rating;
+    const data = await response.json();
+    return { rating: data.rating, success: true };
 }
 
 export async function PostRating(titleId, rating){

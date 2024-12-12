@@ -25,34 +25,29 @@ export default function DetailedTitle({id}) {
   const [showBookmarkPop, setShowBookmarkPop] = useState(false);
   const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
-  const [rating, setRating] = useState(-1);
+  const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
   const [similarMovies, setSimliarMovies] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
+
   const [errorMessage, setErrorMessage] = useState(null);  
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [titleBookmark, setTitleBookmark] = useState(null);  
+  const [titleBookmark, setTitleBookmark] = useState(null); 
+  const [titleRating, setTitleRating] = useState(null);
   
   const [annotation, setAnnotation] = useState('');
 
   let navigate = useNavigate();
 
   useEffect(()=>{ 
-    let headers = GetHeader();
-    isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
-
+  
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        setTitle(await GetTitleById(params.id));
-        
-        let tempRating = await GetRatingById(params.id);
-        setRating(tempRating);
-        if(tempRating > -1) setHasRated(true);
-        else setHasRated(false);
-        setSimliarMovies(await GetSimilarMovies(params.id));
+     
+  
         
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
@@ -63,7 +58,44 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [isBookmarked, params.id]);
 
- async function ToggleBookmark(){
+
+  //checking for isBookmarked and isRated
+  useEffect(()=>{ 
+    
+    const fetchData = async () => {
+    
+    let headers = GetHeader();
+    console.log("accessing,", params.id);
+    isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
+
+
+    setTitle(await GetTitleById(params.id));
+    
+    const { rating, success } = await GetRatingById(params.id); //only needs the boolean value success
+    setTitleRating(success);
+    console.log("status of rating: ", success);
+    setSimliarMovies(await GetSimilarMovies(params.id));
+  };
+
+   fetchData();
+  }, [params.id]);
+
+
+
+
+// async function ToggleRating() {
+//   if(titleRating === false){
+//   console.log("there was no rating, setting new rating");
+//   UpdateRating();
+
+//   }
+//   else{
+//       console.log("rating exists, updating rating and setting hasRated to true");
+//       RateMovie();
+//   } 
+// }
+
+async function ToggleBookmark(){
    let headers = GetHeader();
     if(isBookmarked === false){      
       console.log("Attempting to create a bookmark");
@@ -102,27 +134,53 @@ export default function DetailedTitle({id}) {
       setTimeout(() => {setShowRatingPop(false)}, 2500);
       setShowRatingModal(false);
       setHasRated(false);
-      setRating(-1);
+      setTitleRating(false)
     }
     catch(error){
       console.log("something went wrong");
     }
   }
 
+  // async function RateMovie(){
+  //   setToastMessage('Your rating was submitted');
+  //   setShowRatingPop(true);
+  //   setTimeout(() => {setShowRatingPop(false)}, 2500);
+    
+  //   setShowRatingModal(false);
+  //   if(hasRated){
+  //     await PutRating(params.id, rating);
+  //   }
+  //   else{
+  //     await PostRating(params.id, rating);
+  //     setHasRated(true);
+  //   }
+  // }
+
   async function RateMovie(){
+    //either needs a try/catch here or a try/ catch in RatingsService
+    await PostRating(params.id, rating);
+    setHasRated(true)
+    setTitleRating(true);
+    
+    console.log("user created a new rating ", rating)
+
     setToastMessage('Your rating was submitted');
     setShowRatingPop(true);
     setTimeout(() => {setShowRatingPop(false)}, 2500);
     
-    setShowRatingModal(false);
-    if(hasRated){
-      await PutRating(params.id, rating);
-    }
-    else{
-      await PostRating(params.id, rating);
-      setHasRated(true);
-    }
+    
   }
+  async function UpdateRating(){
+    await PutRating(params.id, rating);
+
+    console.log("user updated their rating to", rating)
+
+    setToastMessage('Your rating was submitted');
+    setShowRatingPop(true);
+    setTimeout(() => {setShowRatingPop(false)}, 2500);
+
+  }
+
 
   function CloseRatingModal(){
     setHoverRating(-1);
@@ -335,7 +393,8 @@ export default function DetailedTitle({id}) {
     
             <Modal.Footer>
               <Button variant="secondary" onClick={() => CloseRatingModal()}>Cancel</Button>
-              <Button variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
+              <Button variant="primary" onClick={() => hasRated ? UpdateRating() : RateMovie() }>{hasRated ? "Update Rating" : "Save Rating"}</Button>
+        
               <Button variant="danger" style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
             </Modal.Footer>
             </Modal.Dialog>
