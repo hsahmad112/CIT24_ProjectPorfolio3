@@ -24,28 +24,26 @@ export default function SimpleTitle({title, navigate}) {
   }
 
   return(
-    // <Carousel.Item interval={5000} key={title.url} className='ClickableOnHover' onClick={()=> navigate("/title/" + title.id)}>
-    //     <img src={title.posterUrl} text="First slide" width="300" height="420"/>
-    //     <Carousel.Caption>
-    //       <h5>{title.primaryTitle}</h5>
-    //       {title.startYear && <p>Release year: {title.startYear}</p> }
-    //       <p>Genres: {DisplayGenre(title.genresList)}</p>
-    //     </Carousel.Caption>
-    // </Carousel.Item>   
-
-
-<Card
-width="300" height="420"
-  style={{ width: '16rem', margin: '10px', padding: '0px'}}
-  onClick={()=> navigate("/title/" + title.id)}
-  >
-  < Card.Img variant="top" src={ title?.posterUrl !== null ?  title.posterUrl : "./no-image.jpg"}/>
-      <Card.Body>
-        <Card.Title>{title.titlePrimaryTitle} </Card.Title> {/* Naming convention of .... data.titlePrimaryTitle could be diffenrent. E.g. could be called primaryTitle*/}
-        {title.startYear && <p>Release year: {title.startYear}</p> }
+    <Card
+      style={{ 
+        width: '16rem', 
+        margin: '10px', 
+        padding: '0px',
+        // backgroundColor: key === 2 ? "black" : "white",
+        // color: key === 2 ? "white" : "black"
+      }}
+      onClick={()=> navigate("/title/" + title.id)}>
+        <Card.Img 
+          width="300"
+          height="220" 
+          variant="top" 
+          src={ title?.posterUrl !== null ?  title.posterUrl : "./no-image.jpg"}/>
+  
+        <Card.Footer>
+        {title.startYear && <>Release year: {title.startYear}</> }
         <p>Genres: {DisplayGenre(title.genresList)}</p>
-      </Card.Body>
-    </Card>
+        </Card.Footer>
+      </Card>
   );
 
 }

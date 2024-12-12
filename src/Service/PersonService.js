@@ -11,7 +11,7 @@ export async function GetPersonBackdrop(id){
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        //console.log(data.person_results[0]);
+        
         return data.person_results[0];
     
     } catch (error) {
