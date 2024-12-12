@@ -7,6 +7,7 @@ import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-
 import { GetPersonBookmarks, GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, isPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 import Bookmark from "../../Component/Bookmark";
+import Badge from 'react-bootstrap/Badge';
 
 export default function DetailedPerson({id}){
     //const {userName, token} = useUser();
@@ -121,7 +122,7 @@ export default function DetailedPerson({id}){
       else{    
            
         let mostRelevantTitles = <>{person.mostRelevantTitles.map((title, index) => <Button variant={"secondary"} className="pills" key={index}>{title}</Button>)}</>
-        let primaryProfessions = <>{person.primaryProfessions.map((profession, index) => <Button variant={"secondary"} className="pills" key={index}>{profession}</Button>)}</>
+        let primaryProfessions = <>{person.primaryProfessions.map((profession, index) => <Badge bg="secondary" className="pills" key={index}>{profession}</Badge>)}</>
     
 
         return (      
