@@ -25,7 +25,7 @@ export default function CustomCarousel ({ items }) {
         <ArrowLeftSquareFill  width={"50px"} height={"50px"} className="carousel-arrow left" onClick={handlePrev}/>
         
         {visibleItems.map((itemIndex, idx) => (
-          <SimpleTitle key={idx} title={items[itemIndex]} navigate={navigate}/>
+          <SimpleTitle keyID={idx} title={items[itemIndex]} navigate={navigate}/>
         ))}  
 
         <ArrowRightSquareFill width={"50px"} height={"50px"} className="carousel-arrow right" onClick={handleNext}/>
