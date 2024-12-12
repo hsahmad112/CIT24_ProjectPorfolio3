@@ -76,65 +76,64 @@ export default function WatchList(){
   }, [titleBookmarkTotalPages, titleBookmarkPage]);
   
   useEffect(() =>{ //Effect for Person Bookmark pagenation
-      const personBookmarks = [];
-            
-      for (let number = 0; number <= personBookmarkTotalPages-1; number++) {
-          personBookmarks.push(
-            <Pagination.Item
-              key={number}
-              active={number === personBookmarkPage}
-              onClick={() => handlePersonBookmarkPageChange(number)}
-            >
-              {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
-            </Pagination.Item>
-          );
-        }
-        setPersonBookmarkPagenationItems(personBookmarks);
-      
-      }, [personBookmarkTotalPages, personBookmarkPage]);
-  
-  return(
-      <div className="container">
-          <h1>Your Watchlist</h1>
-          {/* <ButtonGroup>
-              <Button variant="underline">Titles</Button>
-              <Button>Persons</Button>
-          </ButtonGroup> */}
-          <Tabs
-              defaultActiveKey="Titles"
-              id="uncontrolled-tab-example"
-              className="mb-3">
-              <Tab eventKey="Titles" title="Titles">
-                  List of Title Bookmarks:
-                  <Container>
-                      <Row xs={1} md={4}> 
-                          {titleBookmarks?.map((title, index) => <TitleCard data={title} key={index}></TitleCard>)}     
-                      </Row>
-                      <Row>
-                          <div>
-                              <Pagination>{titleBookmarkPagenationItems}</Pagination>
-                              <br />
-                          </div>
-                      </Row>
-                  </Container>
-              </Tab>
-              <Tab eventKey="Persons" title="Persons">
-                  List of Person Bookmarks:
-                  <Container>
-                      <Row xs={1} md={4}> 
-                          {personBookmarks?.map((person, index) => <PersonCard data={person} key={index}> </PersonCard>)}  
-                      </Row>
-                      <Row>
-                          <div>
-                              <Pagination>{personBookmarkPagenationItems}</Pagination>
-                              <br/>
-                          </div>    
-                      </Row>
-                  </Container>
-              </Tab>
-          </Tabs>               
+    const personBookmarks = [];
+          
+    for (let number = 0; number <= personBookmarkTotalPages-1; number++) {
+      personBookmarks.push(
+        <Pagination.Item
+          key={number}
+          active={number === personBookmarkPage}
+          onClick={() => handlePersonBookmarkPageChange(number)}
+        >
+          {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
+        </Pagination.Item>
+      );
+    }
+    setPersonBookmarkPagenationItems(personBookmarks);
+    
+    }, [personBookmarkTotalPages, personBookmarkPage]);
 
-      </div>
+  return(
+    <div className="container">
+      <h1>Your Watchlist</h1>
+      {/* <ButtonGroup>
+          <Button variant="underline">Titles</Button>
+          <Button>Persons</Button>
+      </ButtonGroup> */}
+      <Tabs
+        defaultActiveKey="Titles"
+        id="uncontrolled-tab-example"
+        className="mb-3">
+          <Tab eventKey="Titles" title="Titles">
+            List of Title Bookmarks:
+            <Container>
+              <Row xs={1} md={4}> 
+                  {titleBookmarks?.map((title, index) => <TitleCard data={title} key={index}></TitleCard>)}     
+              </Row>
+              <Row>
+                  <div>
+                      <Pagination>{titleBookmarkPagenationItems}</Pagination>
+                      <br />
+                  </div>
+              </Row>
+            </Container>
+          </Tab>
+          <Tab eventKey="Persons" title="Persons">
+            List of Person Bookmarks:
+            <Container>
+              <Row xs={1} md={4}> 
+                  {personBookmarks?.map((person, index) => <PersonCard data={person} key={index}> </PersonCard>)}  
+              </Row>
+              <Row>
+                  <div>
+                      <Pagination>{personBookmarkPagenationItems}</Pagination>
+                      <br/>
+                  </div>    
+              </Row>
+            </Container>
+          </Tab>
+      </Tabs>               
+    </div>
   );
   
 }
