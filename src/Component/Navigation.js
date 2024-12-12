@@ -6,7 +6,7 @@ import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row, Nav } 
 import { GetGenres } from '../Service/GenreService';
 
 export default function Navigation(){
-  const {userName, searchType, setSearchType, logout } = useUser();
+  const {userName, token, searchType, setSearchType, logout } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");
@@ -60,13 +60,9 @@ export default function Navigation(){
       let result;
       if(chosenGenre !== undefined || chosenRating !== undefined){
         result = await AdvancedSearch(body);
-        // console.log("reuslt?");
-        // console.log(result);
       }
       else{
         result = await FetchData(searchType, body);
-        console.log("check fetch everythinr result")
-        console.log(result);
         navigate('/search', {
           state: {result, searchType, body },
         });
@@ -75,12 +71,8 @@ export default function Navigation(){
       setChosenStartYear(undefined);
       setChosenEndYear(undefined);
       setChosenRating(undefined);
-
-      // ideally we want result to be a state
-      // const fetchedData = await fetchData(searchType, body);
-      // setResult(fetchedData)
       
-      //when we navigate to search, we "bring along" the current states result (search result list).
+      //when we navigate to search, we "bring along" the current result (search result list).
       // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
       //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
       //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
@@ -90,9 +82,7 @@ export default function Navigation(){
 
     } catch (error) {
       console.error("Error in fetching of data, in Navigation.js", error);
-      //throw new Error (error); --Do we want to throw error here on in SearchResult?
     }
- 
   }
    
     return(
@@ -145,7 +135,7 @@ export default function Navigation(){
               </Row>
             </Form>
             
-            {userName !== null && 
+            {token !== null && 
             <div className='user-menu'>
               <Nav.Item>
                 <Navbar.Text>
@@ -166,15 +156,15 @@ export default function Navigation(){
               </Nav.Item>
             </div>}
 
-            {userName === null && 
+            {token === null && 
             <div> 
               <Button onClick ={() => navigate("/login")}>Login</Button> 
               <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button>
             </div>}
-       </Container>
+          </Container>
          
         </Navbar>    
-        <Outlet />       
+        <Outlet/>       
       </div>
   );
 }

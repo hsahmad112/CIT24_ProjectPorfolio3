@@ -4,122 +4,110 @@ import { useEffect, useState } from 'react';
 import { useUser } from '../../Store/store';
 import { useNavigate } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
-import {Card, Container, Row, Col, Carousel, Stack} from 'react-bootstrap';
+import {Container, Row, Col, Stack} from 'react-bootstrap';
 import TitleProfile from '../../Component/TitleComponents/TitleProfile';
 import PersonProfile from '../../Component/PersonComponents/PersonProfile';
 import TitlePlaceholder from '../../Component/TitleComponents/TitlePlaceholder';
-import Rating from '../../Component/RatingComponents/Rating';
 import RatingProfile from '../../Component/RatingComponents/RatingProfile';
 import Pagination from 'react-bootstrap/Pagination';
 
 export default function Profile(){
+  const [timer, setTimer] = useState(5); //Timer state, used for displaying countdown when redirecting (if not logged in)
 
-    const [userRatings, setUserRatings] = useState([]);
-    const [personBookmarks, setPersonBookmarks] = useState([]);
-    const [titleBookmarks, setTitleBookmarks] = useState([]);
+  //Ratings and bookmark states
+  const [userRatings, setUserRatings] = useState([]);
+  const [personBookmarks, setPersonBookmarks] = useState([]);
+  const [titleBookmarks, setTitleBookmarks] = useState([]);
 
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+  //Error and loading states
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const[ratingPage, setRatingPage] = useState(0); //The page we are on
-    const [ratingTotalPages, setRatingTotalPages] = useState(1) //number of pages in total, we will set state to value recieved from backend
-    const [RatingPagenationItems, setRatingPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
+  //Pagenation states - For ratings
+  const[ratingPage, setRatingPage] = useState(0); //The page we are on
+  const [ratingTotalPages, setRatingTotalPages] = useState(1); //number of pages in total, we will set state to value recieved from backend
+  const [RatingPagenationItems, setRatingPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
 
-    const[titleBookmarkPage, setTitleBookmarkPage] = useState(0); //The page we are on
-    const [titleBookmarkTotalPages, setTitleBookmarkTotalPages] = useState(1) //number of pages in total, we will set state to value recieved from backend
-    const [titleBookmarkPagenationItems, setTitleBookmarkPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
-    
-    const[personBookmarkPage, setPersonBookmarkPage] = useState(0); //The page we are on
-    const [personBookmarkTotalPages, setPersonBookmarkTotalPages] = useState(1) //number of pages in total, we will set state to value recieved from backend
-    const [personBookmarkPagenationItems, setPersonBookmarkPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
-    
+  //Pagenation states - For title bookmarks
+  const[titleBookmarkPage, setTitleBookmarkPage] = useState(0);
+  const [titleBookmarkTotalPages, setTitleBookmarkTotalPages] = useState(1);
+  const [titleBookmarkPagenationItems, setTitleBookmarkPagenationItems] = useState([]);
+  
+  //Pagenation states - For person bookmarks
+  const[personBookmarkPage, setPersonBookmarkPage] = useState(0); 
+  const [personBookmarkTotalPages, setPersonBookmarkTotalPages] = useState(1);
+  const [personBookmarkPagenationItems, setPersonBookmarkPagenationItems] = useState([]);
 
-    const pageSize = 5; //For now, hard-backed
+  const pageSize = 5; //For now, hard-coded
 
-    const [timer, setTimer] = useState(5);
+  let navigate = useNavigate();
 
- 
+  const {userName} = useUser();
 
-    let navigate = useNavigate();
+  const ratingQueryParams = //Used for pagenation, we send these queryParams when fetching ratings in RatingService
+  { page: ratingPage,  //Both params are set to state
+    pageSize: pageSize  
+  };
 
-    const {userName} = useUser();
+  const titleBookmarkQueryParams = 
+  { page: titleBookmarkPage, 
+    pageSize: pageSize  
+  };
 
-    const ratingQueryParams = //Used for pagenation, we send these queryParams when fetching bookmarks in BookmarkService
-    { page: ratingPage,  //Both params are set to state
-      pageSize: pageSize  
-    };
+  const personBookmarkQueryParams =
+  { page: personBookmarkPage,  
+    pageSize: pageSize  
+  };
 
-    const titleBookmarkQueryParams = //Used for pagenation, we send these queryParams when fetching bookmarks in BookmarkService
-    { page: titleBookmarkPage,  //Both params are set to state
-      pageSize: pageSize  
-    };
+  useEffect(() =>{ //Effect for Rating pagenation
 
-    const personBookmarkQueryParams = //Used for pagenation, we send these queryParams when fetching bookmarks in BookmarkService
-    { page: personBookmarkPage,  //Both params are set to state
-      pageSize: pageSize  
-    };
+    const ratings = [];
+        
+    for (let number = 0; number <= ratingTotalPages-1; number++) {
+        ratings.push(
+          <Pagination.Item
+            key={number}
+            active={number === ratingPage}
+            onClick={() => handleRatingPageChange(number)}
+          >
+            {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
+          </Pagination.Item>
+        );
+    }
+    setRatingPagenationItems(ratings);
 
-    
+  }, [ratingTotalPages, ratingPage]);
 
-    
-
-
-
-useEffect(() =>{ //Effect for Rating pagenation
-
-  const ratings = [];
-      
-  for (let number = 0; number <= ratingTotalPages-1; number++) {
-      ratings.push(
-        <Pagination.Item
-          key={number}
-          active={number === ratingPage}
-          onClick={() => handleRatingPageChange(number)}
-        >
-          {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
-        </Pagination.Item>
-      );
-  }
-  setRatingPagenationItems(ratings);
-
-}, [ratingTotalPages, ratingPage]);
-
-const handleRatingPageChange = (page) => {
+  const handleRatingPageChange = (page) => {
     setRatingPage(page);
-    console.log("Changing page to: " + page );
   };
 
   useEffect(() =>{
     const fetchRatings = async () => {
         
-
-        const ratings = await GetAllRatings(ratingQueryParams);
-     
-        if(ratings.success){
-            console.log("Have ratings");
-            setUserRatings(ratings.data.entities);
-            setRatingTotalPages(ratings.data.numberOfPages) //Value from backend
+      const ratings = await GetAllRatings(ratingQueryParams);
+    
+      if(ratings.success){
+          setUserRatings(ratings.data.entities);
+          setRatingTotalPages(ratings.data.numberOfPages)
+          setIsLoading(false);
+      }
+      else {
+        setIsLoading(false);
+        switch (ratings.message) {
+            case "401":
+                setErrorMessage("401");
+                break;
         
-            setIsLoading(false);
-        }
-        else {
-            console.log("Have NO ratings");
-            setIsLoading(false);
-            switch (ratings.message) {
-                case "401":
-                    setErrorMessage("401");
-                    //navigate("/login");
-                    break;
-            
-                default:
-                    break;
-            }
-        }
+            default:
+                break;
+          }
+      }
     }
     fetchRatings();
-}, [ratingPage]);
+  }, [ratingPage]);
 
-useEffect(() =>{ //Effect for Title Bookmark pagenation
+  useEffect(() =>{ //Effect for Title Bookmark pagenation
 
     const titleBookmarks = [];
           
@@ -133,158 +121,141 @@ useEffect(() =>{ //Effect for Title Bookmark pagenation
             {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
           </Pagination.Item>
         );
-      }
-      setTitleBookmarkPagenationItems(titleBookmarks);
+    }
+    setTitleBookmarkPagenationItems(titleBookmarks);
     
-    }, [titleBookmarkTotalPages, titleBookmarkPage]);
+  }, [titleBookmarkTotalPages, titleBookmarkPage]);
 
-    useEffect(() =>{ //Effect for Person Bookmark pagenation
+  useEffect(() =>{ //Effect for Person Bookmark pagenation
 
-        const personBookmarks = [];
-              
-        for (let number = 0; number <= personBookmarkTotalPages-1; number++) {
-            personBookmarks.push(
-              <Pagination.Item
-                key={number}
-                active={number === personBookmarkPage}
-                onClick={() => handlePersonBookmarkPageChange(number)}
-              >
-                {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
-              </Pagination.Item>
-            );
-          }
-          setPersonBookmarkPagenationItems(personBookmarks);
+    const personBookmarks = [];
+          
+    for (let number = 0; number <= personBookmarkTotalPages-1; number++) {
+        personBookmarks.push(
+          <Pagination.Item
+            key={number}
+            active={number === personBookmarkPage}
+            onClick={() => handlePersonBookmarkPageChange(number)}
+          >
+            {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
+          </Pagination.Item>
+        );
+    }
+    setPersonBookmarkPagenationItems(personBookmarks);
+      
+  }, [personBookmarkTotalPages, personBookmarkPage]);
+
+  const handleTitleBookmarkPageChange = (page) => {
+      setTitleBookmarkPage(page);
+      console.log("Changing page to: " + page );
+  };
+
+  const handlePersonBookmarkPageChange = (page) => {
+    setPersonBookmarkPage(page);
+    console.log("Changing page to: " + page );
+  };
         
-        }, [personBookmarkTotalPages, personBookmarkPage]);
+  useEffect(() =>{
+    const getBookmarks = async () => {
 
+      const personBookmarks = await GetPersonBookmarks(personBookmarkQueryParams);
+      const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
+      try {
+          
+          setPersonBookmarks(personBookmarks.entities); 
+          setTitleBookmarks(titleBookmarks.entities);
 
+          setTitleBookmarkTotalPages(titleBookmarks.numberOfPages);
+          setPersonBookmarkTotalPages(personBookmarks.numberOfPages); 
+          
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }            
+    }   
+    getBookmarks();
 
+  }, [titleBookmarkPage, personBookmarkPage]);
 
-    const handleTitleBookmarkPageChange = (page) => {
-        setTitleBookmarkPage(page);
-        console.log("Changing page to: " + page );
-      };
+  useEffect(() => {
+    let countDown;
+    const errorCodeHandler = () => {
+        if (errorMessage === "401") {
+            console.log("Unauthorized. We redirect in 5 sec my friend");
+            // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
+              countDown = setInterval(() => {
+                setTimer((t) => {
+                    if(t <=0){
+                        clearInterval(countDown); //Stops countDown timer from continously running
+                        navigate("/login");
+                        return 0; //timer state is set to 0
+                    }
+                    return t - 1; //aka subtract 1 sec from timer
+                })
+            }, 1000);  
+        }    
+    };
+    errorCodeHandler(); //Calls the above method, to be used within Effect
+    return () => clearInterval(countDown); //Cleanup function, which gets called upon component unmount or change of state    
 
-      const handlePersonBookmarkPageChange = (page) => {
-        setPersonBookmarkPage(page);
-        console.log("Changing page to: " + page );
-      };
-        
+  }, [errorMessage]);
 
-    useEffect(() =>{
-        const getBookmarks = async () => {
-            
-        
-            const personBookmarks = await GetPersonBookmarks(personBookmarkQueryParams);
-            const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
-            try {
-                
-                setPersonBookmarks(personBookmarks.entities); 
-                setTitleBookmarks(titleBookmarks.entities);
-    
-                setTitleBookmarkTotalPages(titleBookmarks.numberOfPages);
-                setPersonBookmarkTotalPages(personBookmarks.numberOfPages); 
-                
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }            
-        }   
-       getBookmarks();
-
-    }, [titleBookmarkPage, personBookmarkPage]);
-
-    useEffect(() => {
-        let countDown;
-        const errorCodeHandler = () => {
-            if (errorMessage === "401") {
-                console.log("Unauthorized. We redirect in 5 sec my friend");
-               // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
-                 countDown = setInterval(() => {
-                    setTimer((t) => {
-                        if(t <=0){
-                            clearInterval(countDown); //Stops countDown timer from continously running
-                            navigate("/login");
-                            return 0; //timer state is set to 0
-                        }
-                        return t - 1; //aka subtract 1 sec from timer
-                    })
-                }, 1000);  
-            }    
-        };
-        errorCodeHandler(); //Calls the above method, to be used within Effect
-        return () => clearInterval(countDown); //Cleanup function, which gets called upon component unmount or change of state    
-
-    }, [errorMessage]);
-
-    return(
-        <>
-
-
-        {isLoading &&
-            <Container>
-            <h1>Ratings are being loaded...</h1>
-            <Row xs={1} md={4}>
+  return(
+    <>
+      {isLoading &&
+        <Container>
+          <h1>Ratings are being loaded...</h1>
+          <Row xs={1} md={4}>
             <TitlePlaceholder/>
             <TitlePlaceholder/>
             <TitlePlaceholder/>
             <TitlePlaceholder/> 
-            </Row>
-            </Container>
-        } {/* Needs better styling ^^*/}
+          </Row>
+        </Container>
+      } {/* Needs better styling ^^*/}
 
-        {!isLoading && errorMessage === "401" && 
-            <Alert key={"danger"} variant={"danger"}>
-            Warning!! You are not logged in! <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
-            </Alert> //When at 1 sec, write "second" as singular form
-        }
+      {!isLoading && errorMessage === "401" && 
+        <Alert key={"danger"} variant={"danger"}>
+          Warning!! You are not logged in! <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
+        </Alert> //When at 1 sec, write "second" as singular form
+      }
 
-            <h1>Profile page for user: {userName}</h1>
-        <Container fluid = "true">
+      <h1>Profile page for user: {userName}</h1>
+      <Container fluid = "true">
 
         <Row>
-                <Col xs ={4}>
-                        <h3 style={{textAlign: 'left'}}> Ratings:</h3>
-                            <div>
-                                <Pagination>{RatingPagenationItems}</Pagination>
-                                <br />
-                            </div>
-                        {userRatings?.map((u) => <RatingProfile title={u} key={u.titleId} navigate={navigate}/>  )/*need of key?, not currently used in Rating component*/} 
-                        </Col>
-        
-                        
-        
-        
-                        <Col xs = {7} >
-                        <Stack className="align-items-end">
-        <h3 style={{textAlign: 'right'}}> Title Bookmarks: </h3>
-                            <div>
-                                <Pagination>{titleBookmarkPagenationItems}</Pagination>
-                                <br />
-                            </div>
-        <div className="p-2"> 
-       
-        {titleBookmarks?.map((title, index) => <TitleProfile data={title} key={index}></TitleProfile>)}  
-        </div>
 
-        <h3 style={{textAlign: 'right'}}> Person Bookmarks: </h3>
-                        
-                            <div>
-                                <Pagination>{personBookmarkPagenationItems}</Pagination>
-                                <br />
-                            </div>
-        <div className="p-2">
-        {personBookmarks?.map((person, index) => <PersonProfile data={person} key={index}></PersonProfile>)} 
-        </div>
-        </Stack>
-        </Col>
-        </Row>
-                            
-        </Container>      
+          <Col xs ={4}>
+            <h3 style={{textAlign: 'left'}}> Ratings:</h3>
+            <div>
+              <Pagination>{RatingPagenationItems}</Pagination>
+              <br />
+            </div>
+            {userRatings?.map((u) => <RatingProfile title={u} key={u.titleId} navigate={navigate}/>  )/*need of key?, not currently used in Rating component*/} 
+          </Col>
 
+          <Col xs = {7} >
+            <Stack className="align-items-end">
+              <h3 style={{textAlign: 'right'}}> Title Bookmarks: </h3>
+              <div>
+                  <Pagination>{titleBookmarkPagenationItems}</Pagination>
+                  <br />
+              </div>
+              <div className="p-2"> 
+                {titleBookmarks?.map((title, index) => <TitleProfile data={title} key={index}></TitleProfile>)}  
+              </div>
 
-
-
-
-        </>
-    )
+              <h3 style={{textAlign: 'right'}}> Person Bookmarks: </h3>
+              <div>
+                  <Pagination>{personBookmarkPagenationItems}</Pagination>
+                  <br />
+              </div>
+              <div className="p-2">
+                {personBookmarks?.map((person, index) => <PersonProfile data={person} key={index}></PersonProfile>)} 
+              </div>
+            </Stack>
+          </Col>
+        </Row>          
+      </Container>      
+    </>
+  )
 } 

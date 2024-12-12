@@ -45,9 +45,18 @@ export const UserProvider = ({ children }) => {
       let navigate = useNavigate();
 
       const login = (userData) => {
-        console.log(`Setting userName: ${userData.userName}`);
-          setUserName( userData.userName);
-          setToken( userData.token);     
+        const {token, firstName} = userData;
+        console.log(`Setting userName: ${firstName}`);
+          
+        const expireTime = new Date();
+        expireTime.setMonth(expireTime.getMonth()+1)
+    
+        document.cookie = `Authorization=Bearer ${token}; expires=${expireTime.toUTCString()}; Path=/`;
+        document.cookie = `FirstName=${firstName}; expires=${expireTime.toUTCString()}; Path=/`;
+        
+        setUserName(firstName);
+        setToken(token);    
+        navigate("/"); 
       };
 
       const logout = () => {
