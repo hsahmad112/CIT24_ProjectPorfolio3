@@ -42,7 +42,7 @@ export default function Profile(){
 
   let navigate = useNavigate();
 
-  const {userName} = useUser();
+  const {userName, logout} = useUser();
 
   const ratingQueryParams = //Used for pagenation, we send these queryParams when fetching ratings in RatingService
   { page: ratingPage,  //Both params are set to state
@@ -180,18 +180,18 @@ export default function Profile(){
     let countDown;
     const errorCodeHandler = () => {
         if (errorMessage === "401") {
+          const cookieExpired = true;
             console.log("Unauthorized. We redirect in 5 sec my friend");
-            // setTimeout(() => {navigate("/login")}, 5000);  //Needs to be in lambda function, otherwise navigate fires imediately
               countDown = setInterval(() => {
                 setTimer((t) => {
                     if(t <=0){
                         clearInterval(countDown); //Stops countDown timer from continously running
-                        navigate("/login");
+                        logout(cookieExpired);
                         return 0; //timer state is set to 0
                     }
                     return t - 1; //aka subtract 1 sec from timer
                 })
-            }, 1000);  
+              }, 1000);  
         }    
     };
     errorCodeHandler(); //Calls the above method, to be used within Effect

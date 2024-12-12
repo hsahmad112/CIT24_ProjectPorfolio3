@@ -26,7 +26,7 @@ export default function UserRating(){
 
     let navigate = useNavigate();
 
-    const {userName} = useUser();
+    const {userName, logout} = useUser();
     
     const queryParams = { 
         page: page,  
@@ -85,16 +85,17 @@ export default function UserRating(){
     useEffect(() => {
         let countDown;
         if (errorMessage === "401") {
+            const cookieExpired = true;
                 countDown = setInterval(() => {
-                setTimer((t) => {
-                    if(t <=0){
-                        clearInterval(countDown); //Stops countDown timer from continously running
-                        navigate("/login");
-                        return 0; //timer state is set to 0
-                    }
-                    return t - 1; //aka subtract 1 sec from timer
-                })
-            }, 1000);  
+                    setTimer((t) => {
+                        if(t <=0){
+                            clearInterval(countDown); //Stops countDown timer from continously running
+                            logout(cookieExpired);
+                            return 0; //timer state is set to 0
+                        }
+                        return t - 1; //aka subtract 1 sec from timer
+                    })
+                }, 1000);  
         }    
         return () => clearInterval(countDown); //Stops timer from continuing to run, after useEffect has executed   
 

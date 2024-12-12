@@ -58,14 +58,19 @@ export const UserProvider = ({ children }) => {
     navigate("/"); 
   };
 
-  const logout = () => {
+  const logout = (cookieExpired = false) => {
     console.log("Logging out");
     document.cookie = "FirstName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     setUserName(null);
     setToken(null);
-    navigate("/")
+    if(cookieExpired === true){ //We append cookieExpired as true in other components, where we get status code 401. 
+      navigate("/login")
+    } 
+    else{
+      navigate("/")
+    }
   };
 
   return (
