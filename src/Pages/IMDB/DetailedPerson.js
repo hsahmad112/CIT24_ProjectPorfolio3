@@ -53,38 +53,40 @@ export default function DetailedPerson({id}){
     }, [isBookmarked, params.id, token] );
 
     async function ToggleBookmark(){
-        if(isBookmarked === false){      
-            console.log("Attempting to create a bookmark");
-            const success = await CreatePersonBookmarksById(params.id, annotation, setIsBookmarked, headers);
+        if(token !== null){
+            if(isBookmarked === false){      
+                console.log("Attempting to create a bookmark");
+                const success = await CreatePersonBookmarksById(params.id, annotation, setIsBookmarked, headers);
+            
+                if( success){ 
+                    console.log("Bookmark was set");
+                    setShowBookmarkPop(true);
+                    setTimeout(() => {setShowBookmarkPop(false)}, 2500);
+                }
+                else{
+                    console.log("did not happen.")
+                }
         
-            if( success){ 
-                console.log("Bookmark was set");
-                setShowBookmarkPop(true);
-                setTimeout(() => {setShowBookmarkPop(false)}, 2500);
             }
-            else{
-                console.log("did not happen.")
-            }
-    
+            if(isBookmarked === true){
+              console.log("Attempting to remove bookmark");
+              const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);
+            
+              if(success){
+                console.log("Bookmark removed successfully")
+                setShowRemoveBookmarkPop(true);
+                setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
+              }else{
+                console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
+              }       
+            }   
+        }      
+        else{
+            setShowNotLoggedIn(true);
+            setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
         }
-        if(isBookmarked === true){
-          console.log("Attempting to remove bookmark");
-          const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);
-        
-          if(success){
-            console.log("Bookmark removed successfully")
-            setShowRemoveBookmarkPop(true);
-            setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
-          }else{
-            console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
-            // setShowNotLoggedIn(true);
-            // setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
-          }       
-        }    
         
     }
-    
-    
 
     function CloseBookmarkModal(){
         setShowBookmarkModal(false);
