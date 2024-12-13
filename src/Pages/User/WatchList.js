@@ -51,12 +51,13 @@ export default function WatchList(){
       const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
       
       if (personBookmarks.success || titleBookmarks.success){
+        console.log(titleBookmarks.data.entities);
         try {
-          setPersonBookmarks(personBookmarks.entities); 
-          setTitleBookmarks(titleBookmarks.entities);
+          setPersonBookmarks(personBookmarks.data.entities); 
+          setTitleBookmarks(titleBookmarks.data.entities);
 
-          setTitleBookmarkTotalPages(titleBookmarks.numberOfPages);
-          setPersonBookmarkTotalPages(personBookmarks.numberOfPages); 
+          setTitleBookmarkTotalPages(titleBookmarks.data.numberOfPages);
+          setPersonBookmarkTotalPages(personBookmarks.data.numberOfPages); 
         } 
         catch (error) {
           console.error('Error fetching data:', error);
