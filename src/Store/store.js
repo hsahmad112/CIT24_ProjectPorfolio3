@@ -72,9 +72,14 @@ export const UserProvider = ({ children }) => {
       navigate("/")
     }
   };
+  
+  const checkToken = () => {
+    setToken(() => getCookieValue("Authorization"));
+    return token;
+  }
 
   return (
-    <UserContext.Provider value={{userName, token, searchType, searchResult, setSearchResult, setSearchType, login, logout}}>
+    <UserContext.Provider value={{userName, token, searchType, searchResult, setSearchResult, setSearchType, login, logout, checkToken}}>
       {children}         
     </UserContext.Provider>
   );

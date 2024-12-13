@@ -7,11 +7,12 @@ import { useEffect, useState } from 'react';
 import {getCookieValue, useUser, GetHeader} from "../../Store/store";
 import { comparePasswords, validateEmail, validatePassword } from '../../Helpers/FormValidation';
 import { useNavigate } from 'react-router';
+import Alert from 'react-bootstrap/Alert';
 
 export default function UserSetting(){
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;  
     
-    const {logout} = useUser();
+    const {token, logout, checkToken} = useUser();
     const navigate = useNavigate();
     
     const headers =  {    
@@ -20,7 +21,8 @@ export default function UserSetting(){
     }
 
     const [showAccountDeletionModal, setShowAccountDeletionModal] = useState(false);
-   
+    const [timer, setTimer] = useState(5);
+
     const [errorMessage, setErrorMessage] = useState({
         passwordMismatch: '',
         invalidEmailFormat: '',
@@ -35,6 +37,34 @@ export default function UserSetting(){
         "password": "",
         "confirmPassword": ""
     })
+
+
+    useEffect(() => {
+        validateEmail(formValues.email, setErrorMessage, setLegalFormatBool);
+        validatePassword(formValues.password, setErrorMessage, setLegalFormatBool)
+        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setLegalFormatBool);
+        
+
+    }, [formValues.email, formValues.password, formValues.confirmPassword]);
+
+    useEffect(() => {
+        let countDown;
+        if (checkToken() === null) {
+            const cookieExpired = true;
+                countDown = setInterval(() => {
+                    setTimer((t) => {
+                        if(t <=0){
+                            clearInterval(countDown); //Stops countDown timer from continously running
+                            logout(cookieExpired);
+                            return 0; //timer state is set to 0
+                        }
+                        return t - 1; //aka subtract 1 sec from timer
+                    })
+                }, 1000);  
+        }    
+        return () => clearInterval(countDown); //Stops timer from continuing to run, after useEffect has executed   
+    
+      }, [token]);
 
     function handleChange(e){
         const {name, value} = e.target;
@@ -91,15 +121,10 @@ export default function UserSetting(){
         
     }
 
-    useEffect(() => {
-        validateEmail(formValues.email, setErrorMessage, setLegalFormatBool);
-        validatePassword(formValues.password, setErrorMessage, setLegalFormatBool)
-        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setLegalFormatBool);
-    }, [formValues.email, formValues.password, formValues.confirmPassword])
-
-
     return(
-        <div>
+        <>
+            {token !== null && (
+                <>
             <h3> Settings </h3>
             <Container className="mt-5"> 
                 <Form onSubmit={handleSubmitEmail}>
@@ -198,6 +223,14 @@ export default function UserSetting(){
                 }
 
             </Form>
-        </div>
+            </>
+            )}
+            {token === null &&
+                <Alert key={"danger"} variant={"danger"}>
+                    Warning!! You are not logged in! {" " /* Adds a space between text and "Click here"*/}
+                    <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
+                </Alert> 
+            }
+        </>
     );
 }

@@ -23,7 +23,7 @@ export default function PersonCard(person){
             }     
         }
         getPersonBookmark();
-    }, [person, personBookmark])
+    }, [person])
 
     async function DeletePersonBookmark(){
         console.log("Trying ti delete bookmark for: "+personBookmark?.name);

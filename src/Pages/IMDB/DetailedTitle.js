@@ -13,7 +13,7 @@ import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
-  const {userName} = useUser();
+  const {userName, token, checkToken} = useUser();
   const params = useParams(id);
   const list = [1,2,3,4,5,6,7,8,9,10];
 
@@ -42,17 +42,21 @@ export default function DetailedTitle({id}) {
 
   useEffect(()=>{ 
     let headers = GetHeader();
-    isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
 
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         setTitle(await GetTitleById(params.id));
         
-        let tempRating = await GetRatingById(params.id);
-        setRating(tempRating);
-        if(tempRating > -1) setHasRated(true);
-        else setHasRated(false);
+        if(checkToken() !== null){
+          console.log("checket virker is not null")
+          isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
+          let tempRating = await GetRatingById(params.id);
+          setRating(tempRating);
+          
+          if(tempRating > -1) setHasRated(true);
+          else setHasRated(false);
+        }
         setSimliarMovies(await GetSimilarMovies(params.id));
         
       } catch (error) {
@@ -62,7 +66,7 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [isBookmarked, params.id]);
+  }, [isBookmarked, params.id, token]);
 
  async function ToggleBookmark(){
    let headers = GetHeader();

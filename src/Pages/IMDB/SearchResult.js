@@ -1,7 +1,8 @@
 import SearchPreview from "../../Component/SearchPreview";
 import { useLocation } from "react-router";
 import { GetHeader } from "../../Store/store";
-
+import { useEffect} from 'react';
+import { useUser } from "../../Store/store";
 
  export async function FetchData(searchType, body){
     //method only handles fetching data
@@ -81,7 +82,7 @@ export default function SearchResult(){
     //gives us access to states passed through navigation.js 
     const location = useLocation();
 
-    //const { searchType } = useUser();
+    const {token, checkToken} = useUser();
     
     //make a try catch here -- Currently made a if statement, should be sufficient? 
 
@@ -124,6 +125,10 @@ export default function SearchResult(){
 
     const personType = "personType";
     const titleType = "titleType";
+    
+    useEffect(() => {
+        checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
+    }, [token]);
 
     return(
         <div className="container" >

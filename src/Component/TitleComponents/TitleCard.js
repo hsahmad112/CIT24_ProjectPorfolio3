@@ -22,7 +22,7 @@ export default function TitleCard(title){
 
         }
         getTitleBookmark();
-    }, [title, titleBookmark]);
+    }, [title]);
 
     async function DeleteTitleBookmark(){
         console.log("Trying ti delete bookmark for: "+titleBookmark?.name);

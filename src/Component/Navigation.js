@@ -6,7 +6,7 @@ import { Navbar, Button, Form, InputGroup, Dropdown, Container, Col, Row, Nav } 
 import { GetGenres } from '../Service/GenreService';
 
 export default function Navigation(){
-  const {userName, token, searchType, setSearchType, logout } = useUser();
+  const {userName, token, searchType, setSearchType, logout, checkToken } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("Everything");
   const [placeholderText, setPlaceholderText] = useState("Search for Everything");

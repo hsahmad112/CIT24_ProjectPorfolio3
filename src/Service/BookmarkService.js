@@ -1,4 +1,4 @@
-import { GetHeader } from "../Store/store";
+import { GetHeader} from "../Store/store";
 
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
@@ -38,13 +38,15 @@ export async function GetTitleBookmarks(queryParams){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/title?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
         
+        
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error (response.status);
         }
         const data = await response.json();
-        return data
+        return {success: true, data};
     } catch (error) {
         console.error("Error fetching data:", error);
+        return {success: false, message: error.message};
     }
     
 }
@@ -186,15 +188,16 @@ export async function GetPersonBookmarks(queryParams){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/person?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        if(!response.ok){
+            throw new Error (response.status);
         }
         const data = await response.json();
-
-        return data
-    } catch (error) {
-        console.error("Error fetching data:", error);
+        
+        return {success: true, data};
     }
+    catch(error){   
+        return {success: false, message: error.message};
+    }     
     
 }
 
