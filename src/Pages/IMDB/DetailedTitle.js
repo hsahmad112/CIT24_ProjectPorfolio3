@@ -62,38 +62,40 @@ export default function DetailedTitle({id}) {
   //checking for isBookmarked and isRated
   useEffect(()=>{ 
     
-    const fetchData = async () => {
-    
+    const fetchData = async () => {   
     let headers = GetHeader();
     console.log("accessing,", params.id);
     isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
-
-
-    setTitle(await GetTitleById(params.id));
-    
+    setTitle(await GetTitleById(params.id)); 
     const { rating, success } = await GetRatingById(params.id); //only needs the boolean value success
-    setTitleRating(success);
+    if(success === true){ 
+      setHasRated(success)
+      setRating(rating);
+    }
+    else{
+      setHasRated(success)
+      setRating(0);
+    }
     console.log("status of rating: ", success);
     setSimliarMovies(await GetSimilarMovies(params.id));
   };
-
    fetchData();
-  }, [params.id]);
+  }, [params.id, hasRated]);
 
 
 
 
-// async function ToggleRating() {
-//   if(titleRating === false){
-//   console.log("there was no rating, setting new rating");
-//   UpdateRating();
+async function ToggleRating() {
+  if(titleRating === false){
+  console.log("there was no rating, setting new rating");
+  UpdateRating();
 
-//   }
-//   else{
-//       console.log("rating exists, updating rating and setting hasRated to true");
-//       RateMovie();
-//   } 
-// }
+  }
+  else{
+      console.log("rating exists, updating rating and setting hasRated to true");
+      RateMovie();
+  } 
+}
 
 async function ToggleBookmark(){
    let headers = GetHeader();
@@ -132,9 +134,11 @@ async function ToggleBookmark(){
       setToastMessage('Your rating was removed');  
       setShowRatingPop(true);
       setTimeout(() => {setShowRatingPop(false)}, 2500);
-      setShowRatingModal(false);
+
       setHasRated(false);
-      setTitleRating(false)
+      setTitleRating(false);
+
+      CloseRatingModal();
     }
     catch(error){
       console.log("something went wrong");
@@ -163,7 +167,7 @@ async function ToggleBookmark(){
     setTitleRating(true);
     
     console.log("user created a new rating ", rating)
-    CloseRatingModal(true);
+    CloseRatingModal();
     setToastMessage('Your rating was submitted');
     setShowRatingPop(true);
     setTimeout(() => {setShowRatingPop(false)}, 2500);
@@ -174,7 +178,7 @@ async function ToggleBookmark(){
     await PutRating(params.id, rating);
 
     console.log("user updated their rating to", rating)
-    CloseRatingModal(true);
+    CloseRatingModal();
     setToastMessage('Your rating was submitted');
     setShowRatingPop(true);
     setTimeout(() => {setShowRatingPop(false)}, 2500);
@@ -182,7 +186,11 @@ async function ToggleBookmark(){
   }
 
 
+  console.log("rating value: ", rating);
   function CloseRatingModal(){
+    if(hasRated === false){
+      setRating(0);
+      }
     setHoverRating(0);
     setShowRatingModal(false);
   }
