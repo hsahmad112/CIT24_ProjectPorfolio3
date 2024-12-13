@@ -1,12 +1,13 @@
 import axios from "axios";
 import { GetHeader } from "../Store/store";
+import { Pagination } from "../Helpers/URLHelper";
 
 const baseRatingApiUrl = process.env.REACT_APP_BASE_API_LINK + "users/rating/";
 
 export async function GetAllRatings(queryParams){     
     try{
         let headers = GetHeader();
-        const response = await fetch(baseRatingApiUrl+"?page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
+        const response = await fetch(baseRatingApiUrl+ Pagination(queryParams.page, queryParams.pageSize), {headers});
         if(!response.ok){
             throw new Error (response.status);
         }

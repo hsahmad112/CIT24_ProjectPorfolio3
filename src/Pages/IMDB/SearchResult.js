@@ -1,7 +1,7 @@
 import SearchPreview from "../../Component/SearchPreview";
 import { useLocation } from "react-router";
 import { GetHeader } from "../../Store/store";
-
+import { Pagination } from "../../Helpers/URLHelper";
 
  export async function FetchData(searchType, body){
     //method only handles fetching data
@@ -9,7 +9,7 @@ import { GetHeader } from "../../Store/store";
     
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
-    const fetchUrl = "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize;
+    const fetchUrl = "/search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
 
     switch (searchType) {
         case "everything":
@@ -58,7 +58,6 @@ import { GetHeader } from "../../Store/store";
 
 // all advanced search is for titles 
 export async function AdvancedSearch(body) {
-    //method only handles fetching data
     let headers = GetHeader();
     
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
@@ -67,11 +66,10 @@ export async function AdvancedSearch(body) {
     const startYear = body.startYear === undefined ? "" : body.startYear;
     const endYear = body.endYear === undefined ? "" : body.endYear;
     const rating = body.rating === undefined ? "" : body.rating;
-    const paging = "&page=" + body.page + "&pageSize=" + body.pageSize;
-    //const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + paging;
+    const paging = Pagination(body.page, body.pageSize);
     const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
     
-    console.log(fetchAdvancedUrl);
+    //console.log(fetchAdvancedUrl);
     const titleResponse = await fetch(baseUrl  + "titles" + fetchAdvancedUrl, {headers});
     const response = await titleResponse.json();
     return{titles: response};   
@@ -80,8 +78,6 @@ export async function AdvancedSearch(body) {
 export default function SearchResult(){
     //gives us access to states passed through navigation.js 
     const location = useLocation();
-
-    //const { searchType } = useUser();
     
     //make a try catch here -- Currently made a if statement, should be sufficient? 
 
@@ -151,6 +147,5 @@ export default function SearchResult(){
 
         </div>
     );
-
 }
 
