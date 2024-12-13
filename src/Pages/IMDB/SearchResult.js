@@ -9,7 +9,7 @@ import { Pagination } from "../../Helpers/URLHelper";
     
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
-    const fetchUrl = "/search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
+    const fetchUrl = "/advanced-search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
 
     switch (searchType) {
         case "everything":
