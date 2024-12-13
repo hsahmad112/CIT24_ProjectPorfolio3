@@ -94,6 +94,8 @@ export default function DetailedTitle({id}) {
         setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
       } else{
         console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
+        // setShowNotLoggedIn(true);
+        // setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
       }       
     }    
       
@@ -185,7 +187,11 @@ export default function DetailedTitle({id}) {
   function ShowingBookmarkModal(){
     if(isBookmarked){
       setShowBookmarkModal(true);
-    }
+    } 
+    else{
+      setShowNotLoggedIn(true);
+      setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
+  }
 
   }
   if(errorMessage){

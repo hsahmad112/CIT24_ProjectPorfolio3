@@ -10,7 +10,7 @@ import Bookmark from "../../Component/Bookmark";
 import Badge from 'react-bootstrap/Badge';
 
 export default function DetailedPerson({id}){
-    //const {userName, token} = useUser();
+    const { token, checkToken } = useUser();
     const params = useParams(id);    
     const headers = GetHeader();
     const [person, setPerson] = useState(null);  
@@ -33,17 +33,16 @@ export default function DetailedPerson({id}){
     let navigate = useNavigate();
 
     useEffect(()=>{
-        isPersonBookmarked(params.id, setIsBookmarked, headers);
-        const res = 
-
-        //setAnnotation();
         window.scrollTo(0, 0);
         const fetchData = async () => {
           try {
             setPerson(await GetPerson(params.id)); 
             setPersonBackdrop( await GetPersonBackdrop(params.id));
-            setPersonBookmark( await GetPersonBookmarksById(params.id));        
-            
+
+            if(checkToken() !== null){
+                isPersonBookmarked(params.id, setIsBookmarked, headers);
+                setPersonBookmark( await GetPersonBookmarksById(params.id));        
+            }
           } catch (error) {
             setErrorMessage("could not find person with with id: " + params.id);
             console.error('Error fetching data:', error);
@@ -52,12 +51,11 @@ export default function DetailedPerson({id}){
     
         fetchData();
         console.log(isBookmarked);
-    }, [isBookmarked, params.id] );
+    }, [isBookmarked, params.id, token] );
 
     async function ToggleBookmark(){
         if(isBookmarked === false){      
             console.log("Attempting to create a bookmark");
-            //console.log(headers);
             const success = await CreatePersonBookmarksById(params.id, annotation, setIsBookmarked, headers);
         
             if( success){ 
@@ -72,7 +70,6 @@ export default function DetailedPerson({id}){
         }
         if(isBookmarked === true){
           console.log("Attempting to remove bookmark");
-          //console.log(headers);
           const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);
         
           if(success){
@@ -81,9 +78,11 @@ export default function DetailedPerson({id}){
             setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
           }else{
             console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
+            // setShowNotLoggedIn(true);
+            // setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
           }       
         }    
-          
+        
     }
     
     
@@ -260,9 +259,9 @@ export default function DetailedPerson({id}){
                     </div>
                 }
                 
-                <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
-                <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>                
-                <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
+                <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"} />
+                <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"} />              
+                <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"} />
                 <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"}></Toaster>
         
                 
