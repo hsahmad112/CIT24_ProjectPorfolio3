@@ -25,6 +25,7 @@ export default function DetailedTitle({id}) {
   const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
   const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
   const [rating, setRating] = useState(-1);
+  const [prevRating, setPrevRating] = useState(null);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
   const [similarMovies, setSimliarMovies] = useState(null);
@@ -47,16 +48,15 @@ export default function DetailedTitle({id}) {
         setTitle(await GetTitleById(params.id));
         
         if(checkToken() !== null){
-          console.log("checket virker is not null")
           isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
-          let tempRating = await GetRatingById(params.id);
-          setRating(tempRating);
-          
-          if(tempRating > -1) setHasRated(true);
-          else setHasRated(false);
         }
         setSimliarMovies(await GetSimilarMovies(params.id));
-        
+        let tempRating = await GetRatingById(params.id);
+        setRating(tempRating);
+          
+        if(tempRating > -1) setHasRated(true);
+        else setHasRated(false);
+
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
         console.error('Error fetching data:', error);
@@ -66,9 +66,11 @@ export default function DetailedTitle({id}) {
     fetchData();
   }, [isBookmarked, params.id, token]);
 
+  // useEffect(async () => {
+    
+  // },[rating]) 
  async function ToggleBookmark(){
     let headers = GetHeader();
-    if(token !== null){
 
       if(isBookmarked === false){      
         console.log("Attempting to create a bookmark"); // Remove later!
@@ -94,13 +96,6 @@ export default function DetailedTitle({id}) {
           console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
         }       
       }  
-    }
-    else{
-      setShowNotLoggedIn(true);
-      setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
-    }
-      
-      
   }
 
   async function RemoveRating(){
@@ -119,17 +114,34 @@ export default function DetailedTitle({id}) {
   }
 
   async function RateMovie(){
-    setToastMessage('Your rating was submitted');
-    setShowRatingPop(true);
-    setTimeout(() => {setShowRatingPop(false)}, 2500);
-    
-    setShowRatingModal(false);
-    if(hasRated){
-      await PutRating(params.id, rating);
+    if(token !== null){
+      setToastMessage('Your rating was submitted');
+      setShowRatingPop(true);
+      setTimeout(() => {setShowRatingPop(false)}, 2500);
+      
+      setShowRatingModal(false);
+      if(hasRated){
+        await PutRating(params.id, rating);
+      }
+      else{
+        await PostRating(params.id, rating);
+        setHasRated(true);
+      }
     }
     else{
-      await PostRating(params.id, rating);
-      setHasRated(true);
+      setShowNotLoggedIn(true);
+      setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
+    }
+  }
+
+  function handleShowRatingModal(){
+    if(token !== null){
+      setShowRatingModal(true);
+      setPrevRating(() => rating);
+    }
+    else{
+      setShowNotLoggedIn(true);
+      setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
     }
   }
 
@@ -329,13 +341,11 @@ export default function DetailedTitle({id}) {
                         </Card.Text>
                       </Card.Body>
                 </Card>
-                {userName !== null &&
-                  <Card className="rate-movie-box" onClick={() => setShowRatingModal(true)}>
+                  <Card className="rate-movie-box" onClick={() => handleShowRatingModal()}>
                     <Card.Body>
                       {hasRated ? "Update your rating" : "Rate movie"}
                     </Card.Body>
                   </Card>
-                }
               </Col>
             </Row>
           </Container>
@@ -375,7 +385,7 @@ export default function DetailedTitle({id}) {
     
             <Modal.Footer>
               <Button variant="secondary" onClick={() => CloseRatingModal()}>Cancel</Button>
-              <Button variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
+              <Button disabled={rating >= 0 && rating !== prevRating ? false : true } variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
               <Button variant="danger" style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
             </Modal.Footer>
             </Modal.Dialog>
