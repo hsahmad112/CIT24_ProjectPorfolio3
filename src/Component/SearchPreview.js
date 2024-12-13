@@ -1,8 +1,8 @@
 import TitleSearchCard from './TitleComponents/TitleSearchCard';
 import PersonSearchCard from './PersonComponents/PersonSearchCard';
 import {Button, Row} from 'react-bootstrap'
-import { useEffect, useState } from 'react';
-import { GetHeader } from "../Store/store";
+import {useEffect, useState} from 'react';
+import { Pagination } from '../Helpers/URLHelper';
 
 export default function SearchPreview({ componentType, body, searchResult }) {
   const baseUrl = process.env.REACT_APP_BASE_API_LINK;
@@ -12,7 +12,19 @@ export default function SearchPreview({ componentType, body, searchResult }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   function FetchUrl(page){
-    return "/search?searchTerm=" + body.searchTerm + "&page=" + page + "&pageSize=" + body.pageSize;
+    const searchTerm = body.searchTerm === undefined ? "" : body.searchTerm;
+    const genreId = body.genreId === undefined ? "" : body.genreId;
+    const startYear = body.startYear === undefined ? "" : body.startYear;
+    const endYear = body.endYear === undefined ? "" : body.endYear;
+    const rating = body.rating === undefined ? "" : body.rating;
+
+
+    const paging = Pagination(page, body.pageSize);
+    return "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
+    
+    //return "/advanced-search?searchTerm=" + body.searchTerm + "&genreId=" + body.genreId + "&startYear=" + body.startYear + "&endYear=" + body.endYear + "&rating=" + body.rating + paging;
+    
+    //return "/advanced-search?searchTerm=" + body.searchTerm + "&page=" + page + "&pageSize=" + body.pageSize;
   }
 
   useEffect(()=>{
@@ -33,7 +45,6 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       }
       else {
         setErrorMessage("problably no more results");
-        // probably no more results
       }
     }
     else{
@@ -52,9 +63,6 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       }
     }
   }
-
-  // console.log("rendering search preview");
-  // console.log(searchResult);
 
     return (
       <div style={{textAlign: 'left'}}>

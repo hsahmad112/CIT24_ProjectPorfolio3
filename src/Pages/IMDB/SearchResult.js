@@ -3,6 +3,7 @@ import { useLocation } from "react-router";
 import { GetHeader } from "../../Store/store";
 import { useEffect} from 'react';
 import { useUser } from "../../Store/store";
+import { Pagination } from "../../Helpers/URLHelper";
 
  export async function FetchData(searchType, body){
     //method only handles fetching data
@@ -10,14 +11,15 @@ import { useUser } from "../../Store/store";
     
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
-    const fetchUrl = "/search?searchTerm=" + body.searchTerm + "&page=" + body.page + "&pageSize=" + body.pageSize;
+    const fetchUrlTitle = "/advanced-search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
+    const fetchUrlPerson = "/search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
 
     switch (searchType) {
         case "everything":
             //returns both titles and persons, fethces concurrently using Promise.All, 
             const [personResponse, titleResponse] = await Promise.all([
-                fetch(baseUrl  + "persons" + fetchUrl, {headers}),
-                fetch(baseUrl + "titles" + fetchUrl),
+                fetch(baseUrl  + "persons" + fetchUrlPerson, {headers}),
+                fetch(baseUrl + "titles" + fetchUrlTitle),
             ]);
            
             //If response of either person or title is not HTTP OK status code, then we use the below 2 empty arrays to pass on 
@@ -45,7 +47,8 @@ import { useUser } from "../../Store/store";
             return{persons: personData, titles: titleData};
             
         default:
-            const response = await fetch(baseUrl + searchType + fetchUrl, {headers});
+            const urlType = searchType === "persons" ? fetchUrlPerson: fetchUrlTitle;
+            const response = await fetch(baseUrl + searchType + urlType, {headers});
             if(response.ok){
                 const data = await response.json();
                 return {persons: data, titles: data}; //Should prop find a better way, than duplicating data in persons/titles....
@@ -59,7 +62,6 @@ import { useUser } from "../../Store/store";
 
 // all advanced search is for titles 
 export async function AdvancedSearch(body) {
-    //method only handles fetching data
     let headers = GetHeader();
     
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
@@ -68,11 +70,10 @@ export async function AdvancedSearch(body) {
     const startYear = body.startYear === undefined ? "" : body.startYear;
     const endYear = body.endYear === undefined ? "" : body.endYear;
     const rating = body.rating === undefined ? "" : body.rating;
-    const paging = "&page=" + body.page + "&pageSize=" + body.pageSize;
-    //const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + paging;
+    const paging = Pagination(body.page, body.pageSize);
     const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
     
-    console.log(fetchAdvancedUrl);
+    //console.log(fetchAdvancedUrl);
     const titleResponse = await fetch(baseUrl  + "titles" + fetchAdvancedUrl, {headers});
     const response = await titleResponse.json();
     return{titles: response};   
@@ -156,6 +157,5 @@ export default function SearchResult(){
 
         </div>
     );
-
 }
 

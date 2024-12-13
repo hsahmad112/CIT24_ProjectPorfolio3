@@ -1,7 +1,6 @@
-import { GetHeader} from "../Store/store";
-
+import { GetHeader } from "../Store/store";
+import { Pagination } from "../Helpers/URLHelper";
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
-const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 
 // Use find so get title or person from tmdb api: 
 // Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
@@ -36,7 +35,7 @@ export async function isTitleBookmarked(id, setIsBookmarked, setTitleBookmark, h
 export async function GetTitleBookmarks(queryParams){
     let headers = GetHeader();
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/title?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
+        const response = await fetch(baseApiUrl + "bookmarks/title?" + Pagination(queryParams.page, queryParams.pageSize), {headers});
         
         
         if (!response.ok) {
@@ -186,7 +185,7 @@ export async function isPersonBookmarked(id, setIsBookmarked, headers) {
 export async function GetPersonBookmarks(queryParams){
     let headers = GetHeader();
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/person?" + "page=" + queryParams.page + "&pageSize=" + queryParams.pageSize, {headers});
+        const response = await fetch(baseApiUrl + "bookmarks/person?" + Pagination(queryParams.page, queryParams.pageSize), {headers});
 
         if(!response.ok){
             throw new Error (response.status);

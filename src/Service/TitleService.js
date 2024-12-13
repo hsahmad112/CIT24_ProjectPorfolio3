@@ -1,12 +1,13 @@
+import { Pagination } from "../Helpers/URLHelper";
+
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 const baseMovieURL_ById = process.env.REACT_APP_TMDB_API_IMAGE_BY_ID_LINK;
 const api_key = process.env.REACT_APP_TMDB_API_KEY;
 
 export function GetAllTitles(){
     let page = Math.floor(Math.random() * 500);
-    let pageSize = Math.floor(Math.random() * 10 + 7);
 
-    return fetch(baseApiUrl + "titles?page=" + page + "&pageSize=" + pageSize).then(res => res.json());
+    return fetch(baseApiUrl + "titles?" + Pagination(page, 10)).then(res => res.json());
 }
 
 // Could slipt it up into different functions fx. also making GetTitlePoster(id) that return the poster_path if we need it?
@@ -44,18 +45,16 @@ export async function GetTitleBackdrop(id, useBackdrop){
         }
         
 
-
     } catch (error) {
         console.log("id er: " + id);
         console.error("Error fetching data:", error);
     }  
-
 }
 
 
 export async function GetTitleById(id){
     let data;
-    const response = await fetch(baseApiUrl + "titles/"+ id);
+    const response = await fetch(baseApiUrl + "titles/" + id);
 
     if(!response.ok) throw new Error("We got a HTTP error. Status is: " + response.status);
 
@@ -70,7 +69,7 @@ export async function GetTitleById(id){
 
 export async function GetSimilarMovies(id){
     let data;
-    const response = await fetch(baseApiUrl + "titles/similar-titles?titleId="+ id);
+    const response = await fetch(baseApiUrl + "titles/similar-titles?titleId=" + id);
 
     if(!response.ok) throw new Error("We got a HTTP error. Status is: " + response.status);
 

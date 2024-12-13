@@ -1,28 +1,24 @@
-import { Button, Modal } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import { useEffect, useState } from 'react';
-import {getCookieValue, useUser, GetHeader} from "../../Store/store";
-import { comparePasswords, validateEmail, validatePassword } from '../../Helpers/FormValidation';
+import {Button, Modal,Row, Form, Col, Container, Alert} from 'react-bootstrap';
+import Toaster from '../../Component/Toaster';
+import {useEffect, useState} from 'react';
+import {useUser} from "../../Store/store";
+import {comparePasswords, validateEmail, validatePassword} from '../../Helpers/FormValidation';
+import {PutPassword, PutEmail, DeleteUser} from '../../Service/UserService';
 import { useNavigate } from 'react-router';
-import Alert from 'react-bootstrap/Alert';
 
-export default function UserSetting(){
-    const baseUrl = process.env.REACT_APP_BASE_API_LINK;  
-    
-    const {token, logout, checkToken} = useUser();
-    const navigate = useNavigate();
-    
-    const headers =  {    
-        "Content-Type": "application/json",
-        "Authorization" : getCookieValue('Authorization')
-    }
-
-    const [showAccountDeletionModal, setShowAccountDeletionModal] = useState(false);
+export default function UserSetting(){ 
+    const {logout, token, checkToken} = useUser();
     const [timer, setTimer] = useState(5);
 
+    const navigate = useNavigate();
+
+    const [showAccountDeletionModal, setShowAccountDeletionModal] = useState(false);
+    const [toastInfo, setToastInfo] = useState({
+        header: "",
+        body: "",
+        color: ""
+    });
+   
     const [errorMessage, setErrorMessage] = useState({
         passwordMismatch: '',
         invalidEmailFormat: '',
@@ -36,7 +32,11 @@ export default function UserSetting(){
         "email": "",
         "password": "",
         "confirmPassword": ""
-    })
+    });
+
+    useEffect(()=>{
+
+    },[toastInfo]);
 
 
     useEffect(() => {
@@ -83,16 +83,28 @@ export default function UserSetting(){
             password: '', 
         });
 
-        const res = await fetch(baseUrl+ 'user', {method: "PUT", headers: headers, body: JSON.stringify(newEmailBody)})
-        console.log("updating email");
-        if(res.ok){
-            console.log("updated! Status code: ", res.status);
+        // really should just have one function that handles all fetching try catch
+        // so you don't do it every single place you have to fetch data
+        try {            
+            const response = await PutEmail(newEmailBody);
+            console.log("updating email");
+            if(response.status === 200){  
+                setToastInfo({header: "Success", body: "Your email was updated", color: "success"});
+                SetUpdatedCredentials(true);
+                setTimeout(() => {
+                    SetUpdatedCredentials(false);
+                }, 2500);
+                console.log("updated! Status code: ", response.status);
+            }
+            else{
+                console.warn("Update did not happen. Status code: ", response.status);
+            }   
+        } catch (error) {
+            console.log("Could not update email, it problably already exist");
         }
-        else{
-            console.warn("Update did not happen. Status code: ", res.status);
-        }   
-    }
 
+    }
+    const [UpdatedCredentials, SetUpdatedCredentials] = useState();
 
     async function handlePasswordSubmit(e){
         e.preventDefault();
@@ -101,29 +113,37 @@ export default function UserSetting(){
             password: formValues.password,
         };
   
-        const res = await fetch(baseUrl + 'user/password-reset/', {method: "PUT", headers: headers, body: JSON.stringify(newPasswordBody)});
-        console.log("updating password");
+        const response = await PutPassword(newPasswordBody);
 
-        if(res.ok){
-            console.log("password Update successfull");
+        if(response.status === 200){ // can't get response.ok to work
+            setToastInfo({header: "Success", body: "Your password was updated", color: "success"});
+            SetUpdatedCredentials(true);
+            setTimeout(() => {
+                SetUpdatedCredentials(false);
+            }, 2500);
         }
         else{
-            console.warn("Update did not happen. Status code: ", res.status);
+            console.warn("Update did not happen. Status code: ", response.status);
         }  
     }
 
     //logout function could have a warning modal popping up with a password field (to confirm identity) a Proceed button and Cancel button to opt out.
     async function handleDeleteAccount(e){ 
         e.preventDefault();
-        const res = await fetch(baseUrl + 'user/', {method: "DELETE", headers});
-        console.log("deleting user");
-        logout();
-        
+
+        const response = await DeleteUser();
+        if(response.status === 204){ // can't get response.ok to work
+            console.log("deleting user");
+            logout();
+        }
+        else{
+            console.warn("Delete did not happen. Status code: ", response.status);
+        }    
     }
 
     return(
         <>
-            {token !== null && (
+            {token !== null && 
                 <>
             <h3> Settings </h3>
             <Container className="mt-5"> 
@@ -224,13 +244,14 @@ export default function UserSetting(){
 
             </Form>
             </>
-            )}
+            }
+            <Toaster header={toastInfo.header} body={toastInfo.body} show={UpdatedCredentials} color={toastInfo.color}></Toaster>
             {token === null &&
                 <Alert key={"danger"} variant={"danger"}>
                     Warning!! You are not logged in! {" " /* Adds a space between text and "Click here"*/}
                     <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
                 </Alert> 
             }
-        </>
+        </>     
     );
 }

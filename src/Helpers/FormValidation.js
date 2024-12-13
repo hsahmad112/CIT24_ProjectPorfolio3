@@ -21,11 +21,10 @@ export const comparePasswords = (password, confirmPassword, setErrorMessage, set
   
     if(password !== confirmPassword){
         setError(setLegalFormatBool, setErrorMessage, errorKey, passwordMismatchMessage);
-        }
-        else{
-            clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
-           
-        }
+    }
+    else{
+        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);      
+    }
 }
 
 export const validateEmail = (email, setErrorMessage, setLegalFormatBool) => {
@@ -55,8 +54,6 @@ export const validateName = (firstname, setErrorMessage, setLegalFormatBool) => 
     else{
         clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
     }
-
-    
 }
 
 

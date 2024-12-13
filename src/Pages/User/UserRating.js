@@ -1,8 +1,8 @@
 import {GetAllRatings} from '../../Service/RatingService';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Rating from '../../Component/RatingComponents/Rating';
-import { useUser } from '../../Store/store';
-import { useNavigate } from 'react-router';
+import {useUser} from '../../Store/store';
+import {useNavigate} from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 import {Container, Row} from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -18,7 +18,7 @@ export default function UserRating(){
     const [sortingOrder, setSortingOrder] = useState("rating"); //Sort order will default to rating
     const [descending, setDescending] = useState(true); //will default to descending sort order
  
-    const[page, setPage] = useState(0); //The page we are on
+    const [page, setPage] = useState(0); //The page we are on
     const [totalPages, setTotalPages] = useState(1) //number of pages in total, we will set state to value recieved from backend
     const [pagenationItems, setPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
     
