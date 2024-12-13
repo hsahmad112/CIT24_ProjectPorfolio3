@@ -28,25 +28,22 @@ export default function TitleCard(title){
         console.log("Trying ti delete bookmark for: "+titleBookmark?.name);
         await DeleteTitleBookmarksById(title.data.titleId, setTitleBookmark, headers)
     }
-    
-
-    if(titleBookmark){   
-        return(
-            <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}>
-                <Card.Img variant="top" src={imageUrl + titleBookmark}/>
-                <Card.Body>
-                    <Card.Title>{title.data.titlePrimaryTitle} </Card.Title> {/* Naming convention of .... data.titlePrimaryTitle could be diffenrent. E.g. could be called primaryTitle*/}
-                    <Card.Text>
-                        {title.data.annotation !== "" ? title.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
-                    </Card.Text>
-                    <ButtonGroup aria-label="Basic example">
-                        <Button onClick={()=> navigate("/title/" + title.data.titleId)} variant="primary">Go to title</Button>
-                        <Button onClick={DeleteTitleBookmark} variant="danger">
-                            <Trash />
-                        </Button>
-                    </ButtonGroup>
-                </Card.Body>
-            </Card>
-        );
-    }  
+ 
+    return(
+        <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}>
+            <Card.Img variant="top" src={titleBookmark !== null ? imageUrl + titleBookmark : "/no-image.jpg" }/>
+            <Card.Body>
+                <Card.Title>{title.data.titlePrimaryTitle} </Card.Title> {/* Naming convention of .... data.titlePrimaryTitle could be diffenrent. E.g. could be called primaryTitle*/}
+                <Card.Text>
+                    {title.data.annotation !== "" ? title.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
+                </Card.Text>
+                <ButtonGroup aria-label="Basic example">
+                    <Button onClick={()=> navigate("/title/" + title.data.titleId)} variant="primary">Go to title</Button>
+                    <Button onClick={DeleteTitleBookmark} variant="danger">
+                        <Trash />
+                    </Button>
+                </ButtonGroup>
+            </Card.Body>
+        </Card>
+    ); 
 }

@@ -24,7 +24,7 @@ export async function GetTitleBackdrop(id, useBackdrop){
         // Determine which array contains data
         let result = null;
 
-        // could not use the switch, had to do the if else statements instead!
+        //could not use the switch, had to do the if else statements instead!
         if (data.movie_results && data.movie_results.length > 0) {
             result = data.movie_results;
         } else if (data.tv_results && data.tv_results.length > 0) {
@@ -33,16 +33,20 @@ export async function GetTitleBackdrop(id, useBackdrop){
             result = data.tv_episode_results;
         } else if (data.tv_season_results && data.tv_season_results.length > 0) {
             result = data.tv_season_results;
+        } else{
+            return result; //Is null if no backdrop found
         }
 
         if(useBackdrop){
             return result[0].backdrop_path;
         }else{
             return result[0].poster_path;
-        }    
+        }
+        
 
 
     } catch (error) {
+        console.log("id er: " + id);
         console.error("Error fetching data:", error);
     }  
 
