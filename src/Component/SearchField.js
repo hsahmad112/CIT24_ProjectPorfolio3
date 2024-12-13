@@ -59,7 +59,7 @@ export default function SearchField(){
         try {
 
             let result;
-            if(chosenGenre !== undefined || chosenRating !== undefined){
+            if(chosenGenre !== undefined || chosenRating !== undefined || chosenStartYear !== undefined || chosenEndYear !== undefined){
             result = await AdvancedSearch(body);
             }
             else{
@@ -91,7 +91,7 @@ export default function SearchField(){
         <Row>
           <Col md="auto"> 
             <Dropdown>
-                <Dropdown.Toggle style={{ backgroundColor: chosenGenre === undefined ? "": "black"}} className='advanced-dropdown' variant="success">
+                <Dropdown.Toggle style={{ backgroundColor: (chosenGenre === undefined && chosenRating === undefined && chosenStartYear === undefined && chosenEndYear === undefined) ? "": "black"}} className='advanced-dropdown' variant="success">
                   <div style={{ color: "white" }}>Advanced Search</div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -103,6 +103,8 @@ export default function SearchField(){
                   </select> 
                   <label for="rating">Rating</label>
                   <input onChange={(e) => setChosenRating(e.target.value)} type='number' placeholder='rating'></input>
+                  <input onChange={(e) => setChosenStartYear(e.target.value)} type='number' placeholder='startYear'></input>
+                  <input onChange={(e) => setChosenEndYear(e.target.value)} type='number' placeholder='endYear'></input>
                 </Dropdown.Menu>
             </Dropdown>
           </Col>

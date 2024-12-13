@@ -7,7 +7,7 @@ const api_key = process.env.REACT_APP_TMDB_API_KEY;
 export function GetAllTitles(){
     let page = Math.floor(Math.random() * 500);
 
-    return fetch(baseApiUrl + Pagination(page, 10)).then(res => res.json());
+    return fetch(baseApiUrl + "titles?" + Pagination(page, 10)).then(res => res.json());
 }
 
 // Could slipt it up into different functions fx. also making GetTitlePoster(id) that return the poster_path if we need it?

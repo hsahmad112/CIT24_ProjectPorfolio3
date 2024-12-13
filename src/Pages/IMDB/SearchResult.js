@@ -9,14 +9,15 @@ import { Pagination } from "../../Helpers/URLHelper";
     
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
-    const fetchUrl = "/advanced-search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
+    const fetchUrlTitle = "/advanced-search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
+    const fetchUrlPerson = "/search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
 
     switch (searchType) {
         case "everything":
             //returns both titles and persons, fethces concurrently using Promise.All, 
             const [personResponse, titleResponse] = await Promise.all([
-                fetch(baseUrl  + "persons" + fetchUrl, {headers}),
-                fetch(baseUrl + "titles" + fetchUrl),
+                fetch(baseUrl  + "persons" + fetchUrlPerson, {headers}),
+                fetch(baseUrl + "titles" + fetchUrlTitle),
             ]);
            
             //If response of either person or title is not HTTP OK status code, then we use the below 2 empty arrays to pass on 
@@ -44,7 +45,8 @@ import { Pagination } from "../../Helpers/URLHelper";
             return{persons: personData, titles: titleData};
             
         default:
-            const response = await fetch(baseUrl + searchType + fetchUrl, {headers});
+            const urlType = searchType === "persons" ? fetchUrlPerson: fetchUrlTitle;
+            const response = await fetch(baseUrl + searchType + urlType, {headers});
             if(response.ok){
                 const data = await response.json();
                 return {persons: data, titles: data}; //Should prop find a better way, than duplicating data in persons/titles....
