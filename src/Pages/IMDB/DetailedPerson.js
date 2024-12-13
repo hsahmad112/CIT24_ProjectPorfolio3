@@ -2,12 +2,11 @@ import { useUser, GetHeader } from "../../Store/store";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import Toaster from "../../Component/Toaster";
-import { GetPersonById, GetPerson, GetPersonBackdrop } from "../../Service/PersonService";
-import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
-import { GetPersonBookmarks, GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, isPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
+import { GetPerson, GetPersonBackdrop } from "../../Service/PersonService";
+import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
+import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, isPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 import Bookmark from "../../Component/Bookmark";
-import Badge from 'react-bootstrap/Badge';
 
 export default function DetailedPerson({id}){
     const { token, checkToken } = useUser();
@@ -29,8 +28,8 @@ export default function DetailedPerson({id}){
     const [personBookmark, setPersonBookmark] = useState(null);  
     
     const [annotation, setAnnotation] = useState('');
-  
-    let navigate = useNavigate();
+    
+    //let navigate = useNavigate();
 
     useEffect(()=>{
         window.scrollTo(0, 0);

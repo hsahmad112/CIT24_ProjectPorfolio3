@@ -1,12 +1,12 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-import {useState} from 'react';
-import {useUser} from '../../Store/store';
+import { useState, useEffect } from 'react';
+import { useUser } from '../../Store/store';
 
 export default function Login(){
 
-  const {login} = useUser();
+  const {login, token, checkToken} = useUser();
   const [errorMessage, setErrorMessage] = useState('');
 
   const [formData, setFormData] = useState({
@@ -14,6 +14,10 @@ export default function Login(){
       password: '',
   });
 
+  useEffect(() => {
+    checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
+  }, [token]);
+    
 
   function formResetter(){
     setFormData({

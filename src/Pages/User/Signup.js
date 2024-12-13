@@ -18,7 +18,7 @@ export default function Signup(){
       confirmPassword: '',
   });
 
-  const {login} = useUser(); //Gets the login state, from store.js (UserContext)
+  const { token, checkToken, login } = useUser(); //Gets the login state, from store.js (UserContext)
     
   const [errorMessage, setErrorMessage] = useState({
     passwordMismatch: '',
@@ -38,6 +38,10 @@ export default function Signup(){
     }));
   };
 
+  useEffect(() => {
+    checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
+  }, [token]);
+  
   useEffect(()=>{
     validateEmail(jsonBody.email, setErrorMessage, setIsFieldValid);
     comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setIsFieldValid);

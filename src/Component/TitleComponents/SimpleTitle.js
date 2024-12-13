@@ -1,4 +1,3 @@
-import Carousel from 'react-bootstrap/Carousel';
 import { Card } from 'react-bootstrap';
 
 export default function SimpleTitle({title, navigate, keyID}) {

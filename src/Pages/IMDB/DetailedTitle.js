@@ -7,9 +7,7 @@ import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
 import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
 import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
-import Badge from 'react-bootstrap/Badge';
-
-import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
+import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
@@ -71,8 +69,7 @@ export default function DetailedTitle({id}) {
  async function ToggleBookmark(){
    let headers = GetHeader();
     if(isBookmarked === false){      
-      console.log("Attempting to create a bookmark");
-      //console.log(headers);
+      console.log("Attempting to create a bookmark"); // Remove later!
       const success =  await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
       console.log(success);
       if( success){ 
@@ -86,10 +83,9 @@ export default function DetailedTitle({id}) {
     }
     if(isBookmarked === true){
       console.log("Attempting to remove bookmark");
-      //console.log(headers);
       const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
       if(success){
-        console.log("Bookmark removed successfully")
+        console.log("Bookmark removed successfully") // Remove later!
         setShowRemoveBookmarkPop(true);
         setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
       } else{
@@ -211,8 +207,6 @@ export default function DetailedTitle({id}) {
     );
   }
   else{
-    // console.log(title)
-    // console.log(rating);
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
     return (
       <div className="container">
