@@ -51,6 +51,9 @@ export default function DetailedPerson({id}){
         console.log(isBookmarked);
     }, [isBookmarked, params.id] );
 
+    console.log("Person is: ");
+    console.log(person);
+
     async function ToggleBookmark(){
         if(isBookmarked === false){      
             console.log("Attempting to create a bookmark");
@@ -144,8 +147,7 @@ export default function DetailedPerson({id}){
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={4 }>
-                           
+                    <Col md={4 }>                          
 
                         {/* column for poster img with person */}
                         <Card bg="transparent d-flex align-items-center" style={{ width: '14rem', padding: '0px' }}>

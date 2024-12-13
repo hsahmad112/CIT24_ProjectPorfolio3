@@ -5,11 +5,9 @@ import TitleSearchCard from "../../Component/TitleComponents/TitleSearchCard";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
-import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
+import { CreateTitleBookmarksById, DeleteTitleBookmarksById, isTitleBookmarked, UpdateTitleBookmark } from "../../Service/BookmarkService";
 import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
-import Badge from 'react-bootstrap/Badge';
-
-import { Card, Col, Row, Container, Stack, Button, Modal, Spinner } from 'react-bootstrap';
+import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
@@ -57,7 +55,6 @@ export default function DetailedTitle({id}) {
         
       } catch (error) {
         setErrorMessage("could not find title with with id: " + params.id);
-        console.error('Error fetching data:', error);
       }
     };
 
@@ -67,10 +64,7 @@ export default function DetailedTitle({id}) {
  async function ToggleBookmark(){
    let headers = GetHeader();
     if(isBookmarked === false){      
-      console.log("Attempting to create a bookmark");
-      //console.log(headers);
       const success =  await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
-      console.log(success);
       if( success){ 
         console.log("Bookmark was set");
         setShowBookmarkPop(true);
@@ -147,37 +141,7 @@ export default function DetailedTitle({id}) {
     setShowUpdateBookmarkPop(true);
     setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
   }
-  // async function handleSubmit(e){
-  //   e.preventDefault();
-  //   const body = 
-  //   { id: null, 
-  //     page: '0', 
-  //     pageSize: searchType === 'everything' ? '5' : '10',
-  //     genreId: chosenGenre,
-  //   };
- 
-  //   try {
-
-  //       let result = await AdvancedSearch(body);
-  //       // console.log("reuslt?");
-  //       // console.log(result);
-
-  //     //setChosenGenre(undefined);
-
-
-  //      navigate('/search', {
-  //       state: {result, searchType, body },
-  //     });
-
-  //   } catch (error) {
-  //     console.error("Error in fetching of data, in Navigation.js", error);
-  //     //throw new Error (error); --Do we want to throw error here on in SearchResult?
-  //   }
- 
-  // }
-
   
-  // if(similarMovies) console.log(similarMovies);
   function ShowingBookmarkModal(){
     if(isBookmarked){
       setShowBookmarkModal(true);
@@ -201,8 +165,6 @@ export default function DetailedTitle({id}) {
     );
   }
   else{
-    // console.log(title)
-    // console.log(rating);
     // title only have the person name, not the id, so can't use them to find the person, the name might overlap
     return (
       <div className="container">
@@ -240,24 +202,6 @@ export default function DetailedTitle({id}) {
               <Col>
                 {/* column for poster with title, rating and stuff */}
                 <Card bg="transparent d-flex align-items-center no-border" style={{height: "500px"}}>
-                  <Card.Title>
-                    {/* <div style={{display: "flex", justifyContent: "space-between"}}>
-                      <span style={{textAlign: "left"}}>
-                        <h1>
-                          {title.primaryTitle}
-                          <p style={{fontSize: "28px", display: "inline"}}>{displayYears(title.startYear, title.endYear)}</p> 
-                        </h1>
-                        {title.originalTitle !== title.primaryTitle &&
-                        <h5 className="less-opacity">{title.originalTitle}</h5>}  
-                      </span>
-                      <span style={{textAlign: "right"}}>
-                        <p style={{fontSize: "15px"}}>{title.titleType}</p>
-                        {title.isAdult && <p style={{fontSize: "15px"}}>is adult</p>}
-                      </span>
-                    </div> */}
-                    <div>
-                    </div>
-                  </Card.Title>
                   <Card.Img fluid="true"
                     variant="bottom"
                     className="detailed-movie-card"
@@ -397,12 +341,11 @@ export default function DetailedTitle({id}) {
           </div>
         }
 
-        <Toaster header={"Not authorized"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
-        <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>        
-        <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
-        <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"}></Toaster>
-          
-        <Toaster header={"Success"} body={toastMessage} show={showRatingPop} color={"success"}></Toaster>
+        <Toaster header={"Not authorized"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"} />
+        <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"} />    
+        <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"} />
+        <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"} />
+        <Toaster header={"Success"} body={toastMessage} show={showRatingPop} color={"success"} />
 
       </div>
     );

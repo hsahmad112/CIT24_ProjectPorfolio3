@@ -13,17 +13,15 @@ export default function PersonCard(person){
     let headers = GetHeader();
 
     useEffect(() =>{
-        const getPersonBookmark = async () => {
-            if(person){
-                try {
-                    setPersonBookmark((await GetPersonBackdrop(person.data.personId)));
-                } catch (error) {
-                    console.log(error);
-                }
-            }     
+        const getPersonBookmark = async () => {  
+            try {
+                setPersonBookmark(await GetPersonBackdrop(person.data.personId));
+            } catch (error) {
+                console.log(error);
+            }
         }
         getPersonBookmark();
-    }, [person, personBookmark])
+    }, [person])
 
     async function DeletePersonBookmark(){
         console.log("Trying ti delete bookmark for: "+personBookmark?.name);

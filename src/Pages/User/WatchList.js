@@ -122,7 +122,7 @@ export default function WatchList(){
             List of Person Bookmarks:
             <Container>
               <Row xs={1} md={4}> 
-                  {personBookmarks?.map((person, index) => <PersonCard data={person} key={index}> </PersonCard>)}  
+                  {personBookmarks?.map((person, index) => <PersonCard data={person} key={index}></PersonCard>)}  
               </Row>
               <Row>
                   <div>

@@ -22,13 +22,12 @@ export default function TitleCard(title){
 
         }
         getTitleBookmark();
-    }, [title, titleBookmark]);
+    }, [title]);
 
     async function DeleteTitleBookmark(){
         console.log("Trying ti delete bookmark for: "+titleBookmark?.name);
         await DeleteTitleBookmarksById(title.data.titleId, setTitleBookmark, headers)
-    }
-    
+    }    
 
     if(titleBookmark){   
         return(
