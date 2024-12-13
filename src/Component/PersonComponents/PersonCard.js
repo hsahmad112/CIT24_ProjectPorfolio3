@@ -37,10 +37,14 @@ export default function PersonCard(person){
                     <Card.Title>
                         {personBookmark?.name !== undefined ? personBookmark?.name : "No Name"}
                     </Card.Title>
-                    <Card.Img style={{padding: '0px'}} variant="top" src={                      
-                        personBookmark?.profile_path !== undefined ? 
-                        imageUrl + personBookmark?.profile_path :
-                        "/no-image.jpg"
+                    <Card.Img 
+                        style={{padding: '0px'}} 
+                        variant="top"
+                        onClick={()=> navigate("/person/" + person.data.personId)}
+                        src={                      
+                            personBookmark?.profile_path !== undefined ? 
+                            imageUrl + personBookmark?.profile_path :
+                            "/no-image.jpg"
                         } 
                     />
                     <Card.Text>

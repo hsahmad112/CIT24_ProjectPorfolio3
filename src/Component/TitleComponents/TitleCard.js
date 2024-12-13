@@ -31,7 +31,10 @@ export default function TitleCard(title){
  
     return(
         <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}>
-            <Card.Img variant="top" src={titleBookmark !== null ? imageUrl + titleBookmark : "/no-image.jpg" }/>
+            <Card.Img 
+                variant="top" 
+                src={titleBookmark !== null ? imageUrl + titleBookmark : "/no-image.jpg" }
+                onClick={()=> navigate("/title/" + title.data.titleId)}/>
             <Card.Body>
                 <Card.Title>{title.data.titlePrimaryTitle} </Card.Title> {/* Naming convention of .... data.titlePrimaryTitle could be diffenrent. E.g. could be called primaryTitle*/}
                 <Card.Text>

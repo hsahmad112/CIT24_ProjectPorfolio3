@@ -5,7 +5,7 @@ import TitleSearchCard from "../../Component/TitleComponents/TitleSearchCard";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
-import { CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
+import { GetPersonBookmarksById, CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
 import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
@@ -36,6 +36,7 @@ export default function DetailedTitle({id}) {
   const [titleBookmark, setTitleBookmark] = useState(null);  
   
   const [annotation, setAnnotation] = useState('');
+  const [prevAnnotation, setPrevAnnotation] = useState(null);  
 
   let navigate = useNavigate();
 
@@ -48,7 +49,7 @@ export default function DetailedTitle({id}) {
         setTitle(await GetTitleById(params.id));
         
         if(checkToken() !== null){
-          isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);
+          isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);      
         }
         setSimliarMovies(await GetSimilarMovies(params.id));
         let tempRating = await GetRatingById(params.id);
@@ -198,9 +199,11 @@ export default function DetailedTitle({id}) {
 
   
   // if(similarMovies) console.log(similarMovies);
+  
   function ShowingBookmarkModal(){
     if(isBookmarked){
       setShowBookmarkModal(true);
+      setPrevAnnotation(annotation);
     } 
     else{
       setShowNotLoggedIn(true);
@@ -262,24 +265,6 @@ export default function DetailedTitle({id}) {
               <Col>
                 {/* column for poster with title, rating and stuff */}
                 <Card bg="transparent d-flex align-items-center no-border" style={{height: "500px"}}>
-                  <Card.Title>
-                    {/* <div style={{display: "flex", justifyContent: "space-between"}}>
-                      <span style={{textAlign: "left"}}>
-                        <h1>
-                          {title.primaryTitle}
-                          <p style={{fontSize: "28px", display: "inline"}}>{displayYears(title.startYear, title.endYear)}</p> 
-                        </h1>
-                        {title.originalTitle !== title.primaryTitle &&
-                        <h5 className="less-opacity">{title.originalTitle}</h5>}  
-                      </span>
-                      <span style={{textAlign: "right"}}>
-                        <p style={{fontSize: "15px"}}>{title.titleType}</p>
-                        {title.isAdult && <p style={{fontSize: "15px"}}>is adult</p>}
-                      </span>
-                    </div> */}
-                    <div>
-                    </div>
-                  </Card.Title>
                   <Card.Img fluid="true"
                     variant="bottom"
                     className="detailed-movie-card"
@@ -401,7 +386,7 @@ export default function DetailedTitle({id}) {
                 
                 <Modal.Body>
                       <textarea 
-                          value={annotation}
+                          value={isBookmarked.annotation}
                           onChange={(e) => handleAnnotationChange(e)}                  
                           rows="3"
                           style={{width: "100%"}}
@@ -410,7 +395,7 @@ export default function DetailedTitle({id}) {
 
                 <Modal.Footer>
                   <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-                  <Button variant="primary" onClick={() => updateAnnotation()}>Update</Button>
+                  <Button disabled={prevAnnotation === annotation ? true : false} variant="primary" onClick={() => updateAnnotation()}>Update</Button>
                 </Modal.Footer>
               </Modal.Dialog>
            
