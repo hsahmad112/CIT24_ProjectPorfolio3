@@ -85,9 +85,6 @@ export async function CreateTitleBookmarksById(titleId, annotation, setIsBookmar
             case 200:
                 setIsBookmarked(true);
                 return true;
-            case 404: //should this case even be possible?
-                console.log("Current user does not have this title " +  titleId + " bookmarked");
-                return false;
             default:
                 console.log("unknown status code");
                 return false; 
@@ -234,9 +231,6 @@ export async function CreatePersonBookmarksById(personId, annotation, setIsBookm
             case 200:
                 setIsBookmarked(true);
                 return true;
-            case 404: //should this case even be possible?
-                console.log("Current user does not have this title " +  personId + " bookmarked");
-                return false;
             default:
                 console.log("unknown status code");
                 return false; 
@@ -269,7 +263,7 @@ export async function UpdatePersonBookmark(personId, headers, annotation){
                 console.log("Updated bookmark on " + personId + " with annotation for current user");
                 return true;
             case 404: //should this case even be possible?
-                console.log("Current user does not have this title " +  personId + " bookmarked");
+                console.log("Current user does not have this person " +  personId + " bookmarked");
                 return false;
             default:
                 console.log("unknown status code", response.status);
@@ -299,7 +293,7 @@ export async function DeletePersonBookmarksById(personId, setIsBookmarked, heade
                 setIsBookmarked(false);
                 return true;
             case 404: //should this case even be possible?
-                console.log("Current user does not have this title " + personId + " bookmarked");
+                console.log("Current user does not have this person " + personId + " bookmarked");
                 return false;
         }
 
