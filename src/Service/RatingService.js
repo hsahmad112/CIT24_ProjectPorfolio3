@@ -7,7 +7,7 @@ const baseRatingApiUrl = process.env.REACT_APP_BASE_API_LINK + "users/rating/";
 export async function GetAllRatings(queryParams){     
     try{
         let headers = GetHeader();
-        const response = await fetch(baseRatingApiUrl+ Pagination(queryParams.page, queryParams.pageSize), {headers});
+        const response = await fetch(baseRatingApiUrl + Pagination(queryParams.page, queryParams.pageSize), {headers});
         if(!response.ok){
             throw new Error (response.status);
         }

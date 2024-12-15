@@ -26,8 +26,8 @@ export default function Navigation(){
                       <Dropdown.Menu>
                         <Dropdown.Item onClick = { () => navigate("/profile")}> Profile</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/watchlist")}>Watchlist</Dropdown.Item>
-                        <Dropdown.Item onClick = { () => navigate("/settings")}>Settings</Dropdown.Item>
                         <Dropdown.Item onClick = { () => navigate("/rating")}>Rating</Dropdown.Item>
+                        <Dropdown.Item onClick = { () => navigate("/settings")}>Settings</Dropdown.Item>
                         <Dropdown.Item onClick = { () => logout()}>Sign out</Dropdown.Item>
                       </Dropdown.Menu>
                   </Dropdown>

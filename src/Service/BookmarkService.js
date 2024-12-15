@@ -35,7 +35,7 @@ export async function isTitleBookmarked(id, setIsBookmarked, setTitleBookmark, h
 export async function GetTitleBookmarks(queryParams){
     let headers = GetHeader();
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/title?" + Pagination(queryParams.page, queryParams.pageSize), {headers});
+        const response = await fetch(baseApiUrl + "bookmarks/title" + Pagination(queryParams.page, queryParams.pageSize), {headers});
         
         
         if (!response.ok) {
@@ -182,7 +182,7 @@ export async function isPersonBookmarked(id, setIsBookmarked, headers) {
 export async function GetPersonBookmarks(queryParams){
     let headers = GetHeader();
     try {
-        const response = await fetch(baseApiUrl + "bookmarks/person?" + Pagination(queryParams.page, queryParams.pageSize), {headers});
+        const response = await fetch(baseApiUrl + "bookmarks/person" + Pagination(queryParams.page, queryParams.pageSize), {headers});
 
         if(!response.ok){
             throw new Error (response.status);

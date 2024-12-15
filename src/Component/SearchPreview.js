@@ -2,7 +2,7 @@ import TitleSearchCard from './TitleComponents/TitleSearchCard';
 import PersonSearchCard from './PersonComponents/PersonSearchCard';
 import {Button, Row} from 'react-bootstrap'
 import {useEffect, useState} from 'react';
-import { Pagination } from '../Helpers/URLHelper';
+import {PaginationForSearch} from '../Helpers/URLHelper';
 
 export default function SearchPreview({ componentType, body, searchResult }) {
   const baseUrl = process.env.REACT_APP_BASE_API_LINK;
@@ -18,13 +18,8 @@ export default function SearchPreview({ componentType, body, searchResult }) {
     const endYear = body.endYear === undefined ? "" : body.endYear;
     const rating = body.rating === undefined ? "" : body.rating;
 
-
-    const paging = Pagination(page, body.pageSize);
+    const paging = PaginationForSearch(page, body.pageSize);
     return "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
-    
-    //return "/advanced-search?searchTerm=" + body.searchTerm + "&genreId=" + body.genreId + "&startYear=" + body.startYear + "&endYear=" + body.endYear + "&rating=" + body.rating + paging;
-    
-    //return "/advanced-search?searchTerm=" + body.searchTerm + "&page=" + page + "&pageSize=" + body.pageSize;
   }
 
   useEffect(()=>{

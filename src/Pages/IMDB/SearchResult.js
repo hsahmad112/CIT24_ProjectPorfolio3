@@ -3,7 +3,7 @@ import { useLocation } from "react-router";
 import { GetHeader } from "../../Store/store";
 import { useEffect} from 'react';
 import { useUser } from "../../Store/store";
-import { Pagination } from "../../Helpers/URLHelper";
+import { PaginationForSearch } from "../../Helpers/URLHelper";
 
  export async function FetchData(searchType, body){
     //method only handles fetching data
@@ -11,8 +11,8 @@ import { Pagination } from "../../Helpers/URLHelper";
     
     console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
-    const fetchUrlTitle = "/advanced-search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
-    const fetchUrlPerson = "/search?searchTerm=" + body.searchTerm + Pagination(body.page, body.pageSize);
+    const fetchUrlTitle = "/advanced-search?searchTerm=" + body.searchTerm + PaginationForSearch(body.page, body.pageSize);
+    const fetchUrlPerson = "/search?searchTerm=" + body.searchTerm + PaginationForSearch(body.page, body.pageSize);
 
     switch (searchType) {
         case "everything":
@@ -70,7 +70,7 @@ export async function AdvancedSearch(body) {
     const startYear = body.startYear === undefined ? "" : body.startYear;
     const endYear = body.endYear === undefined ? "" : body.endYear;
     const rating = body.rating === undefined ? "" : body.rating;
-    const paging = Pagination(body.page, body.pageSize);
+    const paging = PaginationForSearch(body.page, body.pageSize);
     const fetchAdvancedUrl = "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
     
     //console.log(fetchAdvancedUrl);
