@@ -6,7 +6,7 @@ import Navigation from './Component/Navigation';
 import { Routes, Route } from "react-router";
 import DetailedTitle from './Pages/IMDB/DetailedTitle';
 import DetailedPerson from './Pages/IMDB/DetailedPerson';
-import Error from './Component/Error';
+import Error from './Pages/IMDB/Error';
 import { UserProvider } from "./Store/store";
 import WatchList from './Pages/User/WatchList';
 import Login from './Pages/User/Login';

@@ -40,14 +40,16 @@ export default function SimpleTitle({title, navigate, keyID}) {
         variant="top"
         className='arosel-img'
         style={{
-          width: '100%',
+          //width: '100%',
+          height: '100%',
+          minHeight: '70%',
           objectFit: 'cover', // Ensures image covers and crops
         }}
         src={title?.posterUrl ? title.posterUrl : "./no-image.jpg"}
         onClick={() => navigate("/title/" + title.id)} />
       
       <Card.Body style={{ fontSize: "8px", height: '100%' }}>  
-        {/* { title.primaryTitle && (<p style={{ fontSize: "10px", margin: '0px' }}>Title: {title.primaryTitle }</p>)} */}
+        { title.originalTitle && (<p style={{ fontSize: "10px", margin: '0px' }}>Title: {title.primaryTitle }</p>)}
         { title.startYear && (<p style={{ fontSize: "10px", margin: '0px' }}>Release year: {title.startYear}</p>) }
       <p style={{ fontSize: "10px" }}>Genres: {DisplayGenre(title.genresList)}</p>
       </Card.Body>
