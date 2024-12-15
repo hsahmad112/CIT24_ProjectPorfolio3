@@ -2,17 +2,12 @@ import '../../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
 import {GetAllTitles } from '../../Service/TitleService';
-import {Carousel, Container, Row} from 'react-bootstrap';
-import SimpleTitle from '../../Component/TitleComponents/SimpleTitle';
-import { useNavigate } from "react-router";
-import TitleCard from '../../Component/TitleComponents/TitleCard';
 import CustomCarousel from '../../Component/CustomCarousel';
 import { useUser } from "../../Store/store";
 
 export default function Homepage(){
   const {token, checkToken } = useUser();
   const [titles, setTitles] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {

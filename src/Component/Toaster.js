@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Toast } from 'react-bootstrap';
 
-
 export default function Toaster({header, body, show, color}){
 
     const [showPop, setShowPop] = useState(show);

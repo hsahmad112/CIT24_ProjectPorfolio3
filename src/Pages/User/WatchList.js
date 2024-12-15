@@ -16,7 +16,7 @@ export default function WatchList(){
   const [titleBookmarkTotalPages, setTitleBookmarkTotalPages] = useState(1); //number of pages in total, we will set state to value recieved from backend
   const [titleBookmarkPagenationItems, setTitleBookmarkPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
   
-  const[personBookmarkPage, setPersonBookmarkPage] = useState(0); 
+  const [personBookmarkPage, setPersonBookmarkPage] = useState(0); 
   const [personBookmarkTotalPages, setPersonBookmarkTotalPages] = useState(1);
   const [personBookmarkPagenationItems, setPersonBookmarkPagenationItems] = useState([]);
 

@@ -1,12 +1,11 @@
 import { useUser, GetHeader } from "../../Store/store";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import Toaster from "../../Component/Toaster";
 import { GetPerson, GetPersonBackdrop } from "../../Service/PersonService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, isPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
-import Bookmark from "../../Component/Bookmark";
 
 export default function DetailedPerson({id}){
     const { token, checkToken } = useUser();

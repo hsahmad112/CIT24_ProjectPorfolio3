@@ -5,13 +5,13 @@ import TitleSearchCard from "../../Component/TitleComponents/TitleSearchCard";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
-import { GetPersonBookmarksById, CreateTitleBookmarksById, DeleteTitleBookmarksById, GetTitleBookmarksById, isTitleBookmarked, isAuthorized, UpdateTitleBookmark } from "../../Service/BookmarkService";
+import { CreateTitleBookmarksById, DeleteTitleBookmarksById, isTitleBookmarked, UpdateTitleBookmark } from "../../Service/BookmarkService";
 import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedTitle({id}) {
-  const {userName, token, checkToken} = useUser();
+  const {token, checkToken} = useUser();
   const params = useParams(id);
   const list = [1,2,3,4,5,6,7,8,9,10];
 
@@ -168,35 +168,6 @@ export default function DetailedTitle({id}) {
     setShowUpdateBookmarkPop(true);
     setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
   }
-  // async function handleSubmit(e){
-  //   e.preventDefault();
-  //   const body = 
-  //   { id: null, 
-  //     page: '0', 
-  //     pageSize: searchType === 'everything' ? '5' : '10',
-  //     genreId: chosenGenre,
-  //   };
- 
-  //   try {
-
-  //       let result = await AdvancedSearch(body);
-  //       // console.log("reuslt?");
-  //       // console.log(result);
-
-  //     //setChosenGenre(undefined);
-
-
-  //      navigate('/search', {
-  //       state: {result, searchType, body },
-  //     });
-
-  //   } catch (error) {
-  //     console.error("Error in fetching of data, in Navigation.js", error);
-  //     //throw new Error (error); --Do we want to throw error here on in SearchResult?
-  //   }
- 
-  // }
-
   
   // if(similarMovies) console.log(similarMovies);
   
