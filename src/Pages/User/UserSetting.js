@@ -1,7 +1,7 @@
 import {Button, Modal,Row, Form, Col, Container, Alert} from 'react-bootstrap';
 import Toaster from '../../Component/Toaster';
 import {useEffect, useState} from 'react';
-import {useUser} from "../../Store/store";
+import {useUser} from "../../Store/Store";
 import {comparePasswords, validateEmail, validatePassword} from '../../Helpers/FormValidation';
 import {PutPassword, PutEmail, DeleteUser} from '../../Service/UserService';
 import { useNavigate } from 'react-router';
@@ -249,7 +249,7 @@ export default function UserSetting(){
             {token === null &&
                 <Alert key={"danger"} variant={"danger"}>
                     Warning!! You are not logged in! {" " /* Adds a space between text and "Click here"*/}
-                    <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
+                    <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer === 1 ? `${timer} second` : `${timer} seconds` }
                 </Alert> 
             }
         </>     

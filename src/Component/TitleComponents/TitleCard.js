@@ -3,7 +3,7 @@ import { Card, Button, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from "react-router";
 import { GetTitleBackdrop } from '../../Service/TitleService';
 import { DeleteTitleBookmarksById} from '../../Service/BookmarkService';
-import { GetHeader } from '../../Store/store';
+import { GetHeader } from '../../Store/Store';
 import { Trash } from 'react-bootstrap-icons';
 
 export default function TitleCard(title){

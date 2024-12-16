@@ -4,7 +4,7 @@ import { Container, Row, Tab, Tabs} from 'react-bootstrap';
 import TitleCard from '../../Component/TitleComponents/TitleCard';
 import PersonCard from '../../Component/PersonComponents/PersonCard';
 import Pagination from 'react-bootstrap/Pagination';
-import { useUser } from '../../Store/store';
+import { useUser } from '../../Store/Store';
 import { useNavigate } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 

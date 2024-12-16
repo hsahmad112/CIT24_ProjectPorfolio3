@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {FetchData, AdvancedSearch}  from '../Pages/IMDB/SearchResult';
-import {useUser} from "../Store/store";
+import {useUser} from "../Store/Store";
 import {Button, Form, InputGroup, Dropdown, Col, Row} from 'react-bootstrap';
 import {GetGenres} from '../Service/GenreService';
 

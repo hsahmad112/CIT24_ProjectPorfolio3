@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GetHeader } from "../Store/store";
+import { GetHeader } from "../Store/Store";
 import { Pagination } from "../Helpers/URLHelper";
 
 const baseRatingApiUrl = process.env.REACT_APP_BASE_API_LINK + "users/rating/";

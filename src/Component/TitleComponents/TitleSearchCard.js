@@ -1,6 +1,6 @@
 import { Card, CardTitle } from 'react-bootstrap';
 import { useNavigate } from "react-router"; 
-import { displayYears } from '../../Helpers/DisplayHelpers';
+import { DisplayYears } from '../../Helpers/DisplayHelpers';
 
 export default function TitleSearchCard ({title}){
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function TitleSearchCard ({title}){
             onClick={()=> navigate("/title/" + title.titleId)}>
             <div className="col-md-4" style={{height: '100%', width: '100%'}}>
                 <img className='searchCard' src={title.posterUrl !== "" ? title.posterUrl : "./no-image.jpg"} alt="poster" />
-                <CardTitle className='card-text'>{title.primaryTitle} {displayYears(title.startYear, title.endYear)}</CardTitle>
+                <CardTitle className='card-text'>{title.primaryTitle} {DisplayYears(title.startYear, title.endYear)}</CardTitle>
                 {title.originalTitle !== title.primaryTitle &&
                    <CardTitle className='card-text less-opacity' style={{fontSize: "15px"}}>{title.originalTitle}</CardTitle>}  
             </div>

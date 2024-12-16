@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import {useUser} from '../../Store/store';
+import {useUser} from '../../Store/Store';
 import {useEffect, useState} from 'react';
 import {PostUser} from '../../Service/UserService';
 import {comparePasswords, validatePassword, validateEmail, validateName} from '../../Helpers/FormValidation';

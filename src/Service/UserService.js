@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GetHeader } from '../Store/store';
+import { GetHeader } from '../Store/Store';
 
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 

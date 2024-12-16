@@ -1,4 +1,4 @@
-import { GetHeader } from "../Store/store";
+import { GetHeader } from "../Store/Store";
 import { Pagination } from "../Helpers/URLHelper";
 const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 
@@ -7,7 +7,7 @@ const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 
 // ** Title Bookmark Service: **
 
-export async function isTitleBookmarked(id, setIsBookmarked, setTitleBookmark, headers) {
+export async function IsTitleBookmarked(id, setIsBookmarked, setTitleBookmark, headers) {
     try{
         const response = await fetch(baseApiUrl + "bookmarks/title/" + id, {headers});
         
@@ -69,6 +69,7 @@ export async function GetTitleBookmarksById(id, headers){
 
 export async function CreateTitleBookmarksById(titleId, annotation, setIsBookmarked, headers){
     try {
+        // on post, you return the newly created object
         const response = await fetch(baseApiUrl + "bookmarks/title", {
             method: "POST",
             headers: (headers),
@@ -155,7 +156,7 @@ export async function DeleteTitleBookmarksById(titleId, setIsBookmarked, headers
 
 // ** Person Bookmark Service: **
 
-export async function isPersonBookmarked(id, setIsBookmarked, headers) {
+export async function IsPersonBookmarked(id, setIsBookmarked, headers) {
     try{
         const response = await fetch(baseApiUrl + "bookmarks/person/" + id, {headers});
         

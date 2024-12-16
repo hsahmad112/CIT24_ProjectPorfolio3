@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Toaster from "../Component/Toaster";
 import { Card, Col, Row, Container, Stack, Button, Modal, Toast } from 'react-bootstrap';
 import { GetPersonBookmarks, GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById} from '../Service/BookmarkService';
-import { useUser } from "../Store/store";
+import { useUser } from "../Store/Store";
 import * as Icon from 'react-bootstrap-icons';
 
 export default function Bookmark ({person}){

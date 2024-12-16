@@ -1,8 +1,7 @@
 import SearchPreview from "../../Component/SearchPreview";
 import { useLocation } from "react-router";
-import { GetHeader } from "../../Store/store";
+import { GetHeader, useUser } from "../../Store/Store";
 import { useEffect} from 'react';
-import { useUser } from "../../Store/store";
 import { PaginationForSearch } from "../../Helpers/URLHelper";
 
  export async function FetchData(searchType, body){

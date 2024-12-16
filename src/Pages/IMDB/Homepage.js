@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
 import {GetAllTitles } from '../../Service/TitleService';
 import CustomCarousel from '../../Component/CustomCarousel';
-import { useUser } from "../../Store/store";
+import { useUser } from "../../Store/Store";
 
 export default function Homepage(){
   const {token, checkToken } = useUser();

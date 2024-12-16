@@ -1,10 +1,10 @@
-import { useUser, GetHeader } from "../../Store/store";
+import { useUser, GetHeader } from "../../Store/Store";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Toaster from "../../Component/Toaster";
 import { GetPerson, GetPersonBackdrop } from "../../Service/PersonService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
-import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, isPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
+import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, IsPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson({id}){
@@ -38,7 +38,7 @@ export default function DetailedPerson({id}){
             setPersonBackdrop( await GetPersonBackdrop(params.id));
 
             if(checkToken() !== null){
-                isPersonBookmarked(params.id, setIsBookmarked, headers);
+                IsPersonBookmarked(params.id, setIsBookmarked, headers);
                 setPersonBookmark( await GetPersonBookmarksById(params.id));        
             }
           } catch (error) {

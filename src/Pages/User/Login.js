@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
-import {useUser} from '../../Store/store';
+import {useUser} from '../../Store/Store';
 import {PostLogin} from '../../Service/UserService';
 
 export default function Login(){

@@ -3,7 +3,7 @@ import { Card, Button, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from "react-router";
 import { GetPersonBackdrop } from '../../Service/PersonService';
 import { DeletePersonBookmarksById } from '../../Service/BookmarkService';
-import { GetHeader } from '../../Store/store';
+import { GetHeader } from '../../Store/Store';
 import { Trash } from 'react-bootstrap-icons'; 
 
 export default function PersonCard(person){
@@ -37,8 +37,7 @@ export default function PersonCard(person){
                     <Card.Title>
                         {personBookmark?.name !== undefined ? personBookmark?.name : "No Name"}
                     </Card.Title>
-                    <Card.Img 
-                        style={{padding: '0px'}} 
+                    <Card.Img                     
                         variant="top"
                         onClick={()=> navigate("/person/" + person.data.personId)}
                         src={                      

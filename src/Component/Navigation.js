@@ -1,5 +1,5 @@
 import { useNavigate, Outlet } from 'react-router';
-import { useUser } from "../Store/store";
+import { useUser } from "../Store/Store";
 import { Navbar, Button, Dropdown, Container, Nav } from 'react-bootstrap';
 import SearchField from './SearchField';
 
@@ -18,7 +18,7 @@ export default function Navigation(){
             <div className='user-menu'>
               <Nav.Item>
                 <Navbar.Text>
-                  <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>hello {userName} </p>
+                  <p className='user-menu' style={{color:"white", display: "inline !important", width: "100px"}}>Hello {userName} </p>
                   <Dropdown style={{display: "inline-block"}}>
                       <Dropdown.Toggle className='advanced-dropdown' variant="success" id="dropdown-basic">
                         <i className="bi bi-list" style={{color: "white"}}></i>

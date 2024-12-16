@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardTitle } from 'react-bootstrap';
 import { GetPersonBackdrop } from '../../Service/PersonService';
 import { useNavigate } from "react-router"; 
-import { displayYears } from '../../Helpers/DisplayHelpers';
+import { DisplayYears } from '../../Helpers/DisplayHelpers';
 
 export default function PersonSearchCard ({person}){
     const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");
@@ -25,7 +25,7 @@ export default function PersonSearchCard ({person}){
                 onClick={() => navigate("../person/"  + person.personId)}>
                 <div className="col-md-4" style={{width: '100%', height: '100%'}}>
                     <img className='searchCard' src={backdropUrl === "./no-image.jpg" ? backdropUrl : imageUrl + backdropUrl}></img>
-                    <CardTitle className='card-text'>{person.primaryName} {displayYears(person.birthYear, person?.deathYear)}</CardTitle>
+                    <CardTitle className='card-text'>{person.primaryName} {DisplayYears(person.birthYear, person?.deathYear)}</CardTitle>
                 </div>
             </Card>
         </div>  

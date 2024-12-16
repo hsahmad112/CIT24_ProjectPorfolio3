@@ -12,7 +12,8 @@ export default function Toaster({header, body, show, color}){
     if(!showPop) return;
 
     return (
-        <Toast style={{position: "fixed"}} className="to-front" bg={color} onClose={() => setShowPop(false)} show={show} delay={3000} autohide>
+        <Toast style={{position: "fixed"}} className="to-front" bg={color}
+         onClose={() => setShowPop(false)} show={show} delay={3000} autohide>
             <Toast.Header>
                 <strong className="me-auto">{header}</strong>
             </Toast.Header>

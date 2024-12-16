@@ -36,10 +36,10 @@ export const UserProvider = ({ children }) => {
   const [searchType, setSearchType] = useState("everything");
   const [userName, setUserName] = useState(getCookieValue("FirstName"));  
   const [token, setToken] = useState(getCookieValue("Authorization"));
-  const [searchResult, setSearchResult] = useState([{
-    persons: [],
-    titles: []
-  }]);
+  // const [searchResult, setSearchResult] = useState([{
+  //   persons: [],
+  //   titles: []
+  // }]);
 
   let navigate = useNavigate();
 
@@ -79,7 +79,7 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{userName, token, searchType, searchResult, setSearchResult, setSearchType, login, logout, checkToken}}>
+    <UserContext.Provider value={{userName, token, searchType, setSearchType, login, logout, checkToken}}>
       {children}         
     </UserContext.Provider>
   );

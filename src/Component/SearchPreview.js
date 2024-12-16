@@ -45,6 +45,7 @@ export default function SearchPreview({ componentType, body, searchResult }) {
     else{
       const type = "titles";
       const nextPage = page + 1;
+      
       const titleResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {});
       const data = (await titleResponse.json()).entities;
 
@@ -63,20 +64,17 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       <div style={{textAlign: 'left'}}>
         <h1>{componentType === "personType" ? "Persons" : "Titles"}</h1>
         <Row md={3}>
-
           {
             searchResult.entities?.length > 0 ?
             result?.map((e) => (
               componentType === "personType" ? 
               <PersonSearchCard person={e} key={e.personId}/> :
               <TitleSearchCard title={e} key={e.titleId}/>
-
             )) : <p>No results for {componentType === "personType" ? "persons" : "titles"}</p>    
           }
-
         </Row>
-        {(errorMessage || !Array.isArray(searchResult.entities)) ? <p>{errorMessage}</p> : <Button style={{float: 'right', marginRight: "10px"}} onClick={()=> LoadMore()}>See More</Button>}
+        {(errorMessage || !Array.isArray(searchResult.entities)) ? <p>{errorMessage}</p> :
+         <Button style={{float: 'right', marginRight: "10px"}} onClick={()=> LoadMore()}>See More</Button>}
       </div>
     );
-
 }

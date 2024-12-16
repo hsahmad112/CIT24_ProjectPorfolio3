@@ -1,7 +1,7 @@
 import {GetAllRatings} from '../../Service/RatingService';
 import { GetPersonBookmarks, GetTitleBookmarks } from '../../Service/BookmarkService';
 import { useEffect, useState } from 'react';
-import { useUser } from '../../Store/store';
+import { useUser } from '../../Store/Store';
 import { useNavigate } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 import {Container, Row, Col, Stack} from 'react-bootstrap';

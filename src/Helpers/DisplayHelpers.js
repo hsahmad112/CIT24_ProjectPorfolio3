@@ -1,4 +1,4 @@
-export function displayYears(startYear, endYear){
+export function DisplayYears(startYear, endYear){
     if(!startYear && !endYear) return "";
 
     if(!endYear){
@@ -7,7 +7,7 @@ export function displayYears(startYear, endYear){
     return "(" + startYear + "-" + endYear + ")";
 }
 
-export function displayRatingCount(ratingCount){
+export function DisplayRatingCount(ratingCount){
   // console.log(ratingCount);
   if(!ratingCount) return "";
   if(ratingCount > 1000){

@@ -1,12 +1,12 @@
-import { useUser, GetHeader } from "../../Store/store";
+import { useUser, GetHeader } from "../../Store/Store";
 import { useEffect, useState } from "react";
 import Toaster from "../../Component/Toaster";
 import TitleSearchCard from "../../Component/TitleComponents/TitleSearchCard";
 import { useParams, useNavigate } from "react-router";
 import { GetTitleById, GetSimilarMovies } from "../../Service/TitleService";
 import { PostRating, GetRatingById, PutRating, DeleteRating} from "../../Service/RatingService";
-import { CreateTitleBookmarksById, DeleteTitleBookmarksById, isTitleBookmarked, UpdateTitleBookmark } from "../../Service/BookmarkService";
-import { displayYears, displayRatingCount } from "../../Helpers/DisplayHelpers";
+import { CreateTitleBookmarksById, DeleteTitleBookmarksById, IsTitleBookmarked, UpdateTitleBookmark } from "../../Service/BookmarkService";
+import { DisplayYears, DisplayRatingCount } from "../../Helpers/DisplayHelpers";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
@@ -49,7 +49,7 @@ export default function DetailedTitle({id}) {
         setTitle(await GetTitleById(params.id));
         
         if(checkToken() !== null){
-          isTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);      
+          IsTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);      
         }
         setSimliarMovies(await GetSimilarMovies(params.id));
         let tempRating = await GetRatingById(params.id);
@@ -75,9 +75,9 @@ export default function DetailedTitle({id}) {
 
       if(isBookmarked === false){      
         console.log("Attempting to create a bookmark"); // Remove later!
-        const success =  await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
+        const success = await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
         console.log(success);
-        if( success){ 
+        if(success){ 
           console.log("Bookmark was set");
           setShowBookmarkPop(true);
           setTimeout(() => {setShowBookmarkPop(false)}, 2500);
@@ -208,11 +208,11 @@ export default function DetailedTitle({id}) {
                   <span style={{textAlign: "left"}}>
                     <span style={{position: "absolute"}}>
                           <b style={{display: "inline"}}>IMDB rating: {title.voteCount ? title.averageRating + "/10" : "no ratings"}</b>
-                          <p style={{textAlign: "center"}}>{displayRatingCount(title.voteCount)}</p>
+                          <p style={{textAlign: "center"}}>{DisplayRatingCount(title.voteCount)}</p>
                       </span>
                       <h1>
                         {title.primaryTitle}
-                        <p style={{fontSize: "28px", display: "inline"}}>{displayYears(title.startYear, title.endYear)}</p> 
+                        <p style={{fontSize: "28px", display: "inline"}}>{DisplayYears(title.startYear, title.endYear)}</p> 
                       </h1>
                       {title.originalTitle !== title.primaryTitle &&
                       <h5 className="less-opacity">{title.originalTitle}</h5>}  

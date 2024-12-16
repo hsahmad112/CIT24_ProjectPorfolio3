@@ -1,7 +1,7 @@
 import {GetAllRatings} from '../../Service/RatingService';
 import {useEffect, useState} from 'react';
 import Rating from '../../Component/RatingComponents/Rating';
-import {useUser} from '../../Store/store';
+import {useUser} from '../../Store/Store';
 import {useNavigate} from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 import {Container, Row} from 'react-bootstrap';
