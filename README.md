@@ -1,15 +1,16 @@
 # To Do
 ## Frontend
-- Complete routing in App.cs by adding components: Login, Signup, Settings, Profile, WatchList, Ratings.
-- Add components unrelated to routing: AdvancedSearch, Rate, Bookmark
-- Fix in Homepage.js: Carousel element needs a separate element (textbox?) with slightly darker but transparent background so text can appear readable.
-- signup bug - can login when signup with email that exists!
-- watchlist bug - gets all details from tmdb - only should get image
-- Cookie bug - check for 401 unauthorized response for ANY request. then set cookies to expire in the past
-- clear cache when logging out
+- Removing Title/Person Bookmarks in Watchlist only removes the photo, not the rest of the Watchlist element. 
+- SearchPreview: function LoadMore, somewhat poor usage of states - reconsider usage
+- SearchResult: FetchData og AdvancedSearch, should be moved to helper functions 
+- Login:  When Error message appears it extends the username and password forms 
+- UserSetting – setToastInfo should be replaced with our Toaster componenet 
+- Homepage – if no image¨found, it should correct “No image.jpg”  
+- Advanced Search – Sport can only be chosen if initial state is changed. 
+- DetailedTitles – Title sometimes overshadows rating. limit word length in frontend.
+- AdvancedSearch UI is not informative enough, hard to understand what you are sorting after  
 
 ## Backend
-- PersonSearch returns 500 if no results are found - needs to return a 404 instead.
 
 ## DB
 - 
