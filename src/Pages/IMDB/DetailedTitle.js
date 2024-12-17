@@ -372,6 +372,7 @@ export default function DetailedTitle({id}) {
                           onChange={(e) => handleAnnotationChange(e)}                  
                           rows="3"
                           style={{width: "100%"}}
+                          autoFocus
                       />
                 </Modal.Body>
 

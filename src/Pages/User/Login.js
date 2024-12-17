@@ -54,7 +54,7 @@ export default function Login(){
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-1" controlId="LoginFormEmail">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="email@domain.com" onChange={ (e) => setFormData( (fD) => ({...fD, email: e.target.value}) ) } value={formData.email} /> {/*Added form input as controlled, such that input now is reflected by state*/}
+            <Form.Control type="email" placeholder="email@domain.com" onChange={ (e) => setFormData( (fD) => ({...fD, email: e.target.value}) ) } value={formData.email} autoFocus/> {/*Added form input as controlled, such that input now is reflected by state*/}
           </Form.Group>
     
           <Form.Group className="mb-1" controlId="LoginFormPassword">

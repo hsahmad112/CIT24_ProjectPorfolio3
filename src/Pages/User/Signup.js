@@ -79,6 +79,7 @@ return(
           name = "email"
           value = {jsonBody.email}
           onChange= {handleChange}
+          autoFocus
         />
       </Form.Group> 
 
