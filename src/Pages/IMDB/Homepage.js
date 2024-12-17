@@ -24,11 +24,15 @@ export default function Homepage(){
     checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
   }, [token]);
     
-  return(
-    <div>
-      {titles?.length > 0 ? <CustomCarousel items={titles}/> :
-        <b>could not find any titles</b>}   
-    </div>
-  );
+  if(titles){
+    return(
+      <div>
+        {titles?.length > 0 && <CustomCarousel items={titles}/>}   
+      </div>
+    );
+  }
+  else{
+    return <b>could not find any titles</b>;
+  }
       
 }
