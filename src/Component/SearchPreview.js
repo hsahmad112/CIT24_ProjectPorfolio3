@@ -17,11 +17,14 @@ export default function SearchPreview({ componentType, body, searchResult }) {
     const startYear = body.startYear === undefined ? "" : body.startYear;
     const endYear = body.endYear === undefined ? "" : body.endYear;
     const rating = body.rating === undefined ? "" : body.rating;
-
     const paging = PaginationForSearch(page, body.pageSize);
     return "/advanced-search?searchTerm=" + searchTerm + "&genreId=" + genreId + "&startYear=" + startYear + "&endYear=" + endYear + "&rating=" + rating + paging;
   }
-
+  function FetchPersonSearchUrl(page){
+    const searchTerm = body.searchTerm === undefined ? "" : body.searchTerm;
+    const paging = PaginationForSearch(page, body.pageSize);
+    return "/search?searchTerm=" + searchTerm + paging;
+  }
   useEffect(()=>{
     setResult(searchResult.entities);
   }, [body, searchResult.entities])
@@ -31,9 +34,11 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       const type = "persons";
       const nextPage = page + 1;
 
-      const personResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {});
+      const personResponse = await fetch(baseUrl + type + FetchPersonSearchUrl(nextPage), {});
       const data = (await personResponse.json()).entities;
-      
+
+      console.log("this is body", body);
+      console.log("this is data", data);
       if(data) {
         setResult([...result, ...data]);
         setPage(x => parseInt(x) + 1); // is it not supposed to set the state and be used before the next render if written like so?
@@ -49,6 +54,9 @@ export default function SearchPreview({ componentType, body, searchResult }) {
       const titleResponse = await fetch(baseUrl + type + FetchUrl(nextPage), {});
       const data = (await titleResponse.json()).entities;
 
+      console.log("this is body", body);
+      console.log("this is data", data);
+      
       if(data) {
         setResult([...result, ...data]);
         setPage(x => parseInt(x) + 1); // is it not supposed to set the state and be used before the next render if written like so?
