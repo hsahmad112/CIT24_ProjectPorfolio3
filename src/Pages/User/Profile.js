@@ -158,8 +158,8 @@ export default function Profile(){
   useEffect(() =>{
     const getBookmarks = async () => {
 
-      const personBookmarks = await GetPersonBookmarks(personBookmarkQueryParams);
-      const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
+      const personBookmarks = (await GetPersonBookmarks(personBookmarkQueryParams)).data;
+      const titleBookmarks = (await GetTitleBookmarks(titleBookmarkQueryParams)).data;
       try {
           
           setPersonBookmarks(personBookmarks.entities); 
