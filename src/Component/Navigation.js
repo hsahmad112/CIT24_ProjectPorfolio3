@@ -3,8 +3,8 @@ import { useUser } from "../Store/Store";
 import { Navbar, Button, Dropdown, Container, Nav } from 'react-bootstrap';
 import SearchField from './SearchField';
 
-export default function Navigation(){
-  const {userName, token, logout } = useUser();
+export default function Navigation(){ //Navbar component
+  const {userName, token, logout } = useUser(); //States from Context, from parent UserProvider
 
   let navigate = useNavigate();
 
@@ -12,7 +12,7 @@ export default function Navigation(){
       <div>
         <Navbar expand="lg" className="bg-body-tertiary" bg="primary" data-bs-theme="dark">  
           <Container>
-            <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>Portfolio Logo</Navbar.Brand>
+            <Navbar.Brand className='pointer-on-hover' onClick ={() => navigate("/")}>Movie DB</Navbar.Brand>
             <SearchField/>
             {token !== null && 
             <div className='user-menu'>
@@ -35,7 +35,7 @@ export default function Navigation(){
               </Nav.Item>
             </div>}
 
-            {token === null && 
+            {token === null && //If user not logged in, thus no JWT token in cookie, display btn below:
             <div> 
               <Button onClick ={() => navigate("/login")}>Login</Button> 
               <Button onClick ={() => navigate("/signup")} variant="success">Signup</Button>

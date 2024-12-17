@@ -7,14 +7,14 @@ import { GetHeader } from '../../Store/Store';
 import { Trash } from 'react-bootstrap-icons'; 
 
 export default function PersonCard(person){
-    const [personBookmark, setPersonBookmark] = useState(null);
+    const [personBookmark, setPersonBookmark] = useState(null); //Person photo state
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;    
     const navigate = useNavigate();
     let headers = GetHeader();
 
     useEffect(() =>{
         const getPersonBookmark = async () => {
-            if(person){
+            if(person){ //prop
                 try {
                     setPersonBookmark((await GetPersonBackdrop(person.data.personId)));
                 } catch (error) {
@@ -26,33 +26,31 @@ export default function PersonCard(person){
     }, [person])
 
     async function DeletePersonBookmark(){
-        console.log("Trying ti delete bookmark for: "+personBookmark?.name);
         await DeletePersonBookmarksById(person.data.personId, setPersonBookmark, headers)
     }
-    
 
-        return(
-            <Card style={{ width: '16rem', margin: '10px' }}>
-                    <Card.Img                     
-                        variant="top"
-                        src={personBookmark !== undefined ? imageUrl + personBookmark?.profile_path : "/no-image.jpg"}
-                        onClick={()=> navigate("/person/" + person.data.personId)}/>
-                    <Card.Body>
-                    <Card.Title>
-                        {person.data.personName}
-                    </Card.Title>
-                    <Card.Text>
-                        {person.data.annotation !== "" ? person.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
-                    </Card.Text>
-                    <ButtonGroup aria-label="Basic example">
-                        <Button onClick={()=> navigate("/person/" + person.data.personId)} variant="primary">Go to person</Button>
-                        <Button onClick={DeletePersonBookmark} variant="danger">
-                            <Trash />
-                        </Button>
-                    </ButtonGroup>
-                </Card.Body>             
-            </Card>
-        );
+    return( //Returns PersonCard containing annotation, name and photo. Used for watchlist
+        <Card style={{ width: '16rem', margin: '10px' }}>
+                <Card.Img                     
+                    variant="top"
+                    src={personBookmark !== undefined ? imageUrl + personBookmark?.profile_path : "/no-image.jpg"}
+                    onClick={()=> navigate("/person/" + person.data.personId)}/>
+            <Card.Body>
+                <Card.Title>
+                    {person.data.personName}
+                </Card.Title>
+                <Card.Text>
+                    {person.data.annotation !== "" ? person.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
+                </Card.Text>
+                <ButtonGroup aria-label="Basic example">
+                    <Button onClick={()=> navigate("/person/" + person.data.personId)} variant="primary">Go to person</Button>
+                    <Button onClick={DeletePersonBookmark} variant="danger">
+                        <Trash />
+                    </Button>
+                </ButtonGroup>
+            </Card.Body>             
+        </Card>
+    );
     
 
 }

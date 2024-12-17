@@ -5,7 +5,7 @@ import { DisplayYears } from '../../Helpers/DisplayHelpers';
 export default function TitleSearchCard ({title}){
     const navigate = useNavigate();
 
-    return (
+    return ( //Component used in SearchPreview component, when searching for titles
         <Card className='pointer-on-hover'
             style={{width: '48%', margin: '5px', padding: '10px', height: '200px'}}
             onClick={()=> navigate("/title/" + title.titleId)}>

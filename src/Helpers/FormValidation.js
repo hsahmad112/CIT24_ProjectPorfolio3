@@ -1,5 +1,12 @@
-const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ //we did not make this    (match at least one digit, special character and upper cased character, minimum length of 8 characters)
+
+
+
+//match at least one digit, special character and upper cased character, minimum length of 8 characters
+// inspiration from: https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a   
+
+const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 
 
 export const validatePassword = (password, setErrorMessage, setIsFieldValid) => {
@@ -14,68 +21,67 @@ export const validatePassword = (password, setErrorMessage, setIsFieldValid) => 
     }
   };
 
-export const comparePasswords = (password, confirmPassword, setErrorMessage, setLegalFormatBool) => {
+export const comparePasswords = (password, confirmPassword, setErrorMessage, setIsFieldValid) => {
     const errorKey = "passwordMismatch";
     const passwordMismatchMessage = "Password fields do not match.";
     if(!password || !confirmPassword) return;
   
     if(password !== confirmPassword){
-        setError(setLegalFormatBool, setErrorMessage, errorKey, passwordMismatchMessage);
+        setError(setIsFieldValid, setErrorMessage, errorKey, passwordMismatchMessage);
     }
     else{
-        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);      
+        clearErrorMessage(setIsFieldValid, setErrorMessage, errorKey);      
     }
 }
 
-export const validateEmail = (email, setErrorMessage, setLegalFormatBool) => {
+export const validateEmail = (email, setErrorMessage, setIsFieldValid) => {
     const errorKey = "invalidEmailFormat";
     const invalidEmailFormatMessage = "The format of the email is not correct. Please insert a valid email address" 
-    if(isFieldEmpty(email, setLegalFormatBool, setErrorMessage, errorKey)){
+    if(isFieldEmpty(email, setIsFieldValid, setErrorMessage, errorKey)){
         return;
     }
-    if(!doesFieldPassRegex(email, emailRegex, setLegalFormatBool, setErrorMessage, errorKey, invalidEmailFormatMessage)){
+    if(!doesFieldPassRegex(email, emailRegex, setIsFieldValid, setErrorMessage, errorKey, invalidEmailFormatMessage)){
         return;
     }
     else{
-        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
+        clearErrorMessage(setIsFieldValid, setErrorMessage, errorKey);
     }
 }
 
-export const validateName = (firstname, setErrorMessage, setLegalFormatBool) => {
+export const validateName = (firstname, setErrorMessage, setIsFieldValid) => {
     const errorKey = "invalidFirstNameFormat";
     const invalidFirstNameFormatMessage = "The minimum required length for a name is 2 characters. Idk why tho.."
 
-    if(isFieldEmpty(firstname, setLegalFormatBool, setErrorMessage, errorKey)){
+    if(isFieldEmpty(firstname, setIsFieldValid, setErrorMessage, errorKey)){
         return;
     }
     if(firstname === "" || firstname.length < 2){
-        setError(setLegalFormatBool, setErrorMessage, errorKey, invalidFirstNameFormatMessage)
+        setError(setIsFieldValid, setErrorMessage, errorKey, invalidFirstNameFormatMessage)
     }
     else{
-        clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey);
+        clearErrorMessage(setIsFieldValid, setErrorMessage, errorKey);
     }
 }
 
 
-//Meta helpers (Helperfunctions for the helpers)
-
-function isFieldEmpty(field, setLegalFormatBool, setErrorMessage, errorKey){
+//Meta helpers (Helper functions for the helpers)
+function isFieldEmpty(field, setIsFieldValid, setErrorMessage, errorKey){
     if(field === ""){
-        setLegalFormatBool(true); //should not be able to pass empty fields
+        setIsFieldValid(true); //should not be able to pass empty fields
         setErrorMessage((prevState) => ({
             ...prevState,
             [errorKey]: ""
         }));
         return true; //field empty, remove error message
     }
-        return false; //not empty
+        return false; //field not empty, returns false
 }
 
 
 
-function doesFieldPassRegex(field, regex, setLegalFormatBool, setErrorMessage, errorKey, errorMessage){
+function doesFieldPassRegex(field, regex, setIsFieldValid, setErrorMessage, errorKey, errorMessage){
     if(!regex.test(field)){
-        setLegalFormatBool(true);
+        setIsFieldValid(true);
         setErrorMessage((prevState) => ({
             ...prevState,
             [errorKey]: errorMessage
@@ -85,8 +91,8 @@ function doesFieldPassRegex(field, regex, setLegalFormatBool, setErrorMessage, e
     return true;
 }
 
-function setError(setLegalFormatBool, setErrorMessage, errorKey, errorMessage){
-    setLegalFormatBool(true);
+function setError(setIsFieldValid, setErrorMessage, errorKey, errorMessage){
+    setIsFieldValid(true);
     setErrorMessage((prevState) => ({
         ...prevState,
         [errorKey]: errorMessage
@@ -94,8 +100,8 @@ function setError(setLegalFormatBool, setErrorMessage, errorKey, errorMessage){
     return true; //field empty, remove error message
 }
 
-function clearErrorMessage(setLegalFormatBool, setErrorMessage, errorKey){
-    setLegalFormatBool(false);
+function clearErrorMessage(setIsFieldValid, setErrorMessage, errorKey){
+    setIsFieldValid(false);
     setErrorMessage((prevState) => ({
         ...prevState,
         [errorKey]: ""

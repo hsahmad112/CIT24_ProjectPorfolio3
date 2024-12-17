@@ -6,8 +6,8 @@ import { DeleteTitleBookmarksById} from '../../Service/BookmarkService';
 import { GetHeader } from '../../Store/Store';
 import { Trash } from 'react-bootstrap-icons';
 
-export default function TitleCard(title){
-    const [titleBookmark, setTitleBookmark] = useState(null);        
+export default function TitleCard(title){ 
+    const [titleBookmark, setTitleBookmark] = useState(null); //Title photo state       
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;    
     const navigate = useNavigate();
     let headers = GetHeader();
@@ -25,18 +25,17 @@ export default function TitleCard(title){
     }, [title]);
 
     async function DeleteTitleBookmark(){
-        console.log("Trying ti delete bookmark for: "+titleBookmark?.name);
         await DeleteTitleBookmarksById(title.data.titleId, setTitleBookmark, headers)
     }
  
-    return(
+    return( //Returns TitleCard containing annotation, name and photo. Used for watchlist
         <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}>
             <Card.Img 
                 variant="top" 
                 src={titleBookmark !== null ? imageUrl + titleBookmark : "/no-image.jpg" }
                 onClick={()=> navigate("/title/" + title.data.titleId)}/>
             <Card.Body>
-                <Card.Title>{title.data.titlePrimaryTitle} </Card.Title> {/* Naming convention of .... data.titlePrimaryTitle could be diffenrent. E.g. could be called primaryTitle*/}
+                <Card.Title>{title.data.titlePrimaryTitle} </Card.Title>
                 <Card.Text>
                     {title.data.annotation !== "" ? title.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
                 </Card.Text>

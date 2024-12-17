@@ -4,7 +4,7 @@ import { GetPersonBackdrop } from '../../Service/PersonService';
 import { useNavigate } from "react-router"; 
 import { DisplayYears } from '../../Helpers/DisplayHelpers';
 
-export default function PersonSearchCard ({person}){
+export default function PersonSearchCard ({person}){ 
     const [backdropUrl, setBackdropUrl] = useState("./no-image.jpg");
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;  
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ export default function PersonSearchCard ({person}){
         getBackdrop();
     }, [person]);
 
-    return (
+    return (//Component used in SearchPreview component, when searching for persons
         <div>
             <Card className='pointer-on-hover' style={{ width: '100%', padding: '10px', margin: "2px", height: '200px'}}
                 onClick={() => navigate("../person/"  + person.personId)}>

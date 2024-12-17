@@ -4,7 +4,7 @@ import Placeholder from 'react-bootstrap/Placeholder';
 export default function TitlePlaceholder(){
     const spinningCircle = "https://upload.wikimedia.org/wikipedia/commons/3/37/YouTube_loading_symbol_2_%28stable%29.gif";
     
-    return (
+    return ( //Placeholder for titles when titles are not yet fetched, used in Profile and UserRating pages  
         <Card style={{ width: '18rem' }}>
             <Card.Img variant="top" src={spinningCircle} />
             <Card.Body>

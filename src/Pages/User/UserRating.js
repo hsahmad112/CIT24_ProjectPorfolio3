@@ -15,9 +15,10 @@ export default function UserRating(){
     const [errorMessage, setErrorMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [timer, setTimer] = useState(5);
+
+    //this sorting feature exists only on the frontend- ideally this would be performed on the backend due to pagination.
     const [sortingOrder, setSortingOrder] = useState("rating"); //Sort order will default to rating
     const [descending, setDescending] = useState(true); //will default to descending sort order
- 
     const [page, setPage] = useState(0); //The page we are on
     const [totalPages, setTotalPages] = useState(1) //number of pages in total, we will set state to value recieved from backend
     const [pagenationItems, setPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
@@ -193,7 +194,6 @@ export default function UserRating(){
                 <Container>
                     <h1>Ratings for user: {userName}</h1>
                     <Dropdown>
-                        <h2 style ={{color: 'red'}}>Sorting only works on frontend part!!!!!!!!!!!!</h2>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                         {`Sort by ${sortingOrder}`}
                         </Dropdown.Toggle>
@@ -222,7 +222,7 @@ export default function UserRating(){
 
             {!isLoading && errorMessage === "401" &&
                 <Alert key={"danger"} variant={"danger"}>
-                    Warning!! You are not logged in! {" " /* Adds a space between text and "Click here"*/}
+                    Warning! You are not logged in! {" " /* Adds a space between text and "Click here"*/}
                     <Alert.Link onClick={() => navigate("/login")}>{"Click here"}</Alert.Link>. if not redirected within {timer== 1 ? `${timer} second` : `${timer} seconds` }
                 </Alert> 
             } 

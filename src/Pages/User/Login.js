@@ -19,7 +19,7 @@ export default function Login(){
   }, [token]);
     
 
-  function formResetter(){
+  function formResetter(){ //helper function - clears fields
     setFormData({
       email: '',
       password: '',
@@ -65,7 +65,7 @@ export default function Login(){
             Login
           </Button>
           {errorMessage && 
-            (<div className ='mt-3 text-danger'> {/* Currently buggy,expands the form when error message shown*/}
+            (<div className ='mt-3 text-danger'> 
               <p className = 'fw-bold'>{errorMessage}</p>
             </div>)}
         </Form>

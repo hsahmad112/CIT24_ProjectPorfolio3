@@ -10,40 +10,46 @@ import { DisplayYears, DisplayRatingCount } from "../../Helpers/DisplayHelpers";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
-export default function DetailedTitle({id}) {
+export default function DetailedTitle() {
   const {token, checkToken} = useUser();
-  const params = useParams(id);
-  const list = [1,2,3,4,5,6,7,8,9,10];
-
-  const [title, setTitle] = useState(null);
-  const [showRatingModal, setShowRatingModal] = useState(false);
-  const [showRatingPop, setShowRatingPop] = useState(false);
-  const [showBookmarkModal, setShowBookmarkModal] = useState(false);
+  const params = useParams();
   const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
   
-  const [showBookmarkPop, setShowBookmarkPop] = useState(false);
-  const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
-  const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
+
+
+  const [title, setTitle] = useState(null); //current title displayed
+  const [similarMovies, setSimliarMovies] = useState(null); 
+
+  const list = [1,2,3,4,5,6,7,8,9,10]; //array of possible rating
+  //states for rating functionality
   const [rating, setRating] = useState(-1);
   const [prevRating, setPrevRating] = useState(null);
   const [hoverRating, setHoverRating] = useState(-1);
   const [hasRated, setHasRated] = useState(false);
-  const [similarMovies, setSimliarMovies] = useState(null);
-  const [toastMessage, setToastMessage] = useState('');
-
-  const [errorMessage, setErrorMessage] = useState(null);  
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [titleBookmark, setTitleBookmark] = useState(null);  
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showRatingPop, setShowRatingPop] = useState(false);
   
+  //states for bookmark functionality
+  const [showBookmarkModal, setShowBookmarkModal] = useState(false);
+  const [showBookmarkPop, setShowBookmarkPop] = useState(false);
+  const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
+  const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [annotation, setAnnotation] = useState('');
   const [prevAnnotation, setPrevAnnotation] = useState(null);  
+
+
+
+  const [toastMessage, setToastMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);  
+  
+
 
   let navigate = useNavigate();
 
   useEffect(()=>{ 
-  let headers = GetHeader();
     window.scrollTo(0, 0);
-    const fetchData = async () => {
+    const fetchTitle = async () => {
       try {
         setTitle(await GetTitleById(params.id));        
   
@@ -60,41 +66,39 @@ export default function DetailedTitle({id}) {
       }
     };
 
-    fetchData();
+    fetchTitle();
   }, [params.id, token]);
+  
 
   useEffect(() => {
     let headers = GetHeader();
     if(checkToken() !== null){
-          IsTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);      
+          IsTitleBookmarked(params.id, setIsBookmarked, headers);      
     }
-  }, [isBookmarked]);
+  }, [isBookmarked, params.id]);
+
+
  async function ToggleBookmark(){
     let headers = GetHeader();
-
       if(isBookmarked === false){
-        console.log("Attempting to create a bookmark"); // Remove later!
+
         const success = await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
         console.log(success);
         if(success){ 
-          console.log("Bookmark was set");
+
           setShowBookmarkPop(true);
           setTimeout(() => {setShowBookmarkPop(false)}, 2500);
         }
         else{
-          console.log("did not happen.")
+          console.warn("No bookmark was created.")
         }
       }
       else if(isBookmarked === true){
-        console.log("Attempting to remove bookmark");
         const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
         if(success){
-          console.log("Bookmark removed successfully") // Remove later!
           setShowRemoveBookmarkPop(true);
           setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
-        } else{
-          console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
-        }       
+        }     
       }  
   }
 

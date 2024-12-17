@@ -4,10 +4,10 @@ import { useNavigate } from "react-router";
 import {ArrowLeftSquareFill, ArrowRightSquareFill } from 'react-bootstrap-icons';
 import SimpleTitle from './TitleComponents/SimpleTitle';
 
-export default function CustomCarousel ({ items }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function CustomCarousel ({ items }) { //Component with logic to display SimpleTitle at frontpage
+  const [currentIndex, setCurrentIndex] = useState(0); //Currently highlighted title
   const navigate = useNavigate();
-  const itemCount = items.length;
+  const itemCount = items.length; //Num of titles to be displayed
 
   // Calculate indices for the 5 visible cards
   const visibleItems = Array.from({ length: 5 }, (_, i) => (currentIndex + i) % itemCount);

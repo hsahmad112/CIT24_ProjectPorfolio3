@@ -12,7 +12,7 @@ export default function WatchList(){
   const [personBookmarks, setPersonBookmarks] = useState(null);
   const [titleBookmarks, setTitleBookmarks] = useState(null);
 
-  const[titleBookmarkPage, setTitleBookmarkPage] = useState(0); //The page we are on
+  const [titleBookmarkPage, setTitleBookmarkPage] = useState(0); //The page we are on
   const [titleBookmarkTotalPages, setTitleBookmarkTotalPages] = useState(1); //number of pages in total, we will set state to value recieved from backend
   const [titleBookmarkPagenationItems, setTitleBookmarkPagenationItems] = useState([]); //State is containing the Pagenation components, that is filled below 
   
@@ -24,7 +24,7 @@ export default function WatchList(){
   const [timer, setTimer] = useState(5);
   let navigate = useNavigate();
   
-  const pageSize = 5; //For now, hard-backed
+  const pageSize = 5;
 
   const {logout} = useUser();
   const titleBookmarkQueryParams = { //Used for pagenation, we send these queryParams when fetching bookmarks in BookmarkService
@@ -51,7 +51,6 @@ export default function WatchList(){
       const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
       
       if (personBookmarks.success || titleBookmarks.success){
-        console.log(personBookmarks.data.entities);
         try {
           setPersonBookmarks(personBookmarks.data.entities); 
           setTitleBookmarks(titleBookmarks.data.entities);
@@ -76,7 +75,7 @@ export default function WatchList(){
 
   useEffect(() => {
     let countDown;
-    if (errorMessage === "401") {
+    if (errorMessage === "401") { //Logout if not authorized
         const cookieExpired = true;
             countDown = setInterval(() => {
                 setTimer((t) => {
@@ -96,7 +95,7 @@ export default function WatchList(){
   useEffect(() =>{ //Effect for Title Bookmark pagenation
       const titleBookmarks = [];
             
-      for (let number = 0; number <= titleBookmarkTotalPages-1; number++) {
+      for (let number = 0; number <= titleBookmarkTotalPages-1; number++) { //dynamically adding numbered buttons to the Pagenation, according to number of pages
         titleBookmarks.push(
           <Pagination.Item
             key={number}
@@ -134,10 +133,6 @@ export default function WatchList(){
       {errorMessage !== "401" &&
       <div className="container">
         <h1>Your Watchlist</h1>
-        {/* <ButtonGroup>
-            <Button variant="underline">Titles</Button>
-            <Button>Persons</Button>
-        </ButtonGroup> */}
         <Tabs
           defaultActiveKey="Titles"
           id="uncontrolled-tab-example"

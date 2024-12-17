@@ -9,7 +9,7 @@ export default function Signup(){
 
   const [isFieldValid, setIsFieldValid] = useState(false);
 
-  const [jsonBody, setJsonBody] = useState({
+  const [jsonBody, setJsonBody] = useState({ //body for fetch request
       email: '',
       firstname: '',
       password: '',
@@ -40,6 +40,7 @@ export default function Signup(){
     checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
   }, [token]);
   
+  //if the fields changes, useEffect runs the checkers for validating user input
   useEffect(()=>{
     validateEmail(jsonBody.email, setErrorMessage, setIsFieldValid);
     comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setIsFieldValid);

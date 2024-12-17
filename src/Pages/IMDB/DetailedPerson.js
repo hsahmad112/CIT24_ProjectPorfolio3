@@ -7,28 +7,30 @@ import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 
 import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, IsPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
-export default function DetailedPerson({id}){
-    const { token, checkToken } = useUser();
-    const params = useParams(id);    
-    const headers = GetHeader();
-    const [person, setPerson] = useState(null);  
-    const [showBookmarkModal, setShowBookmarkModal] = useState(false);
-    const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
-    const [personBackdrop, setPersonBackdrop] = useState(null);
+export default function DetailedPerson(){
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
-  
+
+    
+    const { token } = useUser(); //state from context
+    const {checkToken} = useUser(); //helper function to check if token is null i.e user not logged in 
+    const headers = GetHeader(); //helper function, builds the header used in HTTPS request 
+    const params = useParams(); 
+    
+    const [showNotLoggedIn, setShowNotLoggedIn] = useState(false); //bool for Toaster informing user not logged in
+
+
+    const [person, setPerson] = useState(null);  //state for handling storing the person fetched
+
+    const [personBackdrop, setPersonBackdrop] = useState(null);
+
+    // states for bookmark handling
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showBookmarkPop, setShowBookmarkPop] = useState(false);
     const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
     const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-  
-    const [errorMessage, setErrorMessage] = useState(null);  
-    const [isBookmarked, setIsBookmarked] = useState(false);
-    const [personBookmark, setPersonBookmark] = useState(null);  
-    
     const [annotation, setAnnotation] = useState('');
     
-    //let navigate = useNavigate();
 
     useEffect(()=>{
         window.scrollTo(0, 0);
@@ -37,12 +39,10 @@ export default function DetailedPerson({id}){
             setPerson(await GetPerson(params.id)); 
             setPersonBackdrop( await GetPersonBackdrop(params.id));
 
-            if(checkToken() !== null){
-                IsPersonBookmarked(params.id, setIsBookmarked, headers);
-                setPersonBookmark( await GetPersonBookmarksById(params.id));        
+            if(checkToken() !== null){ //checks if user is logged in..
+                IsPersonBookmarked(params.id, setIsBookmarked, headers); //...check if person is bookmarked for the user     
             }
           } catch (error) {
-            setErrorMessage("could not find person with with id: " + params.id);
             console.error('Error fetching data:', error);
           }
         };
@@ -51,37 +51,30 @@ export default function DetailedPerson({id}){
         console.log(isBookmarked);
     }, [isBookmarked, params.id, token] );
 
-    async function ToggleBookmark(){
+    async function ToggleBookmark(){ //handles create and delete functionality for bookmark
         if(token !== null){
             if(isBookmarked === false){      
-                console.log("Attempting to create a bookmark");
                 const success = await CreatePersonBookmarksById(params.id, annotation, setIsBookmarked, headers);
             
                 if( success){ 
-                    console.log("Bookmark was set");
                     setShowBookmarkPop(true);
                     setTimeout(() => {setShowBookmarkPop(false)}, 2500);
                 }
                 else{
-                    console.log("did not happen.")
+                    console.warn("No bookmark was created.")
                 }
         
             }
             if(isBookmarked === true){
-              console.log("Attempting to remove bookmark");
-              const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);
-            
+              const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);     
               if(success){
-                console.log("Bookmark removed successfully")
                 setShowRemoveBookmarkPop(true);
                 setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
-              }else{
-                console.log('Unauthorized user is trying to "unset" a bookmark. Should not be possible')
-              }       
+              }  
             }   
         }      
         else{
-            setShowNotLoggedIn(true);
+            setShowNotLoggedIn(true); 
             setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
         }
         
@@ -97,13 +90,13 @@ export default function DetailedPerson({id}){
         console.log(annotation);
     };
 
-    const updateAnnotation = (e) => {
+    const updateBookmark = (e) => {
         UpdatePersonBookmark(params.id, headers, annotation);    
         setShowBookmarkModal(false);
         setShowUpdateBookmarkPop(true);        
         setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
     }
-    function ShowingBookmarkModal(){
+    function displayBookmarkModal(){
         if(isBookmarked){
             setShowBookmarkModal(true);
         }
@@ -136,7 +129,7 @@ export default function DetailedPerson({id}){
                     </Col>
                     <Col md={1}>
                         <Row>
-                            <Col onClick={ShowingBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                            <Col onClick={displayBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
                                 <Icon.PencilFill  style={{color: 'purple', visibility:isBookmarked ? "visible" : "hidden"}} />
                             </Col>
                             <Col onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
@@ -165,24 +158,6 @@ export default function DetailedPerson({id}){
                            
                         </Card>
                        
-                    </Col>
-
-                    <Col md={4}>
-                        {/* row for plot */}
-                        <div className="p-2" style={{height: '100%'}}>    
-                                <Card className="card-no-margin" style={{height: '100%'}}>
-                                    <Card.Header style={{textAlign: 'left'}}>
-                                            Description:
-                                    </Card.Header>
-                                    <Card.Body>
-                                      Put in description...
-                                       
-                                    </Card.Body>
-                                    <Card.Footer>
-                                            Footer
-                                    </Card.Footer>
-                                </Card>
-                            </div>
                     </Col>
 
 
@@ -253,7 +228,7 @@ export default function DetailedPerson({id}){
 
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => CloseBookmarkModal()}>Cancel</Button>
-                            <Button variant="primary" onClick={() => updateAnnotation()}>Update</Button>
+                            <Button variant="primary" onClick={() => updateBookmark()}>Update</Button>
                         </Modal.Footer>
                         </Modal.Dialog>
                     </div>

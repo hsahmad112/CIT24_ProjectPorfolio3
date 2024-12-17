@@ -1,8 +1,8 @@
 import { Card } from 'react-bootstrap';
 
-export default function SimpleTitle({title, navigate, keyID}) {
+export default function SimpleTitle({title, navigate, keyID}) { //Title component used in homepage 
   
-  function DisplayGenre(genres){
+  function DisplayGenre(genres){ //Helper function
     let genresString = "";
     let total = genres.length;
 
@@ -25,12 +25,12 @@ export default function SimpleTitle({title, navigate, keyID}) {
   return(
     <Card
       className='carousel-card'
-      border={keyID === 2 ? '2px solid yellow' : null}
+      border={keyID === 2 ? '2px solid yellow' : null} //keyID refers to highlighted Card
       style={{
-        height: keyID === 2 ? '60vh' : "50vh",
-        width:  keyID === 2 ?'90vh' : '70vh', // Consistent width
+        height: keyID === 2 ? '60vh' : "50vh", // Height set relative to viewport
+        width:  keyID === 2 ?'90vh' : '70vh', 
         margin: '10px',
-        marginLeft: keyID == 2 ? '40px' : '10px',
+        marginLeft: keyID == 2 ? '40px' : '10px', //Margin specified for keyID 2
         marginRight: keyID == 2 ? '40px' : '10px',
         padding: '0px',
         border: keyID === 2 ? '0.5vh solid #d8c303' : '4px solid transparent',
@@ -38,9 +38,7 @@ export default function SimpleTitle({title, navigate, keyID}) {
         color: keyID === 2 ? "white" : "black" }}>
       <Card.Img
         variant="top"
-        className='arosel-img'
         style={{
-          //width: '100%',
           height: '100%',
           minHeight: '70%',
           objectFit: 'cover', // Ensures image covers and crops

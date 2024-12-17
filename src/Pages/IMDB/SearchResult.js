@@ -4,11 +4,12 @@ import { GetHeader, useUser } from "../../Store/Store";
 import { useEffect} from 'react';
 import { PaginationForSearch } from "../../Helpers/URLHelper";
 
- export async function FetchData(searchType, body){
-    //method only handles fetching data
+//Function that handles returning search results. 
+//Takes searchType (Everything/Person/Title), body object from the SearchField
+ export async function FetchData(searchType, body){   
+  
     let headers = GetHeader();
     
-    console.log("We fetching data from fetchData")
     const baseUrl = process.env.REACT_APP_BASE_API_LINK;
     const fetchUrlTitle = "/advanced-search?searchTerm=" + body.searchTerm + PaginationForSearch(body.page, body.pageSize);
     const fetchUrlPerson = "/search?searchTerm=" + body.searchTerm + PaginationForSearch(body.page, body.pageSize);
@@ -59,7 +60,7 @@ import { PaginationForSearch } from "../../Helpers/URLHelper";
     } 
 }   
 
-// all advanced search is for titles 
+// All advanced search is for titles and handled here 
 export async function AdvancedSearch(body) {
     let headers = GetHeader();
     
@@ -79,25 +80,21 @@ export async function AdvancedSearch(body) {
 }
 
 export default function SearchResult(){
-    //gives us access to states passed through navigation.js 
+    //location gives us access to states passed through navigation.js 
     const location = useLocation();
 
     const {token, checkToken} = useUser();
-    
-    //make a try catch here -- Currently made a if statement, should be sufficient? 
-
+ 
     let result, searchType;
     if (location.state.result){  
         result = location.state.result;
         searchType = location.state.searchType; 
     }   else {
-        console.error("NOTE TO DEV: Location state is not defined"); //Using .error to indicate, that issue is critical
+        console.error("NOTE TO DEV: Location state is not defined"); 
     }   
 
-    //  const personEntities = [];
-    // const titleEntities = [];
 
-    const selectedEntities = {}; //One object for searhResult, used to store both title/persons indivually depending on the case:
+    const selectedEntities = {}; //One object for searchResult, used to store both title/persons indivually depending on the case:
     const body = location.state.body;
      switch (searchType) {
         case "everything":
@@ -118,7 +115,7 @@ export default function SearchResult(){
             console.log(selectedEntities);
             break;
         default:
-            console.warn("Selected advanced search feature is invalid or not correct") //.warn is used here to indicate, it's not critical error
+            console.warn("Selected advanced search feature is invalid or not correct")
             result = undefined; //This will trigger warning shown in UI, as below in return:
             break;
      }
@@ -133,7 +130,7 @@ export default function SearchResult(){
     return(
         <div className="container" >
             {console.log("entities:", result)}
-            {result === undefined && <p>Der skete en fejl</p>} {/* Change this error message! */}
+            {result === undefined && <p>No results found</p>}
             { searchType === 'everything' &&(
                 <>
                     <SearchPreview componentType={personType} body={body} searchResult={selectedEntities.persons} />

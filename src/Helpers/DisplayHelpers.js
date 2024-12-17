@@ -8,10 +8,9 @@ export function DisplayYears(startYear, endYear){
 }
 
 export function DisplayRatingCount(ratingCount){
-  // console.log(ratingCount);
   if(!ratingCount) return "";
   if(ratingCount > 1000){
-    return Math.round(ratingCount/1000) + "k";
+    return Math.round(ratingCount/1000) + "k"; //abbriviates 1000s to "k" for readability 
   }
   return ratingCount;
 }

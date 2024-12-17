@@ -5,21 +5,25 @@ import {useUser} from "../Store/Store";
 import {Button, Form, InputGroup, Dropdown, Col, Row} from 'react-bootstrap';
 import {GetGenres} from '../Service/GenreService';
 
-export default function SearchField(){
-
+export default function SearchField(){ //SearchComponent present in Navigation bar
+    //States for default search functionality
     const {searchType, setSearchType } = useUser();
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCategory, setSearchCategory] = useState("Everything");
-    const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+
+    //States for advanced search functionality, with multiple parameters
     const [chosenGenre, setChosenGenre] = useState(undefined);
     const [chosenStartYear, setChosenStartYear] = useState(undefined);
     const [chosenEndYear, setChosenEndYear] = useState(undefined);
     const [chosenRating, setChosenRating] = useState(undefined);
     const [genres, setGenres] = useState([]);
 
+    //Placeholder txt for search field
+    const [placeholderText, setPlaceholderText] = useState("Search for Everything");
+    
     let navigate = useNavigate();
 
-    function handleQuery(e){
+    function handleSearchFieldInputChange(e){ 
         setSearchQuery(e.target.value);
       }
     
@@ -35,7 +39,7 @@ export default function SearchField(){
     fetchData();
     },[])
     
-    function handleType(e){
+    function handleType(e){ //Helper function for setting what the user search for: Everything, Person and Title
         const newSelectedCategory = e.target.getAttribute('name');
         const newSelectedType = e.target.getAttribute('str');
         setSearchType(newSelectedType);
@@ -45,7 +49,7 @@ export default function SearchField(){
 
     async function handleSubmit(e){
         e.preventDefault();
-        const body = 
+        const body = //Object prop containing search parameters, forwarded to SearchPreview and SearchResult
         { id: null, 
             searchTerm: searchQuery, 
             page: '0', 
@@ -60,25 +64,18 @@ export default function SearchField(){
 
             let result;
             if(chosenGenre !== undefined || chosenRating !== undefined || chosenStartYear !== undefined || chosenEndYear !== undefined){
-            result = await AdvancedSearch(body);
+              result = await AdvancedSearch(body);
             }
             else{
-            result = await FetchData(searchType, body);
-            navigate('/search', {
-                state: {result, searchType, body },
-            });
+              result = await FetchData(searchType, body);
             }
             setChosenGenre(undefined);
             setChosenStartYear(undefined);
             setChosenEndYear(undefined);
             setChosenRating(undefined);
-            
-            //when we navigate to search, we "bring along" the current result (search result list).
-            // inspiration -> https://stackoverflow.com/questions/68911432/how-to-pass-parameters-with-react-router-dom-version-6-usenavigate-and-typescrip
-            //unsure if best option as url below informs to use redirect in actions and loaders instead but works.
-            //https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
+
             navigate('/search', {
-            state: {result, searchType, body },
+            state: {result, searchType, body }, //Pass state when navigating to /search
             });
 
         } catch (error) {
@@ -125,7 +122,7 @@ export default function SearchField(){
                 placeholder={placeholderText}
                 aria-label="Search Term"
                 aria-describedby="nav-bar-search"     
-                onChange= {handleQuery}
+                onChange= {handleSearchFieldInputChange}
               />
               <Button type='submit'><i className="bi bi-search"></i></Button>
             </InputGroup>

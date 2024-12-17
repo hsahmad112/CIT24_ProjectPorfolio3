@@ -13,12 +13,14 @@ export default function UserSetting(){
     const navigate = useNavigate();
 
     const [showAccountDeletionModal, setShowAccountDeletionModal] = useState(false);
+    
+    //Toaster Component could have been used instead of this 
     const [toastInfo, setToastInfo] = useState({
         header: "",
         body: "",
         color: ""
     });
-   
+    
     const [errorMessage, setErrorMessage] = useState({
         passwordMismatch: '',
         invalidEmailFormat: '',
@@ -26,7 +28,8 @@ export default function UserSetting(){
         invalidPasswordFormat: '',
         invalidFirstNameFormat: ''
     });     
-    const [legalFormatBool, setLegalFormatBool] = useState(false);
+    const [isValidFormat, setIsValidFormat] = useState(false);
+
 
     const [formValues, setFormValues] = useState({
         "email": "",
@@ -34,31 +37,28 @@ export default function UserSetting(){
         "confirmPassword": ""
     });
 
-    useEffect(()=>{
-
-    },[toastInfo]);
-
-
+ 
     useEffect(() => {
-        validateEmail(formValues.email, setErrorMessage, setLegalFormatBool);
-        validatePassword(formValues.password, setErrorMessage, setLegalFormatBool)
-        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setLegalFormatBool);
+        validateEmail(formValues.email, setErrorMessage, setIsValidFormat);
+        validatePassword(formValues.password, setErrorMessage, setIsValidFormat)
+        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setIsValidFormat);
         
 
-    }, [formValues.email, formValues.password, formValues.confirmPassword]);
+    }, [formValues]);
 
+    //if user is not logged in, displays warning for 5 seconds and redirects.
     useEffect(() => {
         let countDown;
         if (checkToken() === null) {
-            const cookieExpired = true;
+            const cookieExpired = true; 
                 countDown = setInterval(() => {
                     setTimer((t) => {
                         if(t <=0){
                             clearInterval(countDown); //Stops countDown timer from continously running
-                            logout(cookieExpired);
+                            logout(cookieExpired); //passes true to logout function from Store.js - redirection happens here
                             return 0; //timer state is set to 0
                         }
-                        return t - 1; //aka subtract 1 sec from timer
+                        return t - 1; 
                     })
                 }, 1000);  
         }    
@@ -83,8 +83,7 @@ export default function UserSetting(){
             password: '', 
         });
 
-        // really should just have one function that handles all fetching try catch
-        // so you don't do it every single place you have to fetch data
+        
         try {            
             const response = await PutEmail(newEmailBody);
             console.log("updating email");
@@ -100,7 +99,7 @@ export default function UserSetting(){
                 console.warn("Update did not happen. Status code: ", response.status);
             }   
         } catch (error) {
-            console.log("Could not update email, it problably already exist");
+            console.warn("Could not update email, it problably already exist");
         }
 
     }
@@ -115,7 +114,7 @@ export default function UserSetting(){
   
         const response = await PutPassword(newPasswordBody);
 
-        if(response.status === 200){ // can't get response.ok to work
+        if(response.status === 200){ 
             setToastInfo({header: "Success", body: "Your password was updated", color: "success"});
             SetUpdatedCredentials(true);
             setTimeout(() => {
@@ -127,7 +126,7 @@ export default function UserSetting(){
         }  
     }
 
-    //logout function could have a warning modal popping up with a password field (to confirm identity) a Proceed button and Cancel button to opt out.
+        //logout function could have a warning modal popping up with a password field (to confirm identity) a Proceed button and Cancel button to opt out.
     async function handleDeleteAccount(e){ 
         e.preventDefault();
 
@@ -168,7 +167,7 @@ export default function UserSetting(){
                         </Col>
                         <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
                             <Form.Text className ='mt-3 text-danger'
-                            disabled = {legalFormatBool}> {errorMessage.invalidEmailFormat}</Form.Text>
+                            disabled = {isValidFormat}> {errorMessage.invalidEmailFormat}</Form.Text>
                         </Form.Group>
                     </Row>
                 </Form >
@@ -197,19 +196,19 @@ export default function UserSetting(){
                 </Form.Group>
 
                 <Col>
-                    <Button variant="primary" type="submit" disabled ={legalFormatBool}> 
+                    <Button variant="primary" type="submit" disabled ={isValidFormat}> 
                         Change Password
                     </Button>
                 </Col>
 
                 <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
-                    <Form.Text className ='mt-3 text-danger' disabled = {legalFormatBool}> 
+                    <Form.Text className ='mt-3 text-danger' disabled = {isValidFormat}> 
                         {errorMessage.invalidPasswordFormat}
                     </Form.Text>
                 </Form.Group>
 
                 <Form.Group className='mb-1' controlId='PwdNotMatching'>
-                    <Form.Text className ='mt-3 text-danger' disabled = {legalFormatBool}>
+                    <Form.Text className ='mt-3 text-danger' disabled = {isValidFormat}>
                         {errorMessage.passwordMismatch}
                     </Form.Text>
                 </Form.Group>
@@ -231,6 +230,7 @@ export default function UserSetting(){
 
                             <Modal.Body>
                                 Pressing "Proceed" will permanently delete your account together with bookmarks, rating and search history.
+                                <br></br>
                                 Are you certain you wish to proceed?
                             </Modal.Body>
                     

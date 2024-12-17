@@ -7,12 +7,12 @@ import { useUser } from "../../Store/Store";
 
 export default function Homepage(){
   const {token, checkToken } = useUser();
-  const [titles, setTitles] = useState([]);
+  const [titles, setTitles] = useState([]); //array of titles to be set for Homepage Carousel
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setTitles((await GetAllTitles()).entities);
+        setTitles((await GetAllTitles()).entities); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -21,7 +21,8 @@ export default function Homepage(){
   },[]);
 
   useEffect(() => {
-    checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
+    checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. 
+                  //When null, login/signup appear on navbar     
   }, [token]);
     
   if(titles){

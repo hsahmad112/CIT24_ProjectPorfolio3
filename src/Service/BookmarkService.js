@@ -1,13 +1,11 @@
 import { GetHeader } from "../Store/Store";
 import { Pagination } from "../Helpers/URLHelper";
-const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 
-// Use find so get title or person from tmdb api: 
-// Link: "https://api.themoviedb.org/3/find/" + ID +"?external_source=imdb_id&api_key=" + API_KEY
+const baseApiUrl = process.env.REACT_APP_BASE_API_LINK;
 
 // ** Title Bookmark Service: **
 
-export async function IsTitleBookmarked(id, setIsBookmarked, setTitleBookmark, headers) {
+export async function IsTitleBookmarked(id, setIsBookmarked, headers) {
     try{
         const response = await fetch(baseApiUrl + "bookmarks/title/" + id, {headers});
         
@@ -17,7 +15,6 @@ export async function IsTitleBookmarked(id, setIsBookmarked, setTitleBookmark, h
                 return false;
             case 200:
                 setIsBookmarked(true);
-                setTitleBookmark(response.json());
                 return true;
             case 404:
                 console.log("Current user does not have this title bookmarked");
@@ -43,6 +40,7 @@ export async function GetTitleBookmarks(queryParams){
         }
         const data = await response.json();
         return {success: true, data};
+
     } catch (error) {
         console.error("Error fetching data:", error);
         return {success: false, message: error.message};
@@ -69,7 +67,6 @@ export async function GetTitleBookmarksById(id, headers){
 
 export async function CreateTitleBookmarksById(titleId, annotation, setIsBookmarked, headers){
     try {
-        // on post, you return the newly created object
         const response = await fetch(baseApiUrl + "bookmarks/title", {
             method: "POST",
             headers: (headers),
@@ -113,7 +110,7 @@ export async function UpdateTitleBookmark(titleId, headers, annotation){ //if it
             case 204:
                 console.log("Updated bookmark on " + titleId + " with annotation for current user");
                 return true;
-            case 404: //should this case even be possible?
+            case 404:
                 console.log("Current user does not have this title " +  titleId + " bookmarked");
                 return false;
             default:

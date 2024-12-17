@@ -181,7 +181,7 @@ export default function Profile(){
     const errorCodeHandler = () => {
         if (errorMessage === "401") {
           const cookieExpired = true;
-            console.log("Unauthorized. We redirect in 5 sec my friend");
+            console.log("Unauthorized.");
               countDown = setInterval(() => {
                 setTimer((t) => {
                     if(t <=0){
