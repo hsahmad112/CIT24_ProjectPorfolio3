@@ -6,7 +6,7 @@ import { DeleteTitleBookmarksById} from '../../Service/BookmarkService';
 import { GetHeader } from '../../Store/Store';
 import { Trash } from 'react-bootstrap-icons';
 
-export default function TitleWatchlistCard(title){ 
+export default function TitleWatchlistCard({data, onDelete}){ 
     const [titleBookmark, setTitleBookmark] = useState(null); //Title photo state       
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;    
     const navigate = useNavigate();
@@ -15,33 +15,29 @@ export default function TitleWatchlistCard(title){
     useEffect(() =>{
         const getTitleBookmark = async () => {
             try {
-                setTitleBookmark(await GetTitleBackdrop(title.data.titleId, true));
+                setTitleBookmark(await GetTitleBackdrop(data.titleId, true));
             } catch (error) {
                 console.error("Error in TitleCard: " + error);
             }
 
         }
         getTitleBookmark();
-    }, [title]);
+    }, [data]);
 
-    async function DeleteTitleBookmark(){
-        await DeleteTitleBookmarksById(title.data.titleId, setTitleBookmark, headers)
-    }
- 
     return( //Returns TitleCard containing annotation, name and photo. Used for watchlist
         <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}>
             <Card.Img 
                 variant="top" 
                 src={titleBookmark !== null ? imageUrl + titleBookmark : "/no-image.jpg" }
-                onClick={()=> navigate("/title/" + title.data.titleId)}/>
+                onClick={()=> navigate("/title/" + data.titleId)}/>
             <Card.Body>
-                <Card.Title>{title.data.titlePrimaryTitle} </Card.Title>
+                <Card.Title>{data.titlePrimaryTitle} </Card.Title>
                 <Card.Text>
-                    {title.data.annotation !== "" ? title.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
+                    {data.annotation !== "" ? data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
                 </Card.Text>
                 <ButtonGroup aria-label="Basic example">
-                    <Button onClick={()=> navigate("/title/" + title.data.titleId)} variant="primary">Go to title</Button>
-                    <Button onClick={DeleteTitleBookmark} variant="danger">
+                    <Button onClick={()=> navigate("/title/" + data.titleId)} variant="primary">Go to title</Button>
+                    <Button onClick={() => onDelete(data.titleId)} variant="danger">
                         <Trash />
                     </Button>
                 </ButtonGroup>

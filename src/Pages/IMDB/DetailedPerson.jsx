@@ -62,8 +62,9 @@ export default function DetailedPerson(){
                 }
             }
             else if(isBookmarked === true){
-              const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);     
+              const success =  await DeletePersonBookmarksById(params.id, headers);     
               if(success){
+                setIsBookmarked(false);
                 setShowRemovePopBookmark(true);
                 setTimeout(() => {setShowRemovePopBookmark(false)}, 2500);
               }  

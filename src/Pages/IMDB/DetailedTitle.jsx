@@ -87,8 +87,9 @@ export default function DetailedTitle() {
         }
       }
       else if(isBookmarked === true){
-        const success = await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
+        const success = await DeleteTitleBookmarksById(params.id, headers);
         if(success){
+          setIsBookmarked(false);
           setShowRemoveBookmarkPop(true);
           setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
         }     

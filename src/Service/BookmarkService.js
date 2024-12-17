@@ -125,7 +125,7 @@ export async function UpdateTitleBookmark(titleId, headers, annotation){ //if it
     
 }
 
-export async function DeleteTitleBookmarksById(titleId, setIsBookmarked, headers){
+export async function DeleteTitleBookmarksById(titleId, headers){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/title/" + titleId, {
             method: "DELETE",
@@ -137,7 +137,6 @@ export async function DeleteTitleBookmarksById(titleId, setIsBookmarked, headers
                 console.log("Unauthorized/ Not Logged in");
                 return false;
             case 204:
-                setIsBookmarked(false);
                 return true;
             case 404: //should this case even be possible?
                 console.log("Current user does not have this title " + titleId + " bookmarked");
@@ -274,7 +273,7 @@ export async function UpdatePersonBookmark(personId, headers, annotation){
     
 }
 
-export async function DeletePersonBookmarksById(personId, setIsBookmarked, headers){
+export async function DeletePersonBookmarksById(personId, headers){
     try {
         const response = await fetch(baseApiUrl + "bookmarks/person/" + personId, {
             method: "DELETE",
@@ -286,7 +285,6 @@ export async function DeletePersonBookmarksById(personId, setIsBookmarked, heade
                 console.log("Unauthorized/ Not Logged in");
                 return false;
             case 204:
-                setIsBookmarked(false);
                 return true;
             case 404: //should this case even be possible?
                 console.log("Current user does not have this person " + personId + " bookmarked");

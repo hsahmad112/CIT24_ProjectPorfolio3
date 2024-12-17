@@ -4,9 +4,11 @@ import { Container, Row, Tab, Tabs} from 'react-bootstrap';
 import TitleWatchlistCard from '../../Component/TitleComponents/TitleWatchlistCard';
 import PersonWatchlistCard from '../../Component/PersonComponents/PersonWatchlistCard';
 import Pagination from 'react-bootstrap/Pagination';
-import { useUser } from '../../Store/Store';
+import { GetHeader, useUser } from '../../Store/Store';
 import { useNavigate } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
+import { DeletePersonBookmarksById, DeleteTitleBookmarksById } from '../../Service/BookmarkService';
+
 
 export default function WatchList(){
   const [personBookmarks, setPersonBookmarks] = useState(null);
@@ -23,6 +25,8 @@ export default function WatchList(){
   const [errorMessage, setErrorMessage] = useState(null);
   const [timer, setTimer] = useState(5);
   let navigate = useNavigate();
+
+  let headers = GetHeader();
   
   const pageSize = 5;
 
@@ -41,21 +45,43 @@ export default function WatchList(){
     setTitleBookmarkPage(page);
   };
 
+  const handleDeleteTitleBookmark = async (titleId) => {
+    try {
+      const success = await DeleteTitleBookmarksById(titleId, headers)
+      if(success){
+        setTitleBookmarks((prev) =>
+        prev.filter((bookmark) => bookmark.titleId !== titleId)
+        )
+      }
+    } catch (error) {
+      console.error("Failed to delete titleBookmark");
+    }
+  } 
+
   const handlePersonBookmarkPageChange = (page) => {
     setPersonBookmarkPage(page);
   };
+
+  const handleDeletePersonBookmark = async (personId) => {
+    try {
+      const success = await DeletePersonBookmarksById(personId, headers)
+      if(success){
+        setPersonBookmarks((prev) =>
+        prev.filter((bookmark) => bookmark.personId !== personId)
+        )
+      }
+    } catch (error) {
+      console.error("Failed to delete personBookmark");
+    }
+  } 
       
   useEffect(() =>{
     const getBookmarks = async () => {
-      const personBookmarks = await GetPersonBookmarks(personBookmarkQueryParams);
-      const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
-      
-      if (personBookmarks.success || titleBookmarks.success){
+      const personBookmarks = await GetPersonBookmarks(personBookmarkQueryParams);  
+      if (personBookmarks.success){
         try {
           setPersonBookmarks(personBookmarks.data.entities); 
-          setTitleBookmarks(titleBookmarks.data.entities);
 
-          setTitleBookmarkTotalPages(titleBookmarks.data.numberOfPages);
           setPersonBookmarkTotalPages(personBookmarks.data.numberOfPages); 
         } 
         catch (error) {
@@ -64,14 +90,39 @@ export default function WatchList(){
       } 
       else {
         
-        if(personBookmarks.message === "401" || titleBookmarks.message === "401" ){
+        if(personBookmarks.message === "401"){
           setErrorMessage("401");
         }
       }           
     }   
     getBookmarks();
 
-  }, [titleBookmarkPage, personBookmarkPage]);
+  }, [personBookmarkPage]);
+
+  useEffect(() =>{
+    const getBookmarks = async () => {
+      const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
+      
+      if (titleBookmarks.success){
+        try {
+          setTitleBookmarks(titleBookmarks.data.entities);
+
+          setTitleBookmarkTotalPages(titleBookmarks.data.numberOfPages);
+        } 
+        catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      } 
+      else {
+        
+        if(titleBookmarks.message === "401" ){
+          setErrorMessage("401");
+        }
+      }           
+    }   
+    getBookmarks();
+
+  }, [titleBookmarkPage]);
 
   useEffect(() => {
     let countDown;
@@ -141,7 +192,7 @@ export default function WatchList(){
                 List of Title Bookmarks:
                 <Container>
                   <Row xs={1} md={4}> 
-                      {titleBookmarks?.map((title, index) => <TitleWatchlistCard data={title} key={index}></TitleWatchlistCard>)}     
+                      {titleBookmarks?.map((title, index) => <TitleWatchlistCard data={title} key={index} onDelete={handleDeleteTitleBookmark}></TitleWatchlistCard>)}     
                   </Row>
                   <Row>
                       <div>
@@ -155,7 +206,7 @@ export default function WatchList(){
                 List of Person Bookmarks:
                 <Container>
                   <Row xs={1} md={4}> 
-                      {personBookmarks?.map((person, index) => <PersonWatchlistCard data={person} key={index}> </PersonWatchlistCard>)}  
+                      {personBookmarks?.map((person, index) => <PersonWatchlistCard data={person} key={index} onDelete={handleDeletePersonBookmark}> </PersonWatchlistCard>)}  
                   </Row>
                   <Row>
                       <div>
