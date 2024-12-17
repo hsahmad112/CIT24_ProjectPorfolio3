@@ -51,9 +51,8 @@ export default function Signup(){
     e.preventDefault();
 
     try{  
-      const response = await PostUser({jsonBody});
-
-      if(response.ok) login(response.data);
+      const response = await PostUser(jsonBody);
+      if(response.status === 200) login(response.data);
       else
         console.error("credentials passed the form check, but got error. Email might be taken");   
     }
