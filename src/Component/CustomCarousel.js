@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './../index.css';
 import { useNavigate } from "react-router";
 import {ArrowLeftSquareFill, ArrowRightSquareFill } from 'react-bootstrap-icons';
@@ -24,8 +24,8 @@ export default function CustomCarousel ({ items }) {
     <div className="carousel-container" style={{ marginTop:  "50px", height: "100%"}}>  
         <ArrowLeftSquareFill  width={"50px"} height={"50px"} className="carousel-arrow left" onClick={handlePrev}/>
         
-        {visibleItems.map((itemIndex, idx) => (
-          <SimpleTitle keyID={idx} title={items[itemIndex]} navigate={navigate}/>
+        {visibleItems?.map((itemIndex, idx) => (
+          <SimpleTitle keyID={idx} key={itemIndex} title={items[itemIndex]} navigate={navigate}/>
         ))}  
 
         <ArrowRightSquareFill width={"50px"} height={"50px"} className="carousel-arrow right" onClick={handleNext}/>
