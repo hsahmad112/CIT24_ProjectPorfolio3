@@ -31,7 +31,7 @@ export default function SearchPreview({ componentType, body, searchResult }) { /
   }
   useEffect(()=>{ //
     setResult(searchResult.entities);
-  }, [body, searchResult.entities])
+  }, [body, searchResult])
  
   //The URL Generators could be refactored into two method for readability
   async function LoadMore() { //fetches more SearchCards (if any)
