@@ -100,7 +100,7 @@ export default function DetailedTitle({id}) {
 
   async function RemoveRating(){
     try{
-      DeleteRating(params.id);
+      await DeleteRating(params.id);
       setToastMessage('Your rating was removed');  
       setShowRatingPop(true);
       setTimeout(() => {setShowRatingPop(false)}, 2500);
