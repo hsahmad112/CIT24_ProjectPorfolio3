@@ -26,7 +26,7 @@ export default function PersonWatchlistCard({data, onDelete}){
     }, [data])
 
     return( //Returns PersonCard containing annotation, name and photo. Used for watchlist
-        <Card style={{ width: '16rem', margin: '10px' }}>
+        <Card style={{ width: '16rem', margin: '10px', padding: "0px" }}>
             <Card.Img                     
                 variant="top"
                 src={personBookmark !== undefined ? imageUrl + personBookmark?.profile_path : "/no-image.jpg"}
