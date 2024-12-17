@@ -4,6 +4,7 @@ import {useUser} from '../../Store/Store';
 import {useEffect, useState} from 'react';
 import {PostUser} from '../../Service/UserService';
 import {comparePasswords, validatePassword, validateEmail, validateName} from '../../Helpers/FormValidation';
+import { useNavigate } from 'react-router';
 
 export default function Signup(){
   const [isFieldValid, setIsFieldValid] = useState(false);
@@ -14,6 +15,8 @@ export default function Signup(){
       password: '',
       confirmPassword: '',
   });
+
+  let navigate = useNavigate();
 
   const { token, checkToken, login } = useUser(); //Gets the login state, from store.js (UserContext)
     
@@ -37,6 +40,9 @@ export default function Signup(){
 
   useEffect(() => {
     checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
+    if(token != null){
+      navigate("/")
+    }
   }, [token]);
   
   //if the fields changes, useEffect runs the checkers for validating user input

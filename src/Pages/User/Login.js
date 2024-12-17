@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
 import {useUser} from '../../Store/Store';
 import {PostLogin} from '../../Service/UserService';
+import { useNavigate } from 'react-router';
 
 export default function Login(){
 
@@ -14,8 +15,13 @@ export default function Login(){
       password: '',
   });
 
+  let navigate = useNavigate();
+
   useEffect(() => {
     checkToken(); //Calls checkToken, which sets token state to null if it is expired or not present. When null, login/signup appear on navbar     
+    if(token != null){
+      navigate("/")
+    }
   }, [token]);
     
 
