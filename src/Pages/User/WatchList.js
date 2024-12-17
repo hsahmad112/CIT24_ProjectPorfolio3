@@ -51,7 +51,7 @@ export default function WatchList(){
       const titleBookmarks = await GetTitleBookmarks(titleBookmarkQueryParams);
       
       if (personBookmarks.success || titleBookmarks.success){
-        console.log(titleBookmarks.data.entities);
+        console.log(personBookmarks.data.entities);
         try {
           setPersonBookmarks(personBookmarks.data.entities); 
           setTitleBookmarks(titleBookmarks.data.entities);
