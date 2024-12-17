@@ -30,22 +30,17 @@ export default function PersonCard(person){
         await DeletePersonBookmarksById(person.data.personId, setPersonBookmark, headers)
     }
     
-    if(personBookmark){
+
         return(
             <Card style={{ width: '16rem', margin: '10px' }}>
-                <Card.Body>
-                    <Card.Title>
-                        {personBookmark?.name !== undefined ? personBookmark?.name : "No Name"}
-                    </Card.Title>
                     <Card.Img                     
                         variant="top"
-                        onClick={()=> navigate("/person/" + person.data.personId)}
-                        src={                      
-                            personBookmark?.profile_path !== undefined ? 
-                            imageUrl + personBookmark?.profile_path :
-                            "/no-image.jpg"
-                        } 
-                    />
+                        src={personBookmark !== undefined ? imageUrl + personBookmark?.profile_path : "/no-image.jpg"}
+                        onClick={()=> navigate("/person/" + person.data.personId)}/>
+                    <Card.Body>
+                    <Card.Title>
+                        {person.data.personName}
+                    </Card.Title>
                     <Card.Text>
                         {person.data.annotation !== "" ? person.data.annotation : <p style={{color: "lightgrey"}}>No annotation!</p>}
                     </Card.Text>
@@ -58,5 +53,6 @@ export default function PersonCard(person){
                 </Card.Body>             
             </Card>
         );
-    }
+    
+
 }
