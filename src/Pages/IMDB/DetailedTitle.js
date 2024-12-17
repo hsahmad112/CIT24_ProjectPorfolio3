@@ -15,7 +15,6 @@ export default function DetailedTitle() {
   const params = useParams();
   const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
 
-
   const [title, setTitle] = useState(null); //current title displayed
   const [similarMovies, setSimliarMovies] = useState(null); 
 
@@ -37,13 +36,9 @@ export default function DetailedTitle() {
   const [annotation, setAnnotation] = useState('');
   const [prevAnnotation, setPrevAnnotation] = useState(null);  
 
-
-
   const [toastMessage, setToastMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);  
   
-
-
   let navigate = useNavigate();
 
   useEffect(()=>{ 
@@ -79,12 +74,11 @@ export default function DetailedTitle() {
 
  async function ToggleBookmark(){
     let headers = GetHeader();
+    if(token !== null){
       if(isBookmarked === false){
-
         const success = await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
-        console.log(success);
-        if(success){ 
 
+        if(success){ 
           setShowBookmarkPop(true);
           setTimeout(() => {setShowBookmarkPop(false)}, 2500);
         }
@@ -93,12 +87,17 @@ export default function DetailedTitle() {
         }
       }
       else if(isBookmarked === true){
-        const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
+        const success = await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
         if(success){
           setShowRemoveBookmarkPop(true);
           setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
         }     
       }  
+    }
+    else{
+      setShowNotLoggedIn(true); 
+      setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
+    }
   }
 
   async function RemoveRating(){
@@ -170,7 +169,6 @@ export default function DetailedTitle() {
     setShowUpdateBookmarkPop(true);
     setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
   }
-  
   
   function ShowingBookmarkModal(){
     if(isBookmarked){

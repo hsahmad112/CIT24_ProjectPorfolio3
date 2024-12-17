@@ -4,12 +4,11 @@ import { useParams } from "react-router";
 import Toaster from "../../Component/Toaster";
 import { GetPerson, GetPersonBackdrop } from "../../Service/PersonService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
-import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, IsPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
+import { CreatePersonBookmarksById, DeletePersonBookmarksById, IsPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson(){
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
-
     
     const { token } = useUser(); //state from context
     const {checkToken} = useUser(); //helper function to check if token is null i.e user not logged in 
@@ -17,7 +16,6 @@ export default function DetailedPerson(){
     const params = useParams(); 
     
     const [showNotLoggedIn, setShowNotLoggedIn] = useState(false); //bool for Toaster informing user not logged in
-
 
     const [person, setPerson] = useState(null);  //state for handling storing the person fetched
 
@@ -30,7 +28,6 @@ export default function DetailedPerson(){
     const [ShowRemovePopBookmark, setShowRemovePopBookmark] = useState(false);
     const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
     const [annotation, setAnnotation] = useState('');
-    
 
     useEffect(()=>{
         window.scrollTo(0, 0);
@@ -63,9 +60,8 @@ export default function DetailedPerson(){
                 else{
                     console.warn("No bookmark was created.")
                 }
-        
             }
-            if(isBookmarked === true){
+            else if(isBookmarked === true){
               const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);     
               if(success){
                 setShowRemovePopBookmark(true);
@@ -76,8 +72,7 @@ export default function DetailedPerson(){
         else{
             setShowNotLoggedIn(true); 
             setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
-        }
-        
+        }     
     }
 
     function CloseBookmarkModal(){
