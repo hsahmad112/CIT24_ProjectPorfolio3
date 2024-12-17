@@ -219,7 +219,6 @@ export default function Profile(){
         </Alert> //When at 1 sec, write "second" as singular form
       }
 
-      <h1>Profile page for user: {userName}</h1>
       <Container fluid = "true">
 
         <Row>
