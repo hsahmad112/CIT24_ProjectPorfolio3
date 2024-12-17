@@ -86,7 +86,7 @@ export default function SearchResult(){
     const {token, checkToken} = useUser();
  
     let result, searchType;
-    if (location.state.result){  
+    if (location?.state?.result){  
         result = location.state.result;
         searchType = location.state.searchType; 
     }   else {
@@ -95,7 +95,7 @@ export default function SearchResult(){
 
 
     const selectedEntities = {}; //One object for searchResult, used to store both title/persons indivually depending on the case:
-    const body = location.state.body;
+    const body = location?.state?.body;
      switch (searchType) {
         case "everything":
             selectedEntities.persons = result?.persons || [];
