@@ -252,7 +252,7 @@ export default function DetailedTitle({id}) {
                   <div className="p-2">    
                     <Card className="card-no-margin">
                         <Card.Body>
-                          <h5>plot</h5>
+                          <h5>Plot</h5>
                           <Card.Text className="">
                             {title.plot}
                           </Card.Text>
@@ -264,7 +264,7 @@ export default function DetailedTitle({id}) {
                   <div className="p-2">
                     <Card className="card-no-margin">
                         <Card.Body>
-                          <h5>actors</h5>
+                          <h5>Actors</h5>
                             {title.principalCastList.map((actor, index) => <Button onClick={() => navigate("/person/" + actor.personId)} variant={"secondary"} className="pills" key={index}>{actor.personName}</Button>)}
                           <Card.Text className="">
                           </Card.Text>
@@ -276,8 +276,20 @@ export default function DetailedTitle({id}) {
                   <div className="p-2">
                     <Card className="card-no-margin">
                         <Card.Body>
-                          <h5>writers</h5>
+                          <h5>Writers</h5>
                           {title.writersList.map((writer, index) => <Button onClick={() => navigate("/person/" + writer.personId)} variant={"secondary"} className="pills" key={index}>{writer.personName}</Button>)}
+                          <Card.Text className="">
+                          </Card.Text>
+                        </Card.Body>
+                    </Card>
+                  </div>
+
+                 {/* row for directors */}
+                 <div className="p-2">
+                    <Card className="card-no-margin">
+                        <Card.Body>
+                          <h5>Directors</h5>
+                          {title.directorsList.map((director, index) => <Button onClick={() => navigate("/person/" + director.personId)} variant={"secondary"} className="pills" key={index}>{director.personName}</Button>)}
                           <Card.Text className="">
                           </Card.Text>
                         </Card.Body>
@@ -290,7 +302,7 @@ export default function DetailedTitle({id}) {
               <Col xs={2}>
                 <Card className="genre-box">
                       <Card.Body>
-                        <h5>genres</h5>
+                        <h5>Genres</h5>
                           {title.genresList.map((genre, index) => <Badge bg="secondary" className="pills" key={index}>{genre}</Badge>)}
                         <Card.Text>
                         </Card.Text>

@@ -49,7 +49,7 @@ export default function SimpleTitle({title, navigate, keyID}) {
         onClick={() => navigate("/title/" + title.id)} />
       
       <Card.Body style={{ fontSize: "8px", height: '100%' }}>  
-        { title.primaryTitle && (<p style={{ fontSize: "15px", margin: '0px' }}>Title: {title.primaryTitle }</p>)}
+        { title.primaryTitle && (<p style={{ fontSize: "15px", margin: '0px' }}>{title.primaryTitle }</p>)}
         { title.startYear && (<p style={{ fontSize: "10px", margin: '0px' }}>Release year: {title.startYear}</p>) }
       <p style={{ fontSize: "10px" }}>Genres: {DisplayGenre(title.genresList)}</p>
       </Card.Body>
