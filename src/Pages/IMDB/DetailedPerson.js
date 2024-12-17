@@ -4,12 +4,11 @@ import { useParams } from "react-router";
 import Toaster from "../../Component/Toaster";
 import { GetPerson, GetPersonBackdrop } from "../../Service/PersonService";
 import { Card, Col, Row, Container, Stack, Button, Modal, Spinner, Badge } from 'react-bootstrap';
-import { GetPersonBookmarksById, CreatePersonBookmarksById, DeletePersonBookmarksById, IsPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
+import { CreatePersonBookmarksById, DeletePersonBookmarksById, IsPersonBookmarked, UpdatePersonBookmark} from '../../Service/BookmarkService';
 import * as Icon from 'react-bootstrap-icons';
 
 export default function DetailedPerson(){
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;
-
     
     const { token } = useUser(); //state from context
     const {checkToken} = useUser(); //helper function to check if token is null i.e user not logged in 
@@ -17,7 +16,6 @@ export default function DetailedPerson(){
     const params = useParams(); 
     
     const [showNotLoggedIn, setShowNotLoggedIn] = useState(false); //bool for Toaster informing user not logged in
-
 
     const [person, setPerson] = useState(null);  //state for handling storing the person fetched
 
@@ -27,10 +25,9 @@ export default function DetailedPerson(){
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showBookmarkPop, setShowBookmarkPop] = useState(false);
-    const [showRemoveBookmarkPop, setShowRemoveBookmarkPop] = useState(false);
+    const [ShowRemovePopBookmark, setShowRemovePopBookmark] = useState(false);
     const [showUpdateBookmarkPop, setShowUpdateBookmarkPop] = useState(false);
     const [annotation, setAnnotation] = useState('');
-    
 
     useEffect(()=>{
         window.scrollTo(0, 0);
@@ -63,21 +60,19 @@ export default function DetailedPerson(){
                 else{
                     console.warn("No bookmark was created.")
                 }
-        
             }
-            if(isBookmarked === true){
+            else if(isBookmarked === true){
               const success =  await DeletePersonBookmarksById(params.id, setIsBookmarked, headers);     
               if(success){
-                setShowRemoveBookmarkPop(true);
-                setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
+                setShowRemovePopBookmark(true);
+                setTimeout(() => {setShowRemovePopBookmark(false)}, 2500);
               }  
             }   
         }      
         else{
             setShowNotLoggedIn(true); 
             setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
-        }
-        
+        }     
     }
 
     function CloseBookmarkModal(){
@@ -119,96 +114,87 @@ export default function DetailedPerson(){
 
         return (      
             <div className="container">
-              <Container fluid="true">
+                <Container fluid="true">
 
-                <Row style={{marginTop: "10px", marginBottom: "10px"}}>
-                    <Col width="100%">
-                        <h1 className="less-opacity" style={{textAlign: 'left'}}>
-                            {person.name}                     
-                        </h1>
-                    </Col>
-                    <Col md={1}>
-                        <Row>
-                            <Col onClick={displayBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
-                                <Icon.PencilFill  style={{color: 'purple', visibility:isBookmarked ? "visible" : "hidden"}} />
-                            </Col>
-                            <Col onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
-                                { isBookmarked  ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: ''}}/> }
-                            </Col> 
-                        </Row>                
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md={4 }>
-                           
-
-                        {/* column for poster img with person */}
-                        <Card bg="transparent d-flex align-items-center" style={{ width: '14rem', padding: '0px' }}>
-                        
-                            <Card.Img 
-                                fluid="true"
-                                variant="bottom"
-                                className=""
-                                src={                      
+                    <Row style={{marginTop: "10px", marginBottom: "10px"}}>
+                        <Col width="100%">
+                            <h1 className="less-opacity" style={{textAlign: 'left'}}>
+                                {person.name}                     
+                            </h1>
+                        </Col>
+                        <Col md={1}>
+                            <Row>
+                                <Col onClick={displayBookmarkModal} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                                    <Icon.PencilFill  style={{color: 'purple', visibility:isBookmarked ? "visible" : "hidden"}} />
+                                </Col>
+                                <Col onClick={ToggleBookmark} style={{cursor: 'pointer', marginTop: '10px', textAlign: 'right'}}>
+                                    { isBookmarked  ? <Icon.BookmarkFill size={20} style={{color: 'darkgreen'}}/> : <Icon.Bookmark size={20} style={{color: ''}}/> }
+                                </Col> 
+                            </Row>                
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4 }>                          
+                            {/* column for poster img with person */}
+                            <Card bg="transparent d-flex align-items-center" style={{ width: '14rem', padding: '0px' }}>
+                                <Card.Img 
+                                    fluid="true"
+                                    variant="bottom"
+                                    className=""
+                                    src={                      
                                         personBackdrop?.profile_path ? 
                                         imageUrl + personBackdrop?.profile_path :
                                         "/no-image.jpg"
-                                    }            
-                                />
-                           
-                        </Card>
-                       
-                    </Col>
+                                    } />                           
+                            </Card>                       
+                        </Col>
 
-
-                     {/* column for plot, actors, writers */}
-                    <Col md={4}>                   
-                        <Stack  style={{height: '100%'}}>
-                            <div className="p-2"  style={{height: '100%'}}>    
-                                <Card className="card-no-margin" >
-                                    <Card.Body>
-                                        <div>
-                                            <h6>{person.birthYear && "Birth year: " +person.birthYear}</h6>
-                                            <h6>{person.deathYear && "Death year: " +person.deathYear}</h6>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </div>
+                            {/* column for plot, actors, writers */}
+                        <Col md={4}>                   
+                            <Stack  style={{height: '100%'}}>
+                                <div className="p-2"  style={{height: '100%'}}>    
+                                    <Card className="card-no-margin" >
+                                        <Card.Body>
+                                            <div>
+                                                <h6>{person.birthYear && "Birth year: " +person.birthYear}</h6>
+                                                <h6>{person.deathYear && "Death year: " +person.deathYear}</h6>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                                
+                                {/* row for plot */}
+                                <div className="p-2">    
+                                    <Card className="card-no-margin">
+                                        <Card.Body>
+                                            <h5>Relevant Titles</h5>
+                                            <Card.Text className="">
+                                            {mostRelevantTitles}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                                
+                                {/* row for actors */}
+                                <div className="p-2">
+                                    <Card className="card-no-margin">
+                                        <Card.Body>
+                                            <h5>Primary Profession</h5>
+                                            {primaryProfessions}
+                                            <Card.Text className="">
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                                
+                            {/* row for writers */}
+                                <div className="p-2">
                             
-                            {/* row for plot */}
-                            <div className="p-2">    
-                                <Card className="card-no-margin">
-                                    <Card.Body>
-                                        <h5>Relevant Titles</h5>
-                                        <Card.Text className="">
-                                        {mostRelevantTitles}
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            </div>
-                            
-                            {/* row for actors */}
-                            <div className="p-2">
-                                <Card className="card-no-margin">
-                                    <Card.Body>
-                                        <h5>Primary Profession</h5>
-                                        {primaryProfessions}
-                                        <Card.Text className="">
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            </div>
-                            
-                        {/* row for writers */}
-                            <div className="p-2">
-                        
-                            </div>
-                        </Stack>
-                    </Col>
-                    
-             
-                </Row>         
-              </Container>
+                                </div>
+                            </Stack>
+                        </Col>                  
+                    </Row>         
+                </Container>
 
                 {showBookmarkModal &&      
                     <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
@@ -235,7 +221,7 @@ export default function DetailedPerson(){
                 }
                 
                 <Toaster header={"Authorization"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"} />
-                <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"} />              
+                <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={ShowRemovePopBookmark} color={"danger"} />              
                 <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"} />
                 <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"}></Toaster>
         

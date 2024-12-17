@@ -41,9 +41,7 @@ export default function UserSetting(){
     useEffect(() => {
         validateEmail(formValues.email, setErrorMessage, setIsValidFormat);
         validatePassword(formValues.password, setErrorMessage, setIsValidFormat)
-        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setIsValidFormat);
-        
-
+        comparePasswords(formValues.password, formValues.confirmPassword, setErrorMessage, setIsValidFormat);        
     }, [formValues]);
 
     //if user is not logged in, displays warning for 5 seconds and redirects.
@@ -51,16 +49,16 @@ export default function UserSetting(){
         let countDown;
         if (checkToken() === null) {
             const cookieExpired = true; 
-                countDown = setInterval(() => {
-                    setTimer((t) => {
-                        if(t <=0){
-                            clearInterval(countDown); //Stops countDown timer from continously running
-                            logout(cookieExpired); //passes true to logout function from Store.js - redirection happens here
-                            return 0; //timer state is set to 0
-                        }
-                        return t - 1; 
-                    })
-                }, 1000);  
+            countDown = setInterval(() => {
+                setTimer((t) => {
+                    if(t <=0){
+                        clearInterval(countDown); //Stops countDown timer from continously running
+                        logout(cookieExpired); //passes true to logout function from Store.js - redirection happens here
+                        return 0; //timer state is set to 0
+                    }
+                    return t - 1; 
+                })
+            }, 1000);  
         }    
         return () => clearInterval(countDown); //Stops timer from continuing to run, after useEffect has executed   
     
@@ -144,107 +142,107 @@ export default function UserSetting(){
         <>
             {token !== null && 
                 <>
-            <h3> Settings </h3>
-            <Container className="mt-5"> 
-                <Form onSubmit={handleSubmitEmail}>
-                    <h5>Change Email</h5>
-                    <Row className="align-items-end">
-                        <Col md= {3}>
-                            <Form.Group controlId="ChangeEmailForm">
-                                <Form.Control
-                                    type = "email"
-                                    placeholder = "Insert new email"
-                                    name = "email"
-                                    value={formValues.email}
-                                    onChange ={handleChange}
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col md={2}>
-                            <Button variant="primary" type="submit"> 
-                                Change email
+                    <h3> Settings </h3>
+                    <Container className="mt-5"> 
+                        <Form onSubmit={handleSubmitEmail}>
+                            <h5>Change Email</h5>
+                            <Row className="align-items-end">
+                                <Col md= {3}>
+                                    <Form.Group controlId="ChangeEmailForm">
+                                        <Form.Control
+                                            type = "email"
+                                            placeholder = "Insert new email"
+                                            name = "email"
+                                            value={formValues.email}
+                                            onChange ={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={2}>
+                                    <Button variant="primary" type="submit"> 
+                                        Change email
+                                    </Button>
+                                </Col>
+                                <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
+                                    <Form.Text className ='mt-3 text-danger'
+                                    disabled = {isValidFormat}> {errorMessage.invalidEmailFormat}</Form.Text>
+                                </Form.Group>
+                            </Row>
+                        </Form >
+                    </Container>
+
+                    <Form onSubmit={handlePasswordSubmit} className='= mt-5'>
+                        <h5>Change Password</h5>
+                        <Form.Group className="mb-1" controlId="ChangePasswordForm">
+                            <Form.Control 
+                                type="password"
+                                placeholder="New password"
+                                name="password"
+                                value={formValues.password}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+                    
+                        <Form.Group className="mb-1" controlId="ConfirmChangePasswordForm">
+                            <Form.Control 
+                                type="password"
+                                placeholder="Confirm new password"
+                                name="confirmPassword"
+                                value={formValues.confirmPassword}
+                                onChange={handleChange}
+                            />   
+                        </Form.Group>
+
+                        <Col>
+                            <Button variant="primary" type="submit" disabled ={isValidFormat}> 
+                                Change Password
                             </Button>
                         </Col>
-                        <Form.Group className='mb-1' controlId='SignupFormEmailFormat'>
-                            <Form.Text className ='mt-3 text-danger'
-                            disabled = {isValidFormat}> {errorMessage.invalidEmailFormat}</Form.Text>
+
+                        <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
+                            <Form.Text className ='mt-3 text-danger' disabled = {isValidFormat}> 
+                                {errorMessage.invalidPasswordFormat}
+                            </Form.Text>
                         </Form.Group>
-                    </Row>
-                </Form >
-            </Container>
 
-            <Form onSubmit={handlePasswordSubmit} className='= mt-5'>
-                <h5>Change Password</h5>
-                <Form.Group className="mb-1" controlId="ChangePasswordForm">
-                    <Form.Control 
-                        type="password"
-                        placeholder="New password"
-                        name="password"
-                        value={formValues.password}
-                        onChange={handleChange}
-                    />
-                </Form.Group>
-            
-                <Form.Group className="mb-1" controlId="ConfirmChangePasswordForm">
-                    <Form.Control 
-                        type="password"
-                        placeholder="Confirm new password"
-                        name="confirmPassword"
-                        value={formValues.confirmPassword}
-                        onChange={handleChange}
-                    />   
-                </Form.Group>
+                        <Form.Group className='mb-1' controlId='PwdNotMatching'>
+                            <Form.Text className ='mt-3 text-danger' disabled = {isValidFormat}>
+                                {errorMessage.passwordMismatch}
+                            </Form.Text>
+                        </Form.Group>
+                    </Form>
 
-                <Col>
-                    <Button variant="primary" type="submit" disabled ={isValidFormat}> 
-                        Change Password
-                    </Button>
-                </Col>
+                    <Form>
+                        <Form.Group className="mt-5">
+                            <Button variant="danger" onClick={() => setShowAccountDeletionModal(true)}> 
+                                Delete Account
+                            </Button>
+                        </Form.Group>
 
-                <Form.Group className='mb-1' controlId='PwdIncorrectFormat'>
-                    <Form.Text className ='mt-3 text-danger' disabled = {isValidFormat}> 
-                        {errorMessage.invalidPasswordFormat}
-                    </Form.Text>
-                </Form.Group>
+                        {showAccountDeletionModal &&      
+                            <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
+                                <Modal.Dialog >
+                                    <Modal.Header>
+                                        <Modal.Title>Delete Account</Modal.Title>
+                                    </Modal.Header>
 
-                <Form.Group className='mb-1' controlId='PwdNotMatching'>
-                    <Form.Text className ='mt-3 text-danger' disabled = {isValidFormat}>
-                        {errorMessage.passwordMismatch}
-                    </Form.Text>
-                </Form.Group>
-            </Form>
+                                    <Modal.Body>
+                                        Pressing "Proceed" will permanently delete your account together with bookmarks, rating and search history.
+                                        <br></br>
+                                        Are you certain you wish to proceed?
+                                    </Modal.Body>
+                            
+                                    <Modal.Footer>
+                                        <Button onClick={() => setShowAccountDeletionModal(false)}> Cancel </Button>
+                                        <Button type= 'submit' variant='danger' onClick={handleDeleteAccount}> Proceed </Button>
+                                    </Modal.Footer>
+                                </Modal.Dialog>
+                            </div>
+                        }
 
-            <Form>
-                <Form.Group className="mt-5">
-                    <Button variant="danger" onClick={() => setShowAccountDeletionModal(true)}> 
-                        Delete Account
-                    </Button>
-                </Form.Group>
-
-                {showAccountDeletionModal &&      
-                    <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
-                        <Modal.Dialog >
-                            <Modal.Header>
-                                <Modal.Title>Delete Account</Modal.Title>
-                            </Modal.Header>
-
-                            <Modal.Body>
-                                Pressing "Proceed" will permanently delete your account together with bookmarks, rating and search history.
-                                <br></br>
-                                Are you certain you wish to proceed?
-                            </Modal.Body>
-                    
-                            <Modal.Footer>
-                                <Button onClick={() => setShowAccountDeletionModal(false)}> Cancel </Button>
-                                <Button type= 'submit' variant='danger' onClick={handleDeleteAccount}> Proceed </Button>
-                            </Modal.Footer>
-                        </Modal.Dialog>
-                    </div>
-                }
-
-            </Form>
-            </>
-            }
+                    </Form>
+                    </>
+                    }
             <Toaster header={toastInfo.header} body={toastInfo.body} show={UpdatedCredentials} color={toastInfo.color}></Toaster>
             {token === null &&
                 <Alert key={"danger"} variant={"danger"}>

@@ -14,8 +14,6 @@ export default function DetailedTitle() {
   const {token, checkToken} = useUser();
   const params = useParams();
   const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
-  
-
 
   const [title, setTitle] = useState(null); //current title displayed
   const [similarMovies, setSimliarMovies] = useState(null); 
@@ -38,13 +36,9 @@ export default function DetailedTitle() {
   const [annotation, setAnnotation] = useState('');
   const [prevAnnotation, setPrevAnnotation] = useState(null);  
 
-
-
   const [toastMessage, setToastMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);  
   
-
-
   let navigate = useNavigate();
 
   useEffect(()=>{ 
@@ -80,12 +74,11 @@ export default function DetailedTitle() {
 
  async function ToggleBookmark(){
     let headers = GetHeader();
+    if(token !== null){
       if(isBookmarked === false){
-
         const success = await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
-        console.log(success);
-        if(success){ 
 
+        if(success){ 
           setShowBookmarkPop(true);
           setTimeout(() => {setShowBookmarkPop(false)}, 2500);
         }
@@ -94,12 +87,17 @@ export default function DetailedTitle() {
         }
       }
       else if(isBookmarked === true){
-        const success=  await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
+        const success = await DeleteTitleBookmarksById(params.id, setIsBookmarked, headers);
         if(success){
           setShowRemoveBookmarkPop(true);
           setTimeout(() => {setShowRemoveBookmarkPop(false)}, 2500);
         }     
       }  
+    }
+    else{
+      setShowNotLoggedIn(true); 
+      setTimeout(() => {setShowNotLoggedIn(false)}, 2500);
+    }
   }
 
   async function RemoveRating(){
@@ -171,8 +169,6 @@ export default function DetailedTitle() {
     setShowUpdateBookmarkPop(true);
     setTimeout(() => {setShowUpdateBookmarkPop(false)}, 2500);
   }
-  
-  // if(similarMovies) console.log(similarMovies);
   
   function ShowingBookmarkModal(){
     if(isBookmarked){
@@ -264,7 +260,7 @@ export default function DetailedTitle() {
                     </Card>
                   </div>
                   
-                {/* row for actors */}
+                  {/* row for actors */}
                   <div className="p-2">
                     <Card className="card-no-margin">
                         <Card.Body>
@@ -276,7 +272,7 @@ export default function DetailedTitle() {
                     </Card>
                   </div>
                   
-                {/* row for writers */}
+                  {/* row for writers */}
                   <div className="p-2">
                     <Card className="card-no-margin">
                         <Card.Body>
@@ -288,8 +284,8 @@ export default function DetailedTitle() {
                     </Card>
                   </div>
 
-                 {/* row for directors */}
-                 <div className="p-2">
+                  {/* row for directors */}
+                  <div className="p-2">
                     <Card className="card-no-margin">
                         <Card.Body>
                           <h5>Directors</h5>
@@ -308,8 +304,6 @@ export default function DetailedTitle() {
                       <Card.Body>
                         <h5>Genres</h5>
                           {title.genresList.map((genre, index) => <Badge bg="secondary" className="pills" key={index}>{genre}</Badge>)}
-                        <Card.Text>
-                        </Card.Text>
                       </Card.Body>
                 </Card>
                   <Card className="rate-movie-box" onClick={() => handleShowRatingModal()}>
@@ -322,49 +316,49 @@ export default function DetailedTitle() {
           </Container>
 
         {similarMovies && 
-        <Container fluid="true">
-          <div style={{textAlign: 'left'}}>
-            <h1>Similar movies</h1>
-            <Row md={3}>
-              {similarMovies?.map((item) =>   
-                <div key={item.primaryTitle}>
-                    <TitleSearchCard title={item} key={item.titleId}/>
-                    {item?.genres?.map((genre) => 
-                      <div style={{display: "inline", marginLeft: "3px"}} key={genre}>
-                        <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills">{genre}</Button>
-                      </div>
-                    )}
-                </div>)
-              }     
-          </Row>
-        </div>
-        </Container>
+          <Container fluid="true">
+            <div style={{textAlign: 'left'}}>
+              <h1>Similar movies</h1>
+              <Row md={3}>
+                {similarMovies?.map((item) =>   
+                  <div key={item.primaryTitle}>
+                      <TitleSearchCard title={item} key={item.titleId}/>
+                      {item?.genres?.map((genre) => 
+                        <div style={{display: "inline", marginLeft: "3px"}} key={genre}>
+                          <Button onClick={() => navigate("/genres/" + genre.id)} variant={"secondary"} className="pills">{genre}</Button>
+                        </div>
+                      )}
+                  </div>)
+                }     
+            </Row>
+          </div>
+          </Container>
         }
 
         {showRatingModal &&      
-        <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
-          <Modal.Dialog >
-            <Modal.Header closeButton onClick={() => CloseRatingModal()}>
-              <Modal.Title>Rate {title.primaryTitle}</Modal.Title>
-            </Modal.Header>
-    
-            <Modal.Body>
-              {list.map((id) => (hoverRating >= id || (0 > hoverRating && rating >= id)) ?
-              <i className="bi bi-star-fill rate-star" key={id} onClick={() => setRating(id)} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i> : 
-              <i className="bi bi-star rate-star" key={id} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i>)}
-            </Modal.Body>
-    
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => CloseRatingModal()}>Cancel</Button>
-              <Button disabled={rating >= 0 && rating !== prevRating ? false : true } variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
-              <Button variant="danger" style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
-            </Modal.Footer>
-            </Modal.Dialog>
-          </div>
-        }
+          <div className="modal show" style={{ display: 'block', position: 'fixed', marginTop: "300px" }}>
+            <Modal.Dialog >
+              <Modal.Header closeButton onClick={() => CloseRatingModal()}>
+                <Modal.Title>Rate {title.primaryTitle}</Modal.Title>
+              </Modal.Header>
+      
+              <Modal.Body>
+                {list.map((id) => (hoverRating >= id || (0 > hoverRating && rating >= id)) ?
+                <i className="bi bi-star-fill rate-star" key={id} onClick={() => setRating(id)} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i> : 
+                <i className="bi bi-star rate-star" key={id} onMouseEnter={() => setHoverRating(id)} onMouseLeave={() => setHoverRating(-1)}></i>)}
+              </Modal.Body>
+      
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => CloseRatingModal()}>Cancel</Button>
+                <Button disabled={rating >= 0 && rating !== prevRating ? false : true } variant="primary" onClick={() => RateMovie()}>{hasRated ? "Update Rating" : "Save Rating"}</Button>
+                <Button variant="danger" style = {{display: !hasRated? "none" : "inline-block"}} onClick={() => RemoveRating()}> Remove Rating </Button> 
+              </Modal.Footer>
+              </Modal.Dialog>
+            </div>
+          }
 
-        {showBookmarkModal &&      
-          <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
+          {showBookmarkModal &&      
+            <div className="modal show" style={{ display: 'block', marginTop: "10%" }}>
               <Modal.Dialog>
                 <Modal.Header closeButton onClick={() => CloseBookmarkModal()}>
                   <Modal.Title>Bookmark: {title.primaryTitle}</Modal.Title>
@@ -385,15 +379,13 @@ export default function DetailedTitle() {
                   <Button disabled={prevAnnotation === annotation ? true : false} variant="primary" onClick={() => updateAnnotation()}>Update</Button>
                 </Modal.Footer>
               </Modal.Dialog>
-           
-          </div>
-        }
+            </div>
+          }
 
         <Toaster header={"Not authorized"} body={"Your are not logged in."} show={showNotLoggedIn} color={"warning"}></Toaster>
         <Toaster header={"Removed"} body={"Your have removed this bookmark."} show={showRemoveBookmarkPop} color={"danger"}></Toaster>        
         <Toaster header={"Success"} body={"Your have bookmarked this title."} show={showBookmarkPop} color={"success"}></Toaster>
         <Toaster header={"Success"} body={"Your have updated the bookmarked for this title."} show={showUpdateBookmarkPop} color={"success"}></Toaster>
-          
         <Toaster header={"Success"} body={toastMessage} show={showRatingPop} color={"success"}></Toaster>
 
       </div>

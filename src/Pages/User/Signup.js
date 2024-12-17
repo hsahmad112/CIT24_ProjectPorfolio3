@@ -6,7 +6,6 @@ import {PostUser} from '../../Service/UserService';
 import {comparePasswords, validatePassword, validateEmail, validateName} from '../../Helpers/FormValidation';
 
 export default function Signup(){
-
   const [isFieldValid, setIsFieldValid] = useState(false);
 
   const [jsonBody, setJsonBody] = useState({ //body for fetch request
@@ -46,7 +45,7 @@ export default function Signup(){
     comparePasswords(jsonBody.password, jsonBody.confirmPassword, setErrorMessage, setIsFieldValid);
     validatePassword(jsonBody.password, setErrorMessage, setIsFieldValid);
     validateName(jsonBody.firstname, setErrorMessage, setIsFieldValid);
-  }, [jsonBody])
+  }, [jsonBody]);
 
   async function handleSubmit(e){
     e.preventDefault();
@@ -143,7 +142,6 @@ return(
       <Button variant="primary" type="submit" disabled = {!formIsValid}> 
         Sign Up
       </Button>
-
     </Form>
   </div>
   );

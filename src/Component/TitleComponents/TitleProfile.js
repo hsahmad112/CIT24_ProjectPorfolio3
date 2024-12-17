@@ -2,7 +2,6 @@ import { Card, Button} from 'react-bootstrap';
 import { useNavigate } from "react-router";
 
 export default function TitleProfile(title){
-
     const navigate = useNavigate();
      
     return( //Title component rendered on Users' Profile page

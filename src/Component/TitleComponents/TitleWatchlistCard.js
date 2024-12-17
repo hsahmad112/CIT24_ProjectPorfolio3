@@ -6,7 +6,7 @@ import { DeleteTitleBookmarksById} from '../../Service/BookmarkService';
 import { GetHeader } from '../../Store/Store';
 import { Trash } from 'react-bootstrap-icons';
 
-export default function TitleCard(title){ 
+export default function TitleWatchlistCard(title){ 
     const [titleBookmark, setTitleBookmark] = useState(null); //Title photo state       
     const imageUrl = process.env.REACT_APP_TMDB_API_IMAGE_LINK;    
     const navigate = useNavigate();

@@ -25,19 +25,19 @@ export default function SearchField(){ //SearchComponent present in Navigation b
 
     function handleSearchFieldInputChange(e){ 
         setSearchQuery(e.target.value);
-      }
+    }
     
     useEffect(()=>{
-    const fetchData = async () => {
+      const fetchData = async () => {
         try {
-        setGenres(await GetGenres());
-        } catch (error) {
-        console.error('Error fetching data in Navigation:', error);
+          setGenres(await GetGenres());
+        }catch (error) {
+          console.error('Error fetching data in Navigation:', error);
         }
-    };
+      };
 
-    fetchData();
-    },[])
+      fetchData();
+    },[]);
     
     function handleType(e){ //Helper function for setting what the user search for: Everything, Person and Title
         const newSelectedCategory = e.target.getAttribute('name');
@@ -84,32 +84,32 @@ export default function SearchField(){ //SearchComponent present in Navigation b
     }
 
     return (
-        <Form inline="true" onSubmit={handleSubmit}>
+      <Form inline="true" onSubmit={handleSubmit}>
         <Row>
           <Col md="auto"> 
             <Dropdown>
-                <Dropdown.Toggle style={{ backgroundColor: (chosenGenre === undefined && chosenRating === undefined && chosenStartYear === undefined && chosenEndYear === undefined) ? "": "black"}} className='advanced-dropdown' variant="success">
-                  <div style={{ color: "white" }}>Advanced Search</div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <label for="genres">Genres</label>
-                  <select name="genres" onChange={(e) => setChosenGenre(e.target.value)}>
-                    {genres?.map((item, index) =>
-                      <option value={index + 1} key={item.name}>{item.name}</option>
-                    )}
-                  </select> 
-                  <label for="rating">Rating</label>
-                  <input onChange={(e) => setChosenRating(e.target.value)} type='number' placeholder='rating'></input>
-                  <input onChange={(e) => setChosenStartYear(e.target.value)} type='number' placeholder='startYear'></input>
-                  <input onChange={(e) => setChosenEndYear(e.target.value)} type='number' placeholder='endYear'></input>
-                </Dropdown.Menu>
+              <Dropdown.Toggle style={{ backgroundColor: (chosenGenre === undefined && chosenRating === undefined && chosenStartYear === undefined && chosenEndYear === undefined) ? "": "black"}} className='advanced-dropdown' variant="success">
+                <div style={{ color: "white" }}>Advanced Search</div>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <label for="genres">Genres</label>
+                <select name="genres" onChange={(e) => setChosenGenre(e.target.value)}>
+                  {genres?.map((item, index) =>
+                    <option value={index + 1} key={item.name}>{item.name}</option>
+                  )}
+                </select> 
+                <label for="rating">Rating</label>
+                <input onChange={(e) => setChosenRating(e.target.value)} type='number' placeholder='rating'></input>
+                <input onChange={(e) => setChosenStartYear(e.target.value)} type='number' placeholder='startYear'></input>
+                <input onChange={(e) => setChosenEndYear(e.target.value)} type='number' placeholder='endYear'></input>
+              </Dropdown.Menu>
             </Dropdown>
           </Col>
           <Col>
             <InputGroup>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
-                {searchCategory}
+                  {searchCategory}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
@@ -122,8 +122,7 @@ export default function SearchField(){ //SearchComponent present in Navigation b
                 placeholder={placeholderText}
                 aria-label="Search Term"
                 aria-describedby="nav-bar-search"     
-                onChange= {handleSearchFieldInputChange}
-              />
+                onChange= {handleSearchFieldInputChange}/>
               <Button type='submit'><i className="bi bi-search"></i></Button>
             </InputGroup>
           </Col>

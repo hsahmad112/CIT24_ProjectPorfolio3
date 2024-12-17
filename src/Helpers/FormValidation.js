@@ -1,12 +1,9 @@
 
-
-
 //match at least one digit, special character and upper cased character, minimum length of 8 characters
 // inspiration from: https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a   
 
 const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>\/?]).{8,}$/ 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
 
 
 export const validatePassword = (password, setErrorMessage, setIsFieldValid) => {
@@ -19,7 +16,7 @@ export const validatePassword = (password, setErrorMessage, setIsFieldValid) => 
     else {
         clearErrorMessage(setIsFieldValid, setErrorMessage, errorKey);
     }
-  };
+};
 
 export const comparePasswords = (password, confirmPassword, setErrorMessage, setIsFieldValid) => {
     const errorKey = "passwordMismatch";

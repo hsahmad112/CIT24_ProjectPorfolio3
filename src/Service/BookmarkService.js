@@ -56,7 +56,6 @@ export async function GetTitleBookmarksById(id, headers){
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-
         return data
     } 
     catch (error) {
@@ -185,8 +184,7 @@ export async function GetPersonBookmarks(queryParams){
         if(!response.ok){
             throw new Error (response.status);
         }
-        const data = await response.json();
-        
+        const data = await response.json();        
         return {success: true, data};
     }
     catch(error){   
@@ -203,8 +201,8 @@ export async function GetPersonBookmarksById(id, headers){
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-
         return data
+
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -299,4 +297,3 @@ export async function DeletePersonBookmarksById(personId, setIsBookmarked, heade
         console.error("Error fetching data:", error);
     }
 }
-
