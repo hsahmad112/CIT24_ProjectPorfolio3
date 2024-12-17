@@ -12,8 +12,8 @@ export default function TitleSearchCard ({title}){
             <div className="col-md-4" style={{height: '100%', width: '100%'}}>
                 <img className='searchCard' src={title.posterUrl !== "" ? title.posterUrl : "./no-image.jpg"} alt="poster" />
                 <CardTitle className='card-text'>{title.primaryTitle} {DisplayYears(title.startYear, title.endYear)}</CardTitle>
-                {title.originalTitle !== title.primaryTitle &&
-                   <CardTitle className='card-text less-opacity' style={{fontSize: "15px"}}>{title.originalTitle}</CardTitle>}  
+                    {title.originalTitle !== title.primaryTitle &&
+                <CardTitle className='card-text less-opacity' style={{fontSize: "15px"}}>{title.originalTitle}</CardTitle>}  
             </div>
         </Card>
     );

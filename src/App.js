@@ -2,7 +2,7 @@ import './App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Homepage from './Pages/IMDB/Homepage';
-import Navigation from './Component/Navigation';
+import NavigationBar from './Component/NavigationBar';
 import { Routes, Route } from "react-router";
 import DetailedTitle from './Pages/IMDB/DetailedTitle';
 import DetailedPerson from './Pages/IMDB/DetailedPerson';
@@ -22,7 +22,7 @@ function App() {
     <div className="App">
       <UserProvider >
         <Routes>
-          <Route path="/" element={<Navigation/>}>
+          <Route path="/" element={<NavigationBar/>}>
             <Route index element={<Homepage/>} />
             <Route path="/title/:id" element={<DetailedTitle/>} />
             <Route path="/person/:id" element={<DetailedPerson/>} />

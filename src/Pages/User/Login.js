@@ -44,7 +44,7 @@ export default function Login(){
         default:
             setErrorMessage('Unknown error happened, try again');
       }
-      formResetter()
+      formResetter();
 
     }
   }
@@ -67,7 +67,8 @@ export default function Login(){
           {errorMessage && 
             (<div className ='mt-3 text-danger'> 
               <p className = 'fw-bold'>{errorMessage}</p>
-            </div>)}
+            </div>)
+          }
         </Form>
       </div>
 

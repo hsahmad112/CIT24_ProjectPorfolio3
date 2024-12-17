@@ -1,6 +1,6 @@
 import {Card, CardTitle} from 'react-bootstrap'
 
-export default function RatingProfile({title, navigate}){
+export default function RatingProfileCard({title, navigate}){
 
     return ( //Rating component used for displaying a titles rating in users' profile page
         <Card className='pointer-on-hover' bg="transparent" style={{height: "500px"}}

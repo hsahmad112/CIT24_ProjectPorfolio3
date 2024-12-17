@@ -1,6 +1,6 @@
 import {GetAllRatings} from '../../Service/RatingService';
 import {useEffect, useState} from 'react';
-import Rating from '../../Component/RatingComponents/Rating';
+import RatingCard from '../../Component/RatingComponents/RatingCard';
 import {useUser} from '../../Store/Store';
 import {useNavigate} from 'react-router';
 import Alert from 'react-bootstrap/Alert';
@@ -81,7 +81,7 @@ export default function UserRating(){
 
     const handlePageChange = (page) => {
         setPage(page);
-      };
+    };
 
     useEffect(() => {
         let countDown;
@@ -102,8 +102,7 @@ export default function UserRating(){
 
     }, [errorMessage]);
    
-    const sortRatingsHandler = (order) => {
-            
+    const sortRatingsHandler = (order) => {            
         setSortingOrder(order); //changes the default value of sortingOrder, to the specified order sortingRatingHandler receives
         setUserRatings((prev) => {
             const ratingsSorted =[...prev]; //We create shallow copy of userRatings array, so we can update state
@@ -158,12 +157,12 @@ export default function UserRating(){
                         else if (titleA > titleB){
                             return 1;
                         } else {
-                        return 0;
+                            return 0;
                         }
                         }
 
                     }
-                    );
+                );
                     
                 default:
                     console.log("failed to do sorting order for ratings..");
@@ -210,7 +209,7 @@ export default function UserRating(){
                             }}>Order: {descending ? "descending" : "ascending"}</Button> 
                     </Dropdown>
                     <Row xs={1} md={4}> 
-                        {userRatings.map((u, i) => <Rating key={i} {...u} />)}
+                        {userRatings.map((u, i) => <RatingCard key={i} {...u} />)}
                     </Row>
                     <Row>
                         <div>

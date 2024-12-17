@@ -1,8 +1,7 @@
 import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
-export default function Rating({...props}){
-
+export default function RatingCard({...props}){
     const {titleId, primaryTitle, posterUrl, rating} = props;
 
     const navigate = useNavigate();

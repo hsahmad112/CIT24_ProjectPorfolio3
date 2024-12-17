@@ -8,7 +8,7 @@ import {Container, Row, Col, Stack} from 'react-bootstrap';
 import TitleProfile from '../../Component/TitleComponents/TitleProfile';
 import PersonProfile from '../../Component/PersonComponents/PersonProfile';
 import TitlePlaceholder from '../../Component/TitleComponents/TitlePlaceholder';
-import RatingProfile from '../../Component/RatingComponents/RatingProfile';
+import RatingProfileCard from '../../Component/RatingComponents/RatingProfileCard';
 import Pagination from 'react-bootstrap/Pagination';
 
 export default function Profile(){
@@ -60,7 +60,6 @@ export default function Profile(){
   };
 
   useEffect(() =>{ //Effect for Rating pagenation
-
     const ratings = [];
         
     for (let number = 0; number <= ratingTotalPages-1; number++) {
@@ -83,8 +82,7 @@ export default function Profile(){
   };
 
   useEffect(() =>{
-    const fetchRatings = async () => {
-        
+    const fetchRatings = async () => {        
       const ratings = await GetAllRatings(ratingQueryParams);
     
       if(ratings.success){
@@ -108,26 +106,24 @@ export default function Profile(){
   }, [ratingPage]);
 
   useEffect(() =>{ //Effect for Title Bookmark pagenation
-
     const titleBookmarks = [];
           
     for (let number = 0; number <= titleBookmarkTotalPages-1; number++) {
-        titleBookmarks.push(
-          <Pagination.Item
-            key={number}
-            active={number === titleBookmarkPage}
-            onClick={() => handleTitleBookmarkPageChange(number)}
-          >
-            {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
-          </Pagination.Item>
-        );
+      titleBookmarks.push(
+        <Pagination.Item
+          key={number}
+          active={number === titleBookmarkPage}
+          onClick={() => handleTitleBookmarkPageChange(number)}
+        >
+          {number+1} {/* Plus 1, as page starts at 0, we want to display 1 to user*/}
+        </Pagination.Item>
+      );
     }
     setTitleBookmarkPagenationItems(titleBookmarks);
     
   }, [titleBookmarkTotalPages, titleBookmarkPage]);
 
   useEffect(() =>{ //Effect for Person Bookmark pagenation
-
     const personBookmarks = [];
           
     for (let number = 0; number <= personBookmarkTotalPages-1; number++) {
@@ -146,8 +142,8 @@ export default function Profile(){
   }, [personBookmarkTotalPages, personBookmarkPage]);
 
   const handleTitleBookmarkPageChange = (page) => {
-      setTitleBookmarkPage(page);
-      console.log("Changing page to: " + page );
+    setTitleBookmarkPage(page);
+    console.log("Changing page to: " + page );
   };
 
   const handlePersonBookmarkPageChange = (page) => {
@@ -157,9 +153,8 @@ export default function Profile(){
         
   useEffect(() =>{
     const getBookmarks = async () => {
-
       const personBookmarks = (await GetPersonBookmarks(personBookmarkQueryParams)).data;
-      const titleBookmarks = (await GetTitleBookmarks(titleBookmarkQueryParams)).data;
+      const titleBookmarks = (await GetTitleBookmarks(titleBookmarkQueryParams)).data;      
       try {
           
           setPersonBookmarks(personBookmarks.entities); 
@@ -181,17 +176,17 @@ export default function Profile(){
     const errorCodeHandler = () => {
         if (errorMessage === "401") {
           const cookieExpired = true;
-            console.log("Unauthorized.");
-              countDown = setInterval(() => {
-                setTimer((t) => {
-                    if(t <=0){
-                        clearInterval(countDown); //Stops countDown timer from continously running
-                        logout(cookieExpired);
-                        return 0; //timer state is set to 0
-                    }
-                    return t - 1; //aka subtract 1 sec from timer
-                })
-              }, 1000);  
+          console.log("Unauthorized.");
+          countDown = setInterval(() => {
+            setTimer((t) => {
+                if(t <=0){
+                    clearInterval(countDown); //Stops countDown timer from continously running
+                    logout(cookieExpired);
+                    return 0; //timer state is set to 0
+                }
+                return t - 1; //aka subtract 1 sec from timer
+            })
+          }, 1000);  
         }    
     };
     errorCodeHandler(); //Calls the above method, to be used within Effect
@@ -221,16 +216,14 @@ export default function Profile(){
 
       <h1>Profile page for user: {userName}</h1>
       <Container fluid = "true">
-
         <Row>
-
           <Col xs ={4}>
             <h3 style={{textAlign: 'left'}}> Ratings:</h3>
             <div>
               <Pagination>{RatingPagenationItems}</Pagination>
               <br />
             </div>
-            {userRatings?.map((u) => <RatingProfile title={u} key={u.titleId} navigate={navigate}/>  )/*need of key?, not currently used in Rating component*/} 
+            {userRatings?.map((u) => <RatingProfileCard title={u} key={u.titleId} navigate={navigate}/>  )/*need of key?, not currently used in Rating component*/} 
           </Col>
 
           <Col xs = {7} >

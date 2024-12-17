@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { GetPersonBookmarks, GetTitleBookmarks } from '../../Service/BookmarkService';
 import { Container, Row, Tab, Tabs} from 'react-bootstrap';
-import TitleCard from '../../Component/TitleComponents/TitleCard';
-import PersonCard from '../../Component/PersonComponents/PersonCard';
+import TitleWatchlistCard from '../../Component/TitleComponents/TitleWatchlistCard';
+import PersonWatchlistCard from '../../Component/PersonComponents/PersonWatchlistCard';
 import Pagination from 'react-bootstrap/Pagination';
 import { useUser } from '../../Store/Store';
 import { useNavigate } from 'react-router';
@@ -38,11 +38,11 @@ export default function WatchList(){
   };
 
   const handleTitleBookmarkPageChange = (page) => {
-      setTitleBookmarkPage(page);
+    setTitleBookmarkPage(page);
   };
 
   const handlePersonBookmarkPageChange = (page) => {
-      setPersonBookmarkPage(page);
+    setPersonBookmarkPage(page);
   };
       
   useEffect(() =>{
@@ -126,47 +126,48 @@ export default function WatchList(){
     }
     setPersonBookmarkPagenationItems(personBookmarks);
     
-    }, [personBookmarkTotalPages, personBookmarkPage]);
+  }, [personBookmarkTotalPages, personBookmarkPage]);
 
   return(
     <>
       {errorMessage !== "401" &&
-      <div className="container">
-        <h1>Your Watchlist</h1>
-        <Tabs
-          defaultActiveKey="Titles"
-          id="uncontrolled-tab-example"
-          className="mb-3">
-            <Tab eventKey="Titles" title="Titles">
-              List of Title Bookmarks:
-              <Container>
-                <Row xs={1} md={4}> 
-                    {titleBookmarks?.map((title, index) => <TitleCard data={title} key={index}></TitleCard>)}     
-                </Row>
-                <Row>
-                    <div>
-                        <Pagination>{titleBookmarkPagenationItems}</Pagination>
-                        <br />
-                    </div>
-                </Row>
-              </Container>
-            </Tab>
-            <Tab eventKey="Persons" title="Persons">
-              List of Person Bookmarks:
-              <Container>
-                <Row xs={1} md={4}> 
-                    {personBookmarks?.map((person, index) => <PersonCard data={person} key={index}> </PersonCard>)}  
-                </Row>
-                <Row>
-                    <div>
-                        <Pagination>{personBookmarkPagenationItems}</Pagination>
-                        <br/>
-                    </div>    
-                </Row>
-              </Container>
-            </Tab>
-        </Tabs>          
-      </div>}
+        <div className="container">
+          <h1>Your Watchlist</h1>
+          <Tabs
+            defaultActiveKey="Titles"
+            id="uncontrolled-tab-example"
+            className="mb-3">
+              <Tab eventKey="Titles" title="Titles">
+                List of Title Bookmarks:
+                <Container>
+                  <Row xs={1} md={4}> 
+                      {titleBookmarks?.map((title, index) => <TitleWatchlistCard data={title} key={index}></TitleWatchlistCard>)}     
+                  </Row>
+                  <Row>
+                      <div>
+                          <Pagination>{titleBookmarkPagenationItems}</Pagination>
+                          <br />
+                      </div>
+                  </Row>
+                </Container>
+              </Tab>
+              <Tab eventKey="Persons" title="Persons">
+                List of Person Bookmarks:
+                <Container>
+                  <Row xs={1} md={4}> 
+                      {personBookmarks?.map((person, index) => <PersonWatchlistCard data={person} key={index}> </PersonWatchlistCard>)}  
+                  </Row>
+                  <Row>
+                      <div>
+                          <Pagination>{personBookmarkPagenationItems}</Pagination>
+                          <br/>
+                      </div>    
+                  </Row>
+                </Container>
+              </Tab>
+          </Tabs>          
+        </div>
+      }
       {errorMessage === "401" &&
         <Alert key={"danger"} variant={"danger"}>
           Warning!! You are not logged in! {" " /* Adds a space between text and "Click here"*/}

@@ -3,7 +3,7 @@ import { useUser } from "../Store/Store";
 import { Navbar, Button, Dropdown, Container, Nav } from 'react-bootstrap';
 import SearchField from './SearchField';
 
-export default function Navigation(){ //Navbar component
+export default function NavigationBar(){ //Navbar component
   const {userName, token, logout } = useUser(); //States from Context, from parent UserProvider
 
   let navigate = useNavigate();

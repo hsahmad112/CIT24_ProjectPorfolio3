@@ -3,7 +3,6 @@ import { Toast } from 'react-bootstrap';
 
 
 export default function Toaster({header, body, show, color}){ //Custom Toaster - displays notifications, based on need
-
     const [showPop, setShowPop] = useState(show);
 
     useEffect(() =>{
