@@ -146,8 +146,7 @@ export default function DetailedPerson({id}){
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={4 }>
-                           
+                    <Col md={4 }>                          
 
                         {/* column for poster img with person */}
                         <Card bg="transparent d-flex align-items-center" style={{ width: '14rem', padding: '0px' }}>
@@ -157,7 +156,7 @@ export default function DetailedPerson({id}){
                                 variant="bottom"
                                 className=""
                                 src={                      
-                                        personBackdrop?.profile_path !== null ? 
+                                        personBackdrop?.profile_path ? 
                                         imageUrl + personBackdrop?.profile_path :
                                         "/no-image.jpg"
                                     }            
@@ -229,8 +228,7 @@ export default function DetailedPerson({id}){
                         
                             </div>
                         </Stack>
-                    </Col>
-                    
+                    </Col>                    
              
                 </Row>         
               </Container>
