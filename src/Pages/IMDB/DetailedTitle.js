@@ -41,16 +41,12 @@ export default function DetailedTitle({id}) {
   let navigate = useNavigate();
 
   useEffect(()=>{ 
-    let headers = GetHeader();
-
+  let headers = GetHeader();
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        setTitle(await GetTitleById(params.id));
-        
-        if(checkToken() !== null){
-          IsTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);      
-        }
+        setTitle(await GetTitleById(params.id));        
+  
         setSimliarMovies(await GetSimilarMovies(params.id));
         let tempRating = await GetRatingById(params.id);
         setRating(tempRating);
@@ -65,15 +61,18 @@ export default function DetailedTitle({id}) {
     };
 
     fetchData();
-  }, [isBookmarked, params.id, token]);
+  }, [params.id, token]);
 
-  // useEffect(async () => {
-    
-  // },[rating]) 
+  useEffect(() => {
+    let headers = GetHeader();
+    if(checkToken() !== null){
+          IsTitleBookmarked(params.id, setIsBookmarked, setTitleBookmark, headers);      
+    }
+  }, [isBookmarked]);
  async function ToggleBookmark(){
     let headers = GetHeader();
 
-      if(isBookmarked === false){      
+      if(isBookmarked === false){
         console.log("Attempting to create a bookmark"); // Remove later!
         const success = await CreateTitleBookmarksById( params.id, annotation, setIsBookmarked, headers);
         console.log(success);
