@@ -28,7 +28,7 @@ export default function TitleWatchlistCard({data, onDelete}){
         <Card style={{ width: '16rem', margin: '10px', padding: '0px'}}>
             <Card.Img 
                 variant="top" 
-                src={titleBookmark !== null ? imageUrl + titleBookmark : "/no-image.jpg" }
+                src={titleBookmark !== null && titleBookmark !== undefined ? imageUrl + titleBookmark : "/no-image-2.jpg" }
                 onClick={()=> navigate("/title/" + data.titleId)}/>
             <Card.Body>
                 <Card.Title>{data.titlePrimaryTitle} </Card.Title>
