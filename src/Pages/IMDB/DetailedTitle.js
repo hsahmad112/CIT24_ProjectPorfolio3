@@ -238,7 +238,7 @@ export default function DetailedTitle({id}) {
                   <Card.Img fluid="true"
                     variant="bottom"
                     className="detailed-movie-card"
-                    src={title.posterUrl}
+                    src={title.posterUrl ?  title.posterUrl : "/no-image.jpg"}
                     alt={title.primaryTitle}      
                     />
                 </Card>
